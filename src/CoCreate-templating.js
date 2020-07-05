@@ -516,5 +516,18 @@ initEngines();
 initSocketsForEngine();
 initLoadMoreButtons();
 
+const CoCreateTemplate = {
+
+  reload(element) {
+    
+    if (!element || !element.getAttribute) {
+      return;
+    }
+    initTemplateByElement(element, true)
+  }
+}
+
+
+
 CoCreateInit.register('CoCreateTemplate', window, initEngines);
 
