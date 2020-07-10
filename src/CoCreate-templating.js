@@ -1,5 +1,5 @@
 var eOBJs = [];
-var engineWrapperClass="template-wrapper";
+var templateWrapperClass="template-wrapper";
 
 
 function initSocketsForEngine() {
@@ -26,35 +26,35 @@ function initEngines(container) {
   if (!process_container.querySelectorAll) {
     return;
   }
-  let engineWrappers = process_container.querySelectorAll('.' + engineWrapperClass);
+  let templateWrappers = process_container.querySelectorAll('.' + templateWrapperClass);
   
-  if (engineWrappers.length == 0 && process_container != document && process_container.hasAttribute(engineWrapperClass)) {
-    engineWrappers = [process_container];
+  if (templateWrappers.length == 0 && process_container != document && process_container.hasAttribute(templateWrapperClass)) {
+    templateWrappers = [process_container];
   }
   
-  for (let i=0; i < engineWrappers.length; i++) {
-    let engineWrapper = engineWrappers[i];
+  for (let i=0; i < templateWrappers.length; i++) {
+    let templateWrapper = templateWrappers[i];
     
-    let filter = g_cocreateFilter.setFilter(engineWrapper, "data-template_id", "template");
+    let filter = g_cocreateFilter.setFilter(templateWrapper, "data-template_id", "template");
     if (!filter) continue;
     
-    if (CoCreateUtils.getInitialized(engineWrapper)) {
+    if (CoCreateUtils.getInitialized(templateWrapper)) {
 			continue;
 		}
-		CoCreateUtils.setInitialized(engineWrapper)
+		CoCreateUtils.setInitialized(templateWrapper)
     
     /// check if there is search input
 
     let eObj = {
-      el: engineWrapper,
+      el: templateWrapper,
       filter: filter,
-      templateId: engineWrapper.getAttribute('data-template_id'),
+      templateId: templateWrapper.getAttribute('data-template_id'),
       availableMore: true,
     }
     
     eOBJs.push(eObj);
     
-    engineWrapper.addEventListener("changeFilterInput", function(e) {
+    templateWrapper.addEventListener("changeFilterInput", function(e) {
       removeOldData(eObj.el)
       eObj.filter.startIndex = 0;
       g_cocreateFilter.fetchData(eObj.filter);
@@ -465,7 +465,7 @@ function initLoadMoreButtons() {
 }
 
 function findTemplateElByChild(element) {
-  return CoCreateUtils.getParentFromElement(element, engineWrapperClass);
+  return CoCreateUtils.getParentFromElement(element, templateWrapperClass);
 }
 
 function updateParentTemplateOfChild(template, element) {
