@@ -1,0 +1,70 @@
+<html>
+    <body>
+        <style type="text/css">
+            .template{display:none}
+        </style>
+        
+        <div class="card template margin-10px" data-results="cualquier">
+              <div class="card-body padding-15px">
+                <h3 data-result="firstname"></h3>
+                <h3 data-result="last_name"></h3>
+                <h3 data-result="personal_info.email"></h3>
+                <a href="#" class="btn btn-primary">More details</a>
+              </div>
+         </div>
+     
+     <pre>
+         <h1>Paste in your browser console</h1>
+         
+         CocreateResult.drawTemplate('cualquier',[{
+                     firstname : 'Jean',
+                     last_name : 'Mendoza',
+                     personal_info : {email:'jeanmendozar@gmail.com'},
+                 },{
+                     firstname : 'Frankie',
+                     last_name : 'Pagan',
+                     personal_info : {email:'frankpagan@gmail.com'},
+                 }])
+     </pre>
+        
+        
+ query selector attributtes
+ 
+        <div class="card template margin-10px" data-template_id="cualquier">
+              <div class="card-body padding-15px">
+                <h3 class="firstname blue">--</h3>
+                <h3 data-value="lastname" value="lastname"></h3>
+                <input name="hello"  value="firstname"/>
+                <textarea type="textarea" name="nuevo" value="lastname"></textarea>
+                <h3 data-attribute="personal_info.email" value="personal_info.email"></h3>
+                <a href="#" class="btn btn-primary">More details</a>
+              </div>
+         </div>
+     
+     <pre>
+         <h1>Paste in your browser console</h1>
+         
+         CoCreateRender.template_id('cualquier',[{
+             firstname : 'Jean',
+             lastname : 'Mendoza',
+             personal_info : {email:'jeanmendozar@gmail.com'},
+         },{
+             firstname : 'Frankie',
+             lastname : 'Pagan',
+             personal_info : {email:'frankpagan@gmail.com'},
+         }])
+     </pre>
+   <!-- 
+    add CoCreate-results to CoCreate-render
+    data-results=”” to data-template_id=”” //name of object
+    data-result=”” will be replaced with the following 
+    
+    value=”param.subparam” // if value exist insert value in element
+    data-value=”param.subparam” // if exist insert value in attribute
+    Any attribute *=”param.subparam”
+-->
+     
+    </body>
+    <!--<script src="CoCreate-results.js"></script>-->
+    <script src="CoCreate-render.js"></script>
+</html>
