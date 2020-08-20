@@ -38,10 +38,10 @@ function initEngines(container) {
     let filter = g_cocreateFilter.setFilter(templateWrapper, "data-template_id", "template");
     if (!filter) continue;
     
-    if (CoCreateUtils.getInitialized(templateWrapper)) {
+    if (CoCreateInit.getInitialized(templateWrapper)) {
 			continue;
 		}
-		CoCreateUtils.setInitialized(templateWrapper)
+		CoCreateInit.setInitialized(templateWrapper)
     
     /// check if there is search input
 

@@ -1,13 +1,13 @@
 
 const CoCreateTemplate = {
-	selector: '.template-wrapper',
-	className: 'template-wrapper',
+	selector: '[data-template_id][data-fetch_collection]',
 	items: [],
 	
 	init: function() {
 		this.__initItem();
 		this.__initSocketEvent();
 		this.__initLoadMore();
+		this.__initEvents()
 	},
 	
 	__initItem: function(container) {
@@ -18,7 +18,7 @@ const CoCreateTemplate = {
 		}
 		let wrappers = process_container.querySelectorAll(this.selector);
 		
-		if (wrappers.length == 0 && process_container != document && process_container.hasAttributes(this.className)) {
+		if (wrappers.length == 0 && process_container != document && process_container.hasAttributes('date-template_id') && process_container.hasAttributes('date-fetch_collection')) {
 			wrappers = [process_container];
 		}
 		
@@ -41,7 +41,7 @@ const CoCreateTemplate = {
 		let item = g_cocreateFilter.getObjectByFilterId(this.items, item_id);
 		let filter = null;
 		const self = this;
-		if (checkInit && CoCreateUtils.getInitialized(element)) {
+		if (checkInit && CoCreateInit.getInitialized(element)) {
 			return;
 		}
 		
@@ -59,7 +59,7 @@ const CoCreateTemplate = {
 				return;
 			}
 			
-			CoCreateUtils.setInitialized(element)
+			CoCreateInit.setInitialized(element)
 			item = {
 				el: element,
 				filter: filter,
@@ -82,7 +82,7 @@ const CoCreateTemplate = {
 	
 	__initSocketEvent: function() {
 		const self = this;
-		CoCreateSocket.listen('readDocumentList', function(data) {
+		CoCreate.listenMessage('readDocumentList', function(data) {
 			if (data.created_ids) {
 				self.__fetchedItems(data)
 			} else {
@@ -111,6 +111,27 @@ const CoCreateTemplate = {
 		CoCreateSocket.listen('readDocument', function(data) {
 			self.__fetchedArray(data);
 		})
+	},
+	
+	__initEvents: function() {
+		const self = this;
+		document.addEventListener('dndsuccess', function(e) {
+			const {dropedEl, dragedEl} = e.detail;
+			let dragElTemplate = self.findTemplateElByChild(dragedEl);
+			let dropElTemplate = self.findTemplateElByChild(dropedEl);
+			
+			if (!dragElTemplate.isSameNode(dropElTemplate)) {
+				//. save template id
+				self.updateParentTemplateOfChild(dragElTemplate, dragedEl)
+				
+				//. reordering
+				self.reorderChildrenOfTemplate(dragElTemplate);
+				self.reorderChildrenOfTemplate(dropElTemplate);
+			} else {
+				self.reorderChildrenOfTemplate(dropElTemplate);
+			}
+			
+		})	
 	},
 	
 	__initLoadMore: function() {
@@ -143,7 +164,7 @@ const CoCreateTemplate = {
 		let filter = null;
 		const self = this;
 		
-		if (checkInit && CoCreateUtils.getInitialized(element)) {
+		if (checkInit && CoCreateInit.getInitialized(element)) {
 			return;
 		}
 	
@@ -155,7 +176,7 @@ const CoCreateTemplate = {
 			}
 			
 			// if (checkInit) {
-				CoCreateUtils.setInitialized(element)
+				CoCreateInit.setInitialized(element)
 			// }
 			
 			if (fetch_type === 'collection') {
@@ -238,10 +259,10 @@ const CoCreateTemplate = {
 			if (valuePassBtn) CoCreateLogic.__registerValuePassBtnEvent(form, valuePassBtn);
 		}
 		
-		CoCreate.fetchModules(wrapper.parentNode);
+		// CoCreate.fetchModules(wrapper.parentNode);
 		//. re-init....
 		this.__initItem(wrapper)
-		CoCreate.initModules(wrapper.parentNode)
+		// CoCreate.initModules(wrapper.parentNode)
 	},
 	
 	__renderCollection: function(wrapper, items) {
@@ -253,7 +274,7 @@ const CoCreateTemplate = {
 		let templateDiv = document.createElement('div');
 		let template_node = wrapper.querySelector('.template');
 		if (template_node.getAttribute('data-template_id') != templateId) {
-			template_node = wrapper.querySelector('template-wrapper > .template');
+			template_node = wrapper.querySelector(`${this.selector} > .template`);
 		}
 		
 		for (let k = 0; k < items.length; k++) {
@@ -325,7 +346,7 @@ const CoCreateTemplate = {
 		}
 		
 		if (is_fetch) {
-			CoCreate.fetchModules();
+			// CoCreate.fetchModules();
 		}
 	},
 	__renderArray: function(wrapper, items) {
@@ -336,7 +357,7 @@ const CoCreateTemplate = {
 		let template_node = wrapper.querySelector('.template');
 		let new_templateId = template_node.getAttribute('data-template_id');
 		if (new_templateId && new_templateId != templateId) {
-			template_node = wrapper.querySelector('template-wrapper > .template');
+			template_node = wrapper.querySelector(`${this.selector} > .template`);
 		}
 		
 		for (let k=0; k < items.length; k++) {
@@ -373,13 +394,13 @@ const CoCreateTemplate = {
 		let template_node = wrapper.querySelector('.template');
 		let new_tempate_id = template_node.getAttribute('data-template_id');
 		if (new_tempate_id && new_tempate_id != templateId) {
-			template_node = wrapper.querySelector('template-wrapper >.template');
+			template_node = wrapper.querySelector('[data-template_id][data-fetch_collection] >.template');
 		}
 
 		for (let k = 0; k < items.length; k++) {
 			let id = items[k]['_id'];
 			
-			let itemTemplateDiv = this.__cloneElement(template_node, templateId, id)
+			let itemTemplateDiv = this.__cloneElement(template_node, templateId, id, collection)
 			
 			/////  fetch data for h1, h2, h3, h4, h5 ,h6, p, i, q, a, b, li, span, code
 			let displayList = itemTemplateDiv.querySelectorAll('div, h1, h2, h3, h4, h5, h6, p, i, q, a, b, li, span, code, img, tr, td');
@@ -390,7 +411,7 @@ const CoCreateTemplate = {
 				let display = displayList[i];
 				let pass_id = display.getAttribute('data-pass_id');
 				if (passTo && passTo == pass_id) {
-					if (display.classList.contains('template-wrapper')) {
+					if (display.hasAttribute('data-template_id') && display.hasAttribute('data-fetch_collection')) {
 						display.setAttribute('data-template_id', id);
 						display.setAttribute('data-fetch_value', id)
 					} else if (display.classList.contains('template')) {
@@ -431,8 +452,8 @@ const CoCreateTemplate = {
 	__initNewAtags: function(parent) {
 		let aTags = parent.querySelectorAll('a');
 		aTags.forEach(aTag => {
-			if (aTags.classList.contains('newLink')) {
-				aTags.addEventListener('click', function(e) {
+			if (aTag.classList.contains('newLink')) {
+				aTag.addEventListener('click', function(e) {
 					e.preventDefault();
 					CoCreateLogic.setLinkProcess(this);
 				})
@@ -520,7 +541,7 @@ const CoCreateTemplate = {
 		})
 	},
 	
-	__cloneElement: function(clone_node, templateId, id) {
+	__cloneElement: function(clone_node, templateId, id, collection) {
 		let itemTemplateDiv = document.createElement('div');
 		let template = clone_node.cloneNode(true);
 		template.setAttribute('templateId', templateId);
@@ -528,6 +549,9 @@ const CoCreateTemplate = {
 		template.classList.remove('template');
 		if (id) {
 			template.setAttribute('data-document_id', id);
+		}
+		if (collection) {
+			template.setAttribute('data-collection', collection)
 		}
 		itemTemplateDiv.appendChild(template.cloneNode(true));
 		return itemTemplateDiv;
@@ -559,7 +583,7 @@ const CoCreateTemplate = {
 	},
 	
 	findTemplateElByChild: function(element) {
-		return CoCreateUtils.getParentFromElement(element, this.className);
+		return CoCreateUtils.getParentFromElement(element, null, ['data-template_id', 'data-fetch_collection']);
 	},
 	
 	updateParentTemplateOfChild: function(template, element) {
@@ -578,6 +602,7 @@ const CoCreateTemplate = {
 			document_id, 
 			name, 
 			value, 
+			broadcast: false,
 			update_crud: true
 		})
 	},
@@ -601,6 +626,7 @@ const CoCreateTemplate = {
 				document_id, 
 				name: orderField, 
 				value: index * coff, 
+				broadcast: false,
 				update_crud: true})
 		})
 	}
@@ -610,10 +636,10 @@ const CoCreateTemplate = {
  * change name Class
  * add functionality to add value on any attr of each elements into template
  */
-let debug = true
 const CoCreateRender = {
 	
-	 print(message,debug) {
+	 print(message) {
+		let debug = true;
 		debug = debug || false;
 		if(debug)
 			console.log(message)
@@ -631,7 +657,7 @@ const CoCreateRender = {
 						let value = (Object.keys(json).indexOf(find) != -1) ? json[find] : false
 						return value;
 				}catch(error){
-						this.print(['Error in findInJsonDeep',error],debug)
+						this.print(['Error in findInJsonDeep',error])
 						return false;
 				}
  },
@@ -699,7 +725,7 @@ const CoCreateRender = {
 				 template_div.insertAdjacentHTML('beforebegin', template.outerHTML);
 		 })
 	 }catch (error) {
-			 this.print(['Error in Template',error],debug)
+			 this.print(['Error in Template',error])
 	 }
  } 
 

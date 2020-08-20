@@ -7,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Templating | CoCreate</title>
 
-  <!--<link rel="stylesheet" href="https://server.cocreate.app/css/CoCreate.min.css" type="text/css" />-->
-  <link rel="stylesheet" href="https://cdn.cocreate.app/CoCreate.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://server.cocreate.app/css/CoCreate.min.css" type="text/css" />
+  <!--<link rel="stylesheet" href="https://cdn.cocreate.app/CoCreate.min.css" type="text/css" />-->
   
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" crossorigin="anonymous" />    
@@ -16,7 +16,7 @@
 
 <body>
   
-    <div class="padding-10px">
+    <div class="padding:10px">
       <input class="template-search floating-label" data-template_id="filter_test" placeholder="Search1">
       <input class="floating-label" data-template_id="filter_test" placeholder="Search2">
       <input class="floating-label" data-template_id="filter_test" placeholder="Color" data-filter_name="color" >
@@ -26,23 +26,23 @@
     <form data-template_id="filter_test">
       <h3>Filters</h3>
       <input class="template-search floating-label" placeholder="Color">
-      <div class="display-flex">
-        <div class="card margin-10px padding-10px">
+      <div class="display:flex">
+        <div class="card margin:10px padding:10px">
           <h3>Price</h3>
          	<input type="range" 
          	  data-filter_name="price" 
          	  data-value_type="number"
          	  data-filter_operator="range"
-         	  placeholder="price range" class="width-100-percent"><br>
+         	  placeholder="price range" class="width:100%"><br>
          
         	<input data-filter_name="price" data-value_type="number" data-filter_operator="gt" placeholder="Min" class="floating-label"><br>
         	<input data-filter_name="price" data-value_type="number" data-filter_operator="lt" placeholder="Max" class="floating-label">
         </div>
 
-   	    <div class="card margin-10px padding-10px">
+   	    <div class="card margin:10px padding:10px">
    	      <h3>Color</h3>
    	      
-          <p class="font-bold padding-top-10px">No Match</p>
+          <p class="font-bold padding-top:10px">No Match</p>
         	<select placeholder="Select" data-filter_name="color" data-filter_operator="ne" >
         	    <option value="none">None</option>
         	    <option value="red">Red</option>
@@ -50,7 +50,7 @@
         	    <option value="green">Green</option>
         	</select>
         	
-        	<p class="padding-top-20px font-bold">Include Operator</p>
+        	<p class="padding-top:20px font-bold">Include Operator</p>
         
           <div>
       	    <label>Red</label>
@@ -66,16 +66,16 @@
       	  </div>
         </div>
 
-        <div class="card margin-10px padding-10px">
+        <div class="card margin:10px padding:10px">
           <h3>Order</h3>
           <!--<input type="radio" name="category_order" data-order_by="category" value="asc" id="category_order_asc"><label>Order by Category: ASC</label><br>-->
           <!--<input type="radio" name="category_order" data-order_by="category" value="desc" id="category_order_desc"><label>Order by Category: DESC</label><br>-->
-          <div class="font-bold padding-top-10px">Name</div>
+          <div class="font-bold padding-top:10px">Name</div>
           <input type="radio" name="name_order" data-order_by="name" value="none"><label>None</label><br>
           <input type="radio" name="name_order" data-order_by="name" value="asc" ><label>Order by Name: ASC</label><br>
           <input type="radio" name="name_order" data-order_by="name" value="desc"><label>Order by Name: DESC</label><br>
 
-          <div class="padding-top-10px font-bold">Price</div>
+          <div class="padding-top:10px font-bold">Price</div>
           <select data-order_by="price" placeholder="Select">
     	      <option value="none">None</option>
             <option value="asc">ASC</option>
@@ -92,7 +92,60 @@
               <option value="desc">DESC</option>
         	</select>
 
-    <div class="template-wrapper display-flex flex-wrap"
+    <!-- render.js
+    div class="template-wrapper display:flex flex-wrap"
+      data-fetch_collection="module_activity"
+      data-pass_to="me1234" 
+      data-fetch_name="data-module_id" 
+      data-fetch_value="5deb167e189f212c8ebd0137" 
+      data-fetch_operator="or"
+      data-fetch_value_type="string"
+      data-fetch_count=""
+      data-order_by="name" 
+      data-order_type="asc"
+      
+      data-filter_name
+      data-fitler_value
+      data-filter_value_type="string"
+
+      data-filter_operator="contain/eq/...."
+      data-template_id="filter_test">
+      
+      </div>
+      
+      
+      <div data-filter_name="price" data-filter_value_type="number" data-filter_value="12" data-filter_operator="lt" placeholder="Max" class="floating-label">
+      -->
+      
+    
+    <!-- filter.js
+    <input data-filter_name="price" data-value_type="number" data-operator="lt" placeholder="Max" class="floating-label">-->
+    
+    <!-- render.js
+    div class="template-wrapper display:flex flex-wrap"
+      data-filter_collection="module_activity"
+      data-filter_name
+      data-fitler_value
+      data-filter_value_type="string"
+      data-filter_operator="or"
+      data-filter_count=""
+      data-order_by="name" 
+      data-order_type="asc"
+      
+      data-template_id="filter_test"
+      data-pass_to="me1234">
+      
+      </div>
+      
+      
+      <div data-filter_name="price" data-filter_value_type="number" data-filter_value="12" data-filter_operator="lt">
+      -->
+      
+    
+    <!-- filter.js
+    <input data-filter_name="price" data-value_type="number" data-operator="lt" placeholder="Max" class="floating-label">-->
+      
+    <div class="template-wrapper display:flex flex-wrap"
       data-fetch_collection="module_activity"
       data-pass_to="me1234" 
       data-fetch_name="data-module_id" 
@@ -104,9 +157,9 @@
       data-search_type="or"
       >
       
-        <div class="card template margin-10px">
+        <div class="card template margin:10px">
           <img name="name" data-document_id="" data-pass_id="me1234" src="http://via.placeholder.com/250x250/BF00FF/ffffff/" class="card-img-top" alt="...">
-          <div class="card-body padding-15px">
+          <div class="card-body padding:15px">
             <h5 class="card-title" data-document_id="" name="name" data-pass_id="me1234">Item Name</h5>
             <p class="card-text" data-document_id="" name="color" data-pass_id="me1234"></p>
             <p class="card-text" data-document_id="" name="price" data-pass_id="me1234">$0</p>
@@ -117,7 +170,7 @@
         </div>
       </div>
 
-    <button class="loadMore padding-20px-lr padding-10px-tb" data-template_id="filter_test">Load More</button>
+    <button class="loadMore padding:0px_20px padding:10px_0px" data-template_id="filter_test">Load More</button>
   
     <script>
       var config = {
