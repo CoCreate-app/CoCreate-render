@@ -1,5 +1,5 @@
 {
-  "name": "CoCreate-templating",
+  "name": "CoCreate-render",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CoCreate-app/CoCreate-templating.git"
+    "url": "git+https://github.com/CoCreate-app/CoCreate-render.git"
   },
   "author": "Frank Pagan",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CoCreate-app/CoCreate-templating/issues"
+    "url": "https://github.com/CoCreate-app/CoCreate-render/issues"
   },
-  "homepage": "https://github.com/CoCreate-app/CoCreate-templating#readme"
+  "homepage": "https://github.com/CoCreate-app/CoCreate-render#readme"
 }
