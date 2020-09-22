@@ -1,141 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>CoCreate-boilerplate Documentation | CoCreateJS </title>
-        <link rel="icon" type="image/png" sizes="32x32" href="https://cocreate.app/images/favicon.ico">
-        <meta name="description" content="A simple HTML5 and pure javascript component. Easy configuration using data-attributes and highly styleable." />
-        <meta name="keywords" content="helper classes, utility classes, css framework, css library, inline style classes" />
-        <meta name="robots" content="index,follow" />
-        
-        <!-- CoCreate CSS -->
-        <link rel="stylesheet" href="https://server.cocreate.app/css/CoCreate.min.css" type="text/css" />
-        
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" crossorigin="anonymous" />    
-        
-        <!-- Codemirror -->
-        <link rel="stylesheet" href="https://server.cocreate.app/CoCreate-components/CoCreate-codemirror/src/CoCreate-codemirror.css" type="text/css" />
-        <link rel=stylesheet href="https://codemirror.net/lib/codemirror.css"  async defer>
 
-        <!-- Highlight.js-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CoCreate-dnd Documentation | CoCreateJS </title>
+	<link rel="icon" type="image/png" sizes="32x32" href="https://cocreate.app/images/favicon.ico">
+	<meta name="description" content="A simple yet powerful drag-and-drop solution powered by javascript." />
+	<meta name="keywords" content="drag and drop, colaboration, dnd utility, drag and drop utility" />
+	<meta name="robots" content="index,follow" />
+	<!-- CoCreate CSS -->
+	<link rel="stylesheet" href="https://server.cocreate.app/css/CoCreate.min.css" type="text/css" />
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" crossorigin="anonymous" />
+	<!-- Codemirror -->
+	<link rel="stylesheet" href="https://server.cocreate.app/CoCreate-plugins/CoCreate-codemirror/src/CoCreate-codemirror.css" type="text/css" />
+	<link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css" async defer>
+	<!-- prism -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.21.0/themes/prism.min.css" rel="stylesheet" />
+	<!-- Highlight.js-->
+	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">-->    
+	<!--<script src="preCode.js"></script>-->
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>-->
+	<script>
+	</script>
+</head>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script>
-    </head>
+<body>
+	<div data-collection="" data-document_id="" name="" id="CoCreate-dnd"class="padding:15px">
+		<div class="display:flex flex-wrap:wrap justify-content:space-between margin:10px">
+			<div class="display:flex align-items:center">
+				<h2>CoCreate-render</h2>
+			</div>
+			<div class="display:flex align-items:center font-size:20px social_share" data-height="600" data-width="500" data-media="https://via.placeholder.com/300/09f/fff.png"> <a href="https://github.com/CoCreate-app/CoCreate-dnd" target="_blank" class="margin-right:15px"><i class="fab fa-github"></i></a> <a class="margin-right:15px share" data-network='twitter' title="Share on twitter"><i class="fab fa-twitter"></i></a>                <a class="margin-right:15px share" data-network='facebook' title="Share on Facebook"><i class="fab fa-facebook"></i></a> <a class="margin-right:15px share" data-network='instagram' title="Share on instagram"><i class="fab fa-instagram"></i></a>                <a class="margin-right:15px share" data-network='share' title="Share on share"><i class="fas fa-share-alt"></i></a> </div>
+		</div>
+		<p class="max-width:500px margin:20px_10px">CoCreate-render javascript component. Easy configuration using data-attributes and highly styleable.</p>
+		<div id="boilerplate-section" class="display:flex flex-wrap:wrap">
+			<div class="flex-grow:1 min-width:300px width:50% padding:0px_10px margin:20px_0px">
+				<h2 class="border-bottom:1px_solid_lightgrey padding:5px_0px">Install</h2>
+				<pre><code class="language-javascript">npm install cocreate-render</code></pre>
+				<p class="padding:10px_0px">Or you can use cdn link:</p>
+				<pre><code class="language-javascript">https://cdn.cocreate.app/CoCreate-render.min.js</code></pre>
+				<p class="padding:10px_0px">for styling please refer to #id-style</p>
 
-    <body>
-        <div data-collection="" data-document_id="" name="" id="cocreate-boilerplate" class="padding:15px">
-            <div class="display:flex flex-wrap:wrap justify-content:space-between">
-                <div class="display:flex align-items:center">
-                    <h2>CoCreate-boilerplate</h2>
-                </div>
-                <div class="display:flex align-items:center font-size:20px social_share" data-height="600" data-width="500" data-media="https://via.placeholder.com/300/09f/fff.png">
-                    <a href="https://github.com/CoCreate-app/CoCreate-boilerplate" target="_blank" class="margin-right:15px"><i class="fab fa-github"></i></a>
-                    <a class="margin-right:15px share" data-network='twitter' title="Share on twitter"><i class="fab fa-twitter"></i></a>
-                    <a class="margin-right:15px share" data-network='facebook' title="Share on Facebook"><i class="fab fa-facebook"></i></a>
-                    <a class="margin-right:15px share" data-network='instagram' title="Share on instagram"><i class="fab fa-instagram"></i></a>
-                    <a class="margin-right:15px share" data-network='share' title="Share on share"><i class="fas fa-share-alt"></i></a>
-                </div>
-            </div>
-            <p class="max-width:500px margin:20px_0px">A simple HTML5, CSS and pure javascript component. Easy configuration using data-attributes and highly styleable.</p>
-            <div id="boilerplate-section" class="display:flex flex-wrap:wrap">
-                <div class="flex-grow:1 min-width:300px width:50% padding:0px_10px margin:20px_0px">
-    
-                    <h2 class="border-bottom:1px_solid_lightgrey padding:5px_0px">Reference</h2>
-                    <div class="">
-                        <p class="padding:10px_0px">This is boilerplate reference</p>
-                
-                        <div class="flex-grow:1 min-width:300px width:100%">
-                            <pre>
-                                <code>&lt;div&gt;&lt;/div&gt;</code>
-                            </pre>
-                        </div>
-                        <p class="padding:10px_0px">This is boilerplate reference</p>
-                        <p class="padding:10px_0px">This is boilerplate reference</p>
-                    </div>
-                    <h2 class="border-bottom:1px_solid_lightgrey padding:5px_0px">Attributes</h2>
-                    <ul class="list-style-type:none ">
-                        <li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-                            <h4><span>data-boilerplate</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
-                            <p>boilerplate-attribute</p>
-                        </li>
-                        <li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-                            <h4><span>data-boilerplate</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
-                            <p>boilerplate-attribute</p>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="flex-grow:1 min-width:300px width:50% padding:0px_10px margin:20px_0px  border-bottom:1px_solid_lightgrey">
-                    <!-- SandBox -->
-                    <h2 class="border-bottom:1px_solid_lightgrey padding:5px_0px">Demo</h2>
-                    <div class="position:sticky top:0 padding:15px_0px height:100vh">
-    			    <div class="container svColumn overflow:hidden card border-radius:2px width:auto height:100%" id="form-sandbox">
-    			       <div class="font-size:20px position:absolute top:10px right:10px opacity:0.6 z-index:7">
-    			        <a class="margin-right:10px" id="preview" data-show="preview" data-hide="code"><i class="far fa-eye"></i></a>
-    			        <a class="margin-right:10px hidden" id="code" data-show="code" data-hide="preview"><i class="fas fa-code"></i></a>
-    			        <!--<a class="margin-right:10px"><i class="far fa-window-maximize"></i></a>-->
-    					<a target="modal" href="module_activity_datatable.html"
-    				  	     data-pass_collection="modules"
-    				  	     data-pass_document_id=""
-    				  	     data-pass_fetch_value=""
-    				  	     data-pass_prefix=""
-    				  	     data-pass_to="render"
-    				  	     data-modal_width="600px"
-    				  	     data-modal_height="400px"
-    				  	     data-modal_color="#229954"
-    				  	     data-modal_header="false"
-    				  	     class="margin-right:10px">
-    				  	    <i class="fas fa-external-link-alt"></i>
-    				     </a>        
-    				     <a class="fs-toggle margin-right:5px" target="#playground-1"><i class="fas fa-expand"></i></a>
-    			        </div>
-    			
-    			        <div class="svRow">
-    			            
-    			            <div class="svColumn">
-    			            	
-    			                <div class="svPanel">
-    			                    <div data-realtime="false"
-    			                        data-collection="modules"
-    			                        data-document_id="5eefe30952c6e94c75fb5e3f"
-    			                        name="html" 
-    			                        id="7" 
-    			                        class="codemirror min-width:300px">
-    			                    </div>
-    			                </div>
-    			            	<div class="svSplitter svHorizontal"> </div>
-    			
-    			                <div class="svPanel">
-    			                    <iframe data-get_value="7" frameBorder="0" height="100%" width="100%"  class="min-width:300px"></iframe>
-    			                </div>
-    			                
-    			            </div>
-    			        </div>
-    			    </div>
-    			    <!-- End SandBox -->
-    			    </div>
-                </div>
-                
-            </div>				
-        </div>
-        <script>
-            var config = {
-                apiKey: 'c2b08663-06e3-440c-ef6f-13978b42883a',
-                securityKey: 'f26baf68-e3a9-45fc-effe-502e47116265',
-                organization_Id: '5de0387b12e200ea63204d6c'
-            }
-        </script>
-    
-        <!--CoCreateJS-->
-        <script src="https://server.cocreate.app/js/CoCreate.min.js"></script>
-        
-        <!-- CoCreate CodeMiirror -->
-        <script type="text/javascript" src="https://server.cocreate.app/CoCreate-plugins/CoCreate-codemirror/dist/CoCreate-codemirror.js" async></script>
-        
-    </body>
+				<h2 class="border-bottom:1px_solid_lightgrey margin-top:80px padding:5px_0px">Usage</h2>
+				<p class="padding:10px_0px">
+					CoCreate-render would use that set attributes and renders the elements based on html and json data.
+				</p>
+
+				<h3 class="border-bottom:1px_solid_lightgrey margin-top:40px padding:5px_0px">Example</h3>
+				<p class="padding:10px_0px">
+				</p>
+
+				<h4 class="margin-top:20px padding:5px_0px">HTML Template</h4>
+<div class="margin-top:10px">
+	
+					<pre><code class="language-html">
+&lt;div data-template_id="abc1" data-fetch_collection="render_test"&gt;
+	&lt;div class="template card {{render2.collection}} card margin:10px firstname" 
+		data-value="{{render2.data._id}}" 
+		data-template_id="abc1" 
+		data-render_array="render2.data"&gt;
+			
+		&lt;div class="card-body padding:15px" data-collection="{{render2.collection}}"&gt;
+			&lt;h3 class="{{render2.data.firstname}} blue" value="{{render2.data.lastname}} - {{render2.data.firstname}}"&gt;--&lt;/h3&gt;
+			&lt;h3 data-value="{{ render2.data.lastname }}" value="{{lastname}}"&gt;&lt;/h3&gt;
+			&lt;input value="{{ render2.collection }}"/&gt;
+			&lt;h3 class="email" value="{{render2.data.email}}"&gt;&lt;/h3&gt;
+			&lt;textarea value="{{render2.data.lastname}}"&gt;&lt;/textarea&gt;
+			&lt;h3 data-attribute="{{render2.data.personal_info.email}}" name="email" value="{{render2.data.personal_info.email}}"&gt;&lt;/h3&gt;
+			
+			&lt;div class="template card" data-render_array="render2.data.testing_array" data-render_key="temp2" &gt;
+				&lt;h3 data-attribute="{{temp2.email}}" name="email" class="{{temp2.email}}" value="{{temp2.email}}"&gt;&lt;/h3&gt;
+				&lt;h3 value="{{render2.collection}}"&gt;&lt;/h3&gt;
+				&lt;h3 value="{{render2.data.personal_info.email}}"&gt;&lt;/h3&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+				</code></pre> </div>
+
+				<h4 class="margin-top:40px padding:5px_0px">CoCreate-render usage</h4>
+				<p class="padding:10px_0px">Description.</p>
+				<pre><code class="language-html">
+CoCreateRender.render('[data-template_id=abc1]',{
+	 render2: {
+		collection : 'dededede',
+		data: [{
+			 _id : '123kijfhgfkel45',
+			 firstname : 'Jin',
+			 lastname : 'codingmachinine',
+			 personal_info : {email:'jeanmendozar@gmail.com','phone':'56666'},
+			 email: 'tesing@gamil.com',
+			 testing_array : [
+				 {email:'jeanmendozar@gmail.com','phone':'0','home':'home1'},
+				 {email:'frank@gmail.com','phone':'1','home':'home2'},
+				 {email:'jose@gmail.com','phone':'2','home':'home3'},
+			 ],
+		 },{
+			_id : '5678efe32qd2ol',
+			firstname : 'jean',
+			lastname : 'Mendoza',
+			personal_info : {email:'jeanmendozar@gmail.com','phone':'56666'},
+			email: 'tesing2@gamil.com',
+			testing_array : [
+				{email:'1ana@gmail.com','phone':'16','home':'home17'},
+				{email:'1rosa@gmail.com','phone':'17','home':'home18'},
+				{email:'1nuevo@gmail.com','phone':'18','home':'home19'}
+			],
+		 },
+		]
+	}
+})
+				</code></pre>
+				
+				<h4 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">Attributes</h4>
+				<ul class="list-style-type:none ">
+					<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
+						<h4><span>data-render_array</span> <span class="cocreate-badge warning">optional</span><span class="cocreate-badge danger">required</span></h4>
+						<p>To render the array data, this attribute should define by the object selector path</p>
+					</li>
+					<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
+						<h4><span>data-render_key</span> <span class="cocreate-badge warning">optional</span><span class="cocreate-badge">Default: data-render_array's value</span></h4>
+						<p>If data-render_array defined, this attribute can define</p>
+						<p>Default value is value of data-render_array</p>
+					</li>
+				</ul>
+				
+				<h4 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">Funcations</h4>
+				<ul class="list-style-type:none ">
+					<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
+						<h4><span>setValue(elements, data, [passTo])</span></h4>
+						<p>This is main function. </p>
+						<div>
+							<p><strong>elements</strong> <span class="cocreate-badge warning">Type:NoteList</span><span class="cocreate-badge danager">required</span></p>
+							<p> Dom elements for render</p>
+						</div>
+						<div>
+							<p><strong>data</strong> <span class="cocreate-badge warning">Type:object</span><span class="cocreate-badge danager">required</span></p>
+							<p>Data to render</p>
+						</div>
+						<div>
+							<p><strong>passTo</strong><span class="cocreate-badge warning">Type:string</span><span class="cocreate-badge warning">optional</span></p>
+						</div>
+					</li>
+					<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
+						<h4>
+							<span>render(selector, data)</span>
+						</h4>
+						<div>
+							<p><strong>selector</strong> <span class="cocreate-badge warning">Type:String</span><span class="cocreate-badge danager">required</span></p>
+							<p>The selector of element to render</p>
+						</div>
+						<div>
+							<p><strong>data</strong> <span class="cocreate-badge warning">Type:object</span><span class="cocreate-badge danager">required</span></p>
+							<p>Data to render</p>
+						</div>
+					</li>
+					<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
+						<h4>
+							<span>setArray(element, data)</span>
+						</h4>
+						<div>
+							<p><strong>element</strong> <span class="cocreate-badge warning">Type:Node</span><span class="cocreate-badge danager">required</span></p>
+							<p>Element  to render the array. Geneeral it will be template.</p>
+						</div>
+						<div>
+							<p><strong>data</strong> <span class="cocreate-badge warning">Type:object</span><span class="cocreate-badge danager">required</span></p>
+							<p>Data to render</p>
+						</div>
+					</li>
+
+				</ul>
+				
+
+				<h2 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">How Does It Works</h2>
+				<p>CoCreate-render works based on attributes and template, The attributes to render should be wrapper "{{ }}", and attributes can include the combine "{{}}" wrapper.</p>
+				
+				<p>To render the array data, Render need to define <code>class="template"</code>. <code>data-render_array</code></p>
+
+				<h2 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">Effects and Styles</h2>
+
+				<h2 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">Events</h2>
+				
+			</div>
+			<div class="flex-grow:1 min-width:300px width:50% padding:0px_10px margin:20px_0px  border-bottom:1px_solid_lightgrey">
+				<!-- SandBox -->
+				<h2 class="border-bottom:1px_solid_lightgrey padding:5px_0px">Demo</h2>
+				<div class="position:sticky top:0 padding:15px_0px height:100vh">
+					<div class="container svColumn overflow:hidden card border-radius:2px width:auto height:100%" id="sandbox">
+						<div class="font-size:20px position:absolute top:10px right:10px opacity:0.6 z-index:7"> <a class="margin-right:10px" id="preview" data-show="preview" data-hide="code"><i class="far fa-eye"></i></a> <a class="margin-right:10px hidden" id="code" data-show="code" data-hide="preview"><i class="fas fa-code"></i></a>
+							<!--<a class="margin-right:10px"><i class="far fa-window-maximize"></i></a>--><a target="modal" href="module_activity_datatable.html" data-pass_collection="modules" data-pass_document_id="" data-pass_fetch_value="" data-pass_prefix="" data-pass_to="render" data-modal_width="600px" data-modal_height="400px"
+								data-modal_color="#229954" data-modal_header="false" class="margin-right:10px">
+							<i class="fas fa-external-link-alt"></i>
+						 </a> <a class="margin-right:5px" data-fullscreen target="#sandbox"><i class="fas fa-expand"></i></a> </div>
+						<div class="svRow">
+							<div class="svColumn">
+								<div class="svPanel">
+									<div data-realtime="false" data-collection="modules" data-document_id="5eefe30952c6e94c75fb5e3f" name="html" id="7" class="codemirror height:100% min-width:300px"> </div>
+								</div>
+								<div class="svSplitter svHorizontal"> </div>
+								<div class="svPanel"> <iframe data-get_value="7" frameBorder="0" height="100%" width="100%" class="min-width:300px"></iframe> </div>
+							</div>
+						</div>
+					</div>
+					<!-- End SandBox -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var config = {
+			apiKey: 'c2b08663-06e3-440c-ef6f-13978b42883a',
+			securityKey: 'f26baf68-e3a9-45fc-effe-502e47116265',
+			organization_Id: '5de0387b12e200ea63204d6c'
+		}
+	</script>
+	<!--CoCreateJS-->
+	<script src="https://server.cocreate.app/js/CoCreate.min.js"></script>
+	<!-- CoCreate CodeMiirror -->
+	<script type="text/javascript" src="https://server.cocreate.app/CoCreate-plugins/CoCreate-codemirror/dist/CoCreate-codemirror.js" async></script>
+	<!-- Prism -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.21.0/prism.min.js"></script>
+	<script>
+		//     Prism.plugins.NormalizeWhitespace.setDefaults({
+		//         'remove-trailing': true,
+		//         'remove-indent': true,
+		//         'left-trim': true,
+		//         'right-trim': true,
+		//         /*'break-lines': 80,
+		//         'indent': 2,
+		//         'remove-initial-line-feed': false,
+		//         'tabs-to-spaces': 4,
+		//         'spaces-to-tabs': 4*/
+		//     });
+	</script>
+</body>
+
 </html>

@@ -3,57 +3,73 @@
  * add functionality to add value on any attr of each elements into template
  */
 const CoCreateRender = {
-	restrictAttrList : [
-		"name", 
-		"data-pass_to", 
-		"data-pass_id", 
-		"data-pass_collection", 
-	],
-	print(message) {
-		let debug = true;
-		debug = debug || false;
-		if(debug)
-			console.log(message)
-	},
-	
-	addRestrictItem: function(attr) {
-		this.restrictAttrList.push(attr);	
-	},
-	
-	findInJsonDeep : function(json, path) {
+
+	__getValueFromObject : function(json, path) {
 		try {
-			if(typeof json == 'undefined')
+			if(typeof json == 'undefined' || !path)
 				return false;
-			let subpath = path.split('.');
-			let find = subpath.shift();
-			if (subpath.length > 0){
-					return this.findInJsonDeep(json[find], subpath.join('.'))
+			let jsonData = json, subpath = path.split('.');
+			
+			for (let i = 0; i < subpath.length; i++) {
+				jsonData = jsonData[subpath[i]];
+				if (!jsonData) return false;
 			}
-			let value = (Object.keys(json).indexOf(find) != -1) ? json[find] : false
-			return value;
+			return jsonData;
 		}catch(error){
-			this.print(['Error in findInJsonDeep',error])
+			console.log("Error in getValueFromObject", error);
+			return false;
+		}
+	},
+	
+	__getValue: function(data, attrValue) {
+		let result = /{{\s*([\w\W]+)\s*}}/g.exec(attrValue);
+		if (result) {
+			return this.__getValueFromObject(data, result[1].trim());
+		}
+		return false;
+		
+	},
+	
+	__createObject: function (data, path) {
+		try {
+			if (!path) return data;
+			
+			let keys = path.split('.')
+			let newObject = data;
+
+			for (var  i = keys.length - 1; i >= 0; i--) {
+				newObject = {[keys[i]]: newObject}				
+			}
+			return newObject;
+			
+		} catch (error) {
+			console.log("Error in getValueFromObject", error);
 			return false;
 		}
 	},
 	
 	setArray: function(template, data) {
 		const type = template.getAttribute('data-render_array') || "data";
+		const render_key = template.getAttribute('data-render_key') || type;
 		const self = this;
-		const arrayData = this.findInJsonDeep(data, type);
+		const arrayData = this.__getValueFromObject(data, type);
 		if (type && Array.isArray(arrayData)) {
-			arrayData.forEach(row => {
+			arrayData.forEach((item) => {
+				
 				let cloneEl = template.cloneNode(true);
 				cloneEl.classList.remove('template');
 				cloneEl.classList.add('clone_' + type);
-				self.setValue([cloneEl], row, cloneEl);
+				
+				let r_data = self.__createObject(item, render_key);
+
+				self.setValue([cloneEl], r_data, cloneEl);
 				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
 			})
 		}
 	},
  
-	setValue:function(els, row, template, passTo){
-		if (!row) return;
+	setValue:function(els, data, passTo, template){
+		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(e => {
 			let passId = e.getAttribute('data-pass_id');
@@ -61,58 +77,46 @@ const CoCreateRender = {
 				return;
 			}
 			Array.from(e.attributes).forEach(attr=>{
-				let value = false
 				let attr_name = attr.name.toLowerCase();
-				if (that.restrictAttrList.includes(attr_name)) {
+				let  isPass = false;
+				let attrValue = attr.value;
+				let variables = attrValue.match(/{{\s*(\S+)\s*}}/g);
+				if (!variables) {
 					return;
 				}
 				
-				switch (attr_name) {
-					case 'class':
-						let list_class = []
-						attr.value.split(' ').forEach(my_class => {
-							value = that.findInJsonDeep(row, my_class);
-							list_class.push(value != false ? value : my_class)
-						});
-						if(list_class.length) {
-							value = list_class.join(' ')
-						}
-						break;
-					default:
-						if (attr.value === '--') {
-							value = row
-						} else {
-							value = that.findInJsonDeep(row, attr.value);
-						}
-				}
-				
-				if(value != false && typeof(value) !== "object"){
+				variables.forEach((attr) => {
+					let value = that.__getValue(data, attr)
+					if (value && typeof(value) !== "object") {
+						isPass = true;
+						attrValue = attrValue.replace(attr, value);
+					}
+				})
+				if (isPass) {
 					if(attr_name == 'value'){
 						let tag = e.tagName.toLowerCase();
 						switch (tag) {
 							case 'input':
-								 e.setAttribute(attr_name, value);
+								 e.setAttribute(attr_name, attrValue);
 							break;
 							case 'textarea':
-								e.setAttribute(attr_name, value);
-								e.textContent =value;
+								e.setAttribute(attr_name, attrValue);
+								e.textContent = attrValue;
 							break;
 							default:
-								e.innerHTML =  value;
+								e.innerHTML =  attrValue;
 						}
-					}else{
-						e.setAttribute(attr_name, value);
 					}
+					e.setAttribute(attr_name, attrValue);
 				}
-					
 			});
 			
 			if(e.children.length > 0) {
+				that.setValue(e.children, data, e)
+				
 				if (e.classList.contains('template')) {
-					that.setArray(e, row);
-				} else {
-					that.setValue(e.children, row, template)
-				}
+					that.setArray(e, data);
+				} 
 			}
 		});
 	},
@@ -121,9 +125,9 @@ const CoCreateRender = {
 		let template_div = document.querySelector(selector)
 		if (Array.isArray(dataResult)) {
 			template_div.setAttribute('data-render_array', 'test');
-			this.setValue([template_div], {test: dataResult}, template_div);
+			this.setValue([template_div], {test: dataResult});
 		} else {
-			this.setValue(template_div.children, dataResult, template_div);
+			this.setValue(template_div.children, dataResult);
 		}
 	}
 
