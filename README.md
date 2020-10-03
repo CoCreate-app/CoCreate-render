@@ -27,7 +27,7 @@ We appreciate your continued support, thank you!
 <a name="announcements"></a>
 # Announcements
 
-All updates to this library are documented in our [CHANGELOG](https://github.com/CoCreate-app/CoCreate-render/blob/master/CHANGELOG.md) and [releases](https://github.com/CoCreate-app/CoCreate-render/releases). You may also subscribe to email for releases and breaking changes. 
+All updates to this library are documented in our [CHANGELOG](https://github.com/CoCreate-app/CoCreate-render/blob/master/CHANGELOG.md) and [releases](https://github.com/CoCreate-app/CoCreate-render/releases). You may also subscribe to email for releases and breaking changes..
 
 <a name="roadmap"></a>
 # Roadmap
