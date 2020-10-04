@@ -38,7 +38,7 @@ If you are interested in the future direction of this project, please take a loo
 <a name="about"></a>
 # About
 
-CoCreate-render is guided and supported by the CoCreate Developer Experience Team.
+CoCreate-render.. is guided and supported by the CoCreate Developer Experience Team.
 
 Please Email the Developer Experience Team [here](mailto:develop@cocreate.app) in case of any queries.
 
