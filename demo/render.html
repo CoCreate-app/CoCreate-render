@@ -9,12 +9,10 @@
         </style>
 
             <div data-template_id="abc1" data-fetch_collection="render_test">
-                    
                 <div class="template card {{render2.collection}} card margin:10px firstname" 
                     data-value="{{render2.data._id}}" 
                     data-template_id="abc1" 
                     data-render_array="render2.data">
-                        
                     <div class="card-body padding:15px" data-collection="{{render2.collection}}">
                         <h3 class="{{render2.data.firstname}} blue" value="{{render2.data.lastname}} - {{render2.data.firstname}}">--</h3>
                         <h3 data-value="{{ render2.data.lastname }}" value="{{lastname}}"></h3>
@@ -31,9 +29,16 @@
                             
                             <h3 value="{{render2.data.personal_info.email}}"></h3>
                         </div>
+                        <div class="template card " 
+                            data-render_array="render2.data.string_array" data-render_key="string_">
+                            
+                            <h3 name="test" 
+                                data-attribute="{{string_.--}}" 
+                                class="{{string_.--}}" 
+                                value="{{string_.--}}"></h3>
+                        </div>
                     </div>
                 </div>
-                 
             </div>
          
      
@@ -58,11 +63,8 @@
                          {email:'jose@gmail.com','phone':'2','home':'home3'},
                          {email:'juan@gmail.com','phone':'3','home':'home4'},
                          {email:'kooo@gmail.com','phone':'4','home':'home5'},
-                         {email:'allask@gmail.com','phone':'5','home':'home6'},
-                         {email:'ana@gmail.com','phone':'6','home':'home7'},
-                         {email:'rosa@gmail.com','phone':'7','home':'home8'},
-                         {email:'nuevo@gmail.com','phone':'8','home':'home9'}
                      ],
+                     string_array: ['string1', 'string2', 1, 3]
                  },{
                      _id : '5678efe32qd2ol',
                      firstname : 'jean',
@@ -80,6 +82,7 @@
                          {email:'1rosa@gmail.com','phone':'17','home':'home18'},
                          {email:'1nuevo@gmail.com','phone':'18','home':'home19'}
                      ],
+                     string_array: ['string1', 'string2', 1, 3]
                  },
                 ]
             }

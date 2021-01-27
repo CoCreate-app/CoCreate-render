@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>CoCreate-dnd Documentation | CoCreateJS </title>
+	<title>CoCreate-render Documentation | CoCreateJS </title>
 	<link rel="icon" type="image/png" sizes="32x32" href="https://cocreate.app/images/favicon.ico">
 	<meta name="description" content="A simple yet powerful drag-and-drop solution powered by javascript." />
 	<meta name="keywords" content="drag and drop, colaboration, dnd utility, drag and drop utility" />
@@ -54,32 +54,43 @@
 				</p>
 
 				<h4 class="margin-top:20px padding:5px_0px">HTML Template</h4>
+				
 <div class="margin-top:10px">
-	
 					<pre><code class="language-html">
-&lt;div data-template_id="abc1" data-fetch_collection="render_test"&gt;
-	&lt;div class="template card {{render2.collection}} card margin:10px firstname" 
-		data-value="{{render2.data._id}}" 
-		data-template_id="abc1" 
-		data-render_array="render2.data"&gt;
-			
-		&lt;div class="card-body padding:15px" data-collection="{{render2.collection}}"&gt;
-			&lt;h3 class="{{render2.data.firstname}} blue" value="{{render2.data.lastname}} - {{render2.data.firstname}}"&gt;--&lt;/h3&gt;
-			&lt;h3 data-value="{{ render2.data.lastname }}" value="{{lastname}}"&gt;&lt;/h3&gt;
-			&lt;input value="{{ render2.collection }}"/&gt;
-			&lt;h3 class="email" value="{{render2.data.email}}"&gt;&lt;/h3&gt;
-			&lt;textarea value="{{render2.data.lastname}}"&gt;&lt;/textarea&gt;
-			&lt;h3 data-attribute="{{render2.data.personal_info.email}}" name="email" value="{{render2.data.personal_info.email}}"&gt;&lt;/h3&gt;
-			
-			&lt;div class="template card" data-render_array="render2.data.testing_array" data-render_key="temp2" &gt;
-				&lt;h3 data-attribute="{{temp2.email}}" name="email" class="{{temp2.email}}" value="{{temp2.email}}"&gt;&lt;/h3&gt;
-				&lt;h3 value="{{render2.collection}}"&gt;&lt;/h3&gt;
-				&lt;h3 value="{{render2.data.personal_info.email}}"&gt;&lt;/h3&gt;
-			&lt;/div&gt;
-		&lt;/div&gt;
-	&lt;/div&gt;
+&lt;div data-template_id=&quot;abc1&quot; data-fetch_collection=&quot;render_test&quot;&gt;
+    &lt;div class=&quot;template card {{render2.collection}} card margin:10px firstname&quot; 
+        data-value=&quot;{{render2.data._id}}&quot; 
+        data-template_id=&quot;abc1&quot; 
+        data-render_array=&quot;render2.data&quot;&gt;
+        &lt;div class=&quot;card-body padding:15px&quot; data-collection=&quot;{{render2.collection}}&quot;&gt;
+            &lt;h3 class=&quot;{{render2.data.firstname}} blue&quot; value=&quot;{{render2.data.lastname}} - {{render2.data.firstname}}&quot;&gt;--&lt;/h3&gt;
+            &lt;h3 data-value=&quot;{{ render2.data.lastname }}&quot; value=&quot;{{lastname}}&quot;&gt;&lt;/h3&gt;
+            &lt;input value=&quot;{{ render2.collection }}&quot;/&gt;
+            &lt;h3 class=&quot;email&quot; value=&quot;{{render2.data.email}}&quot;&gt;--&lt;/h3&gt;
+            &lt;textarea value=&quot;{{render2.data.lastname}}&quot;&gt;&lt;/textarea&gt;
+            &lt;h3 data-attribute=&quot;{{render2.data.personal_info.email}}&quot; name=&quot;email&quot; value=&quot;{{render2.data.personal_info.email}}&quot;&gt;&lt;/h3&gt;
+            
+            &lt;div class=&quot;template card &quot; 
+                data-render_array=&quot;render2.data.testing_array&quot;&gt;
+                
+                &lt;h3 data-attribute=&quot;{{render2.data.testing_array.email}}&quot; name=&quot;email&quot; class=&quot;{{render2.data.testing_array.email}}&quot; value=&quot;{{render2.data.testing_array.email}}&quot;&gt;&lt;/h3&gt;
+                &lt;h3 value=&quot;{{render2.collection}}&quot;&gt;&lt;/h3&gt;
+                
+                &lt;h3 value=&quot;{{render2.data.personal_info.email}}&quot;&gt;&lt;/h3&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;template card &quot; 
+                data-render_array=&quot;render2.data.string_array&quot; data-render_key=&quot;string_&quot;&gt;
+                
+                &lt;h3 name=&quot;test&quot; 
+                    data-attribute=&quot;{{string_.--}}&quot; 
+                    class=&quot;{{string_.--}}&quot; 
+                    value=&quot;{{string_.--}}&quot;&gt;&lt;/h3&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
-				</code></pre> </div>
+				</code></pre> 
+</div>
 
 				<h4 class="margin-top:40px padding:5px_0px">CoCreate-render usage</h4>
 				<p class="padding:10px_0px">Description.</p>
@@ -98,6 +109,7 @@ CoCreateRender.render('[data-template_id=abc1]',{
 				 {email:'frank@gmail.com','phone':'1','home':'home2'},
 				 {email:'jose@gmail.com','phone':'2','home':'home3'},
 			 ],
+			 string_array: ['string1', 'string2', 1, 3]
 		 },{
 			_id : '5678efe32qd2ol',
 			firstname : 'jean',
@@ -109,6 +121,7 @@ CoCreateRender.render('[data-template_id=abc1]',{
 				{email:'1rosa@gmail.com','phone':'17','home':'home18'},
 				{email:'1nuevo@gmail.com','phone':'18','home':'home19'}
 			],
+			string_array: ['string1', 'string2', 1, 3]
 		 },
 		]
 	}
@@ -223,19 +236,6 @@ CoCreateRender.render('[data-template_id=abc1]',{
 	<script type="text/javascript" src="https://server.cocreate.app/CoCreate-plugins/CoCreate-codemirror/dist/CoCreate-codemirror.js" async></script>
 	<!-- Prism -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.21.0/prism.min.js"></script>
-	<script>
-		//     Prism.plugins.NormalizeWhitespace.setDefaults({
-		//         'remove-trailing': true,
-		//         'remove-indent': true,
-		//         'left-trim': true,
-		//         'right-trim': true,
-		//         /*'break-lines': 80,
-		//         'indent': 2,
-		//         'remove-initial-line-feed': false,
-		//         'tabs-to-spaces': 4,
-		//         'spaces-to-tabs': 4*/
-		//     });
-	</script>
 </body>
 
 </html>

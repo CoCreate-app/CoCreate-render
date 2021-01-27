@@ -53,16 +53,21 @@ const CoCreateRender = {
 		const render_key = template.getAttribute('data-render_key') || type;
 		const self = this;
 		const arrayData = this.__getValueFromObject(data, type);
+
 		if (type && Array.isArray(arrayData)) {
-			arrayData.forEach((item) => {
+			arrayData.forEach((item, index) => {
 				
 				let cloneEl = template.cloneNode(true);
 				cloneEl.classList.remove('template');
 				cloneEl.classList.add('clone_' + type);
-				
+				if (typeof item !== 'object') {
+					item = {"--": item};
+				} else {
+					item['index'] = index;
+				}
 				let r_data = self.__createObject(item, render_key);
 
-				self.setValue([cloneEl], r_data, cloneEl);
+				self.setValue([cloneEl], r_data);
 				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
 			})
 		}
@@ -98,13 +103,15 @@ const CoCreateRender = {
 						switch (tag) {
 							case 'input':
 								 e.setAttribute(attr_name, attrValue);
-							break;
+								break;
 							case 'textarea':
 								e.setAttribute(attr_name, attrValue);
 								e.textContent = attrValue;
-							break;
+								break;
 							default:
-								e.innerHTML =  attrValue;
+								if (e.children.length === 0) {
+									e.innerHTML =  attrValue;
+								}
 						}
 					}
 					e.setAttribute(attr_name, attrValue);
@@ -112,7 +119,7 @@ const CoCreateRender = {
 			});
 			
 			if(e.children.length > 0) {
-				that.setValue(e.children, data, e)
+				that.setValue(e.children, data)
 				
 				if (e.classList.contains('template')) {
 					that.setArray(e, data);
@@ -123,6 +130,9 @@ const CoCreateRender = {
 	
 	render : function(selector, dataResult) {
 		let template_div = document.querySelector(selector)
+		if (!template_div) {
+			return;
+		}
 		if (Array.isArray(dataResult)) {
 			template_div.setAttribute('data-render_array', 'test');
 			this.setValue([template_div], {test: dataResult});
@@ -132,3 +142,4 @@ const CoCreateRender = {
 	}
 
 }
+export default CoCreateRender;
