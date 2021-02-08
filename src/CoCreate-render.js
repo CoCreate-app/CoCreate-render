@@ -128,7 +128,7 @@ const CoCreateRender = {
 		});
 	},
 	
-	render : function(selector, dataResult) {
+	data : function(selector, dataResult) {
 		let template_div = document.querySelector(selector)
 		if (!template_div) {
 			return;
