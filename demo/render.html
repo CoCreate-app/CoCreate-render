@@ -47,7 +47,9 @@
          
 
         /** Example of array object from  db -- render2 is an example of data-render_id**/
-        CoCreate.render.data('[data-template_id=abc1]',{
+        CoCreate.render.data({
+        selector: '[data-template_id=abc1]',
+        data: {
              render2: {
                 collection : 'dededede',
                 data: [{
@@ -85,6 +87,7 @@
                  },
                 ]
             }
+        }
         })
         
      </pre>

@@ -128,7 +128,15 @@ const CoCreateRender = {
 		});
 	},
 	
-	data : function(selector, dataResult) {
+	data: function({selector, data, elements, passTo}) {
+		if (selector) {
+			this.render(selector, data);
+		} else if (elements) {
+			this.setValue(elements, data, passTo);
+		}
+	},
+	
+	render : function(selector, dataResult) {
 		let template_div = document.querySelector(selector)
 		if (!template_div) {
 			return;
