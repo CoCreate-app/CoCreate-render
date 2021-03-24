@@ -48,6 +48,28 @@ const CoCreateRender = {
 		}
 	},
 	
+	__replaceValue: function(data, inputValue) {
+		let isPass = false;
+		let self = this;
+		let resultValue = null;
+		// let variables = inputValue.match(/{{\s*(\S+)\s*}}/g);
+		let variables = inputValue.match(/{{([A-Za-z0-9_.,\- ]*)}}/g);
+		if (variables) {
+			variables.forEach((attr) => {
+				let value = self.__getValue(data, attr)
+				if (value && typeof(value) !== "object") {
+					isPass = true;
+					inputValue = inputValue.replace(attr, value);
+				}
+			})
+			
+			if (isPass) {
+				resultValue = inputValue;
+			}
+		}
+		return resultValue;
+	},
+	
 	setArray: function(template, data) {
 		const type = template.getAttribute('data-render_array') || "data";
 		const render_key = template.getAttribute('data-render_key') || type;
@@ -85,19 +107,9 @@ const CoCreateRender = {
 				let attr_name = attr.name.toLowerCase();
 				let  isPass = false;
 				let attrValue = attr.value;
-				let variables = attrValue.match(/{{\s*(\S+)\s*}}/g);
-				if (!variables) {
-					return;
-				}
+				attrValue = that.__replaceValue(data, attrValue);
 				
-				variables.forEach((attr) => {
-					let value = that.__getValue(data, attr)
-					if (value && typeof(value) !== "object") {
-						isPass = true;
-						attrValue = attrValue.replace(attr, value);
-					}
-				})
-				if (isPass) {
+				if (attrValue) {
 					if(attr_name == 'value'){
 						let tag = e.tagName.toLowerCase();
 						switch (tag) {
@@ -117,6 +129,16 @@ const CoCreateRender = {
 					e.setAttribute(attr_name, attrValue);
 				}
 			});
+			
+			if (e.children.length == 0 && e.textContent) {
+				let textContent = e.textContent;
+				textContent = that.__replaceValue(data, textContent);
+				if (textContent) {
+					e.textContent = textContent;
+				}
+			}
+			
+			
 			
 			if(e.children.length > 0) {
 				that.setValue(e.children, data)
