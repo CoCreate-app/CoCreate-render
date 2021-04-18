@@ -9,7 +9,7 @@ A simple render component in vanilla javascript. Easily configured using HTML5 d
 
 ![CoCreate-render](https://cdn.cocreate.app/docs/CoCreate-render.gif)
 
-## [Docs & Demo](https://cocreate.app/docs/clone)
+## [Docs & Demo](https://cocreate.app/docs/render)
 
 For a complete guide and working demo refer to the [doumentation](https://cocreate.app/docs/render)
 
