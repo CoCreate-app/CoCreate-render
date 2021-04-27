@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.0.3...v1.0.4) (2021-04-27)
+
+
+### Bug Fixes
+
+* Update to readme, demo, added cdn scripts ([bb69220](https://github.com/CoCreate-app/CoCreate-render/commit/bb6922011e5e48e8861b6eaec3ee18287dec6be3))
+
 ## [1.0.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.0.2...v1.0.3) (2021-04-23)
 
 
