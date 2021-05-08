@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/CoCreate-app/CoCreate-render/compare/v1.0.4...v1.0.5) (2021-05-08)
+
+
+### Bug Fixes
+
+* add css auto parse and save to docs. ([997ffc0](https://github.com/CoCreate-app/CoCreate-render/commit/997ffc056b992ebe5c78032f4152c9e5e85ff575))
+
 ## [1.0.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.0.3...v1.0.4) (2021-04-27)
 
 
