@@ -27,6 +27,7 @@
                         <h3 value="{{render2.collection}}"></h3>
                         
                         <h3 value="{{render2.data.personal_info.email}}"></h3>
+                        <div>*******************************************</div>
                     </div>
                     <div class="template card " 
                         data-render_array="render2.data.string_array" data-render_key="string_">
@@ -35,7 +36,9 @@
                             data-attribute="{{string_.--}}" 
                             class="{{string_.--}}" 
                             value="{{string_.--}}"></h3>
+                        
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -97,6 +100,6 @@
         </script>
         
         <!-- CoCreate JS CDN -->
-        <script src="https://cdn.cocreate.app/render/latest/CoCreate-render.min.js" ></script>
+        <script src="../dist/CoCreate-render.js" ></script>
     </body>
 </html>

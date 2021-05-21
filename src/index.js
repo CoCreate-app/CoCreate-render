@@ -53,7 +53,8 @@ const CoCreateRender = {
 		let self = this;
 		let resultValue = null;
 		// let variables = inputValue.match(/{{\s*(\S+)\s*}}/g);
-		let variables = inputValue.match(/{{([A-Za-z0-9_.,\- ]*)}}/g);
+		// let variables = inputValue.match(/{{([A-Za-z0-9_.,\- ]*)}}/g);
+		let variables = inputValue.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/g);
 		if (variables) {
 			variables.forEach((attr) => {
 				let value = self.__getValue(data, attr)
@@ -72,7 +73,7 @@ const CoCreateRender = {
 	
 	setArray: function(template, data) {
 		const type = template.getAttribute('data-render_array') || "data";
-		const render_key = template.getAttribute('data-render_key') || type;
+		let render_key = template.getAttribute('data-render_key') || type;
 		const self = this;
 		const arrayData = this.__getValueFromObject(data, type);
 
@@ -83,7 +84,8 @@ const CoCreateRender = {
 				cloneEl.classList.remove('template');
 				cloneEl.classList.add('clone_' + type);
 				if (typeof item !== 'object') {
-					item = {"--": item};
+					// item = {"--": item};
+					render_key = render_key + "[]";
 				} else {
 					item['index'] = index;
 				}
