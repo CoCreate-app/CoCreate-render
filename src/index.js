@@ -73,7 +73,7 @@ const CoCreateRender = {
 	
 	setArray: function(template, data) {
 		const type = template.getAttribute('data-render_array') || "data";
-		let render_key = template.getAttribute('data-render_key') || type;
+		const render_key = template.getAttribute('data-render_key') || type;
 		const self = this;
 		const arrayData = this.__getValueFromObject(data, type);
 
@@ -83,13 +83,14 @@ const CoCreateRender = {
 				let cloneEl = template.cloneNode(true);
 				cloneEl.classList.remove('template');
 				cloneEl.classList.add('clone_' + type);
+				let new_key = render_key;
 				if (typeof item !== 'object') {
 					// item = {"--": item};
-					render_key = render_key + "[]";
+					new_key = new_key + "[]";
 				} else {
 					item['index'] = index;
 				}
-				let r_data = self.__createObject(item, render_key);
+				let r_data = self.__createObject(item, new_key);
 
 				self.setValue([cloneEl], r_data);
 				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
