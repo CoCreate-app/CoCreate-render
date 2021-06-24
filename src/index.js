@@ -145,11 +145,11 @@ const CoCreateRender = {
 			
 			if(e.children.length > 0) {
 				that.setValue(e.children, data)
-				
-				if (e.classList.contains('template')) {
-					that.setArray(e, data);
-				} 
 			}
+			if (e.classList.contains('template')) {
+				that.setArray(e, data);
+			} 
+
 		});
 	},
 	
