@@ -113,22 +113,22 @@ const CoCreateRender = {
 				attrValue = that.__replaceValue(data, attrValue);
 				
 				if (attrValue) {
-					if(attr_name == 'value'){
-						let tag = e.tagName.toLowerCase();
-						switch (tag) {
-							case 'input':
-								 e.setAttribute(attr_name, attrValue);
-								break;
-							case 'textarea':
-								e.setAttribute(attr_name, attrValue);
-								e.textContent = attrValue;
-								break;
-							default:
-								if (e.children.length === 0) {
-									e.innerHTML =  attrValue;
-								}
-						}
-					}
+					// if(attr_name == 'value'){
+					// 	let tag = e.tagName.toLowerCase();
+					// 	switch (tag) {
+					// 		case 'input':
+					// 			 e.setAttribute(attr_name, attrValue);
+					// 			break;
+					// 		case 'textarea':
+					// 			e.setAttribute(attr_name, attrValue);
+					// 			e.textContent = attrValue;
+					// 			break;
+					// 		default:
+					// 			if (e.children.length === 0) {
+					// 				e.innerHTML =  attrValue;
+					// 			}
+					// 	}
+					// }
 					e.setAttribute(attr_name, attrValue);
 				}
 			});
