@@ -1,3 +1,11 @@
+## [1.0.15](https://github.com/CoCreate-app/CoCreate-render/compare/v1.0.14...v1.0.15) (2021-07-13)
+
+
+### Bug Fixes
+
+* add yarn lockfile to git ignore ([156492c](https://github.com/CoCreate-app/CoCreate-render/commit/156492c26448ea9d8e28a084236879a1393a9b50))
+* remove yarn.lock ([f39a86a](https://github.com/CoCreate-app/CoCreate-render/commit/f39a86a7028f8920c3cac5f466a5f75040fbee66))
+
 ## [1.0.14](https://github.com/CoCreate-app/CoCreate-render/compare/v1.0.13...v1.0.14) (2021-07-10)
 
 
