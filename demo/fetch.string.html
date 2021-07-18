@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Render | CoCreateJS</title>
+        
+        <!-- CoCreate Favicon -->
+        <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
+    </head>
+    <style>
+        .template{display:none}
+    </style>
+    <body>
+        
+        <cocreate-select name="current_org" data-template_id="abc1">
+            <selected class="template" data-template_id="abc1" data-render_array="data">
+                <cc-option class="template" value="{{data.current_org}}">
+                    <h3>{{data.current_org}}</h3>
+                </cc-option>
+            </selected>
+        </cocreate-select>
+     
+ 
+         <pre>
+             <h1>Paste in your browser console</h1>
+        
+        /** Example of array object from  db -- render2 is an example of data-render_id**/
+        CoCreate.render.data({
+            selector: '[data-template_id=abc1]',
+            data: {
+                collection : 'dededede',
+                data: [{
+                     _id : '123kijfhgfkel45',
+                     current_org: 'test1'
+                 }]
+            }
+            
+        })
+            
+         </pre>
+        <script>
+          var config = {
+            apiKey: 'c2b08663-06e3-440c-ef6f-13978b42883a',
+                    organization_Id: '5de0387b12e200ea63204d6c'
+          }
+        </script>
+        
+        <!-- CoCreate JS CDN -->
+        <script src="../dist/CoCreate-render.js" ></script>
+    </body>
+</html>

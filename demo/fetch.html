@@ -7,8 +7,8 @@
     </head>
     <body>
         
-        <div data-template_id="abc1" data-fetch_collection="render_test">
-            <div class="template card {{render2.collection}} card margin:10px firstname" 
+        <div data-template_id="abc1">
+            <div class="template card {{render2.collection}} card margin:10px" 
                 data-value="{{render2.data._id}}" 
                 data-template_id="abc1" 
                 data-render_array="render2.data">
@@ -20,22 +20,18 @@
                     <textarea value="{{render2.data.lastname}}"></textarea>
                     <h3 data-attribute="{{render2.data.personal_info.email}}" name="email" value="{{render2.data.personal_info.email}}"></h3>
                     
-                    <div class="template card " 
-                        data-render_array="render2.data.testing_array">
-                        
-                        <h3 data-attribute="{{render2.data.testing_array.email}}" name="email" class="{{render2.data.testing_array.email}}" value="{{render2.data.testing_array.email}}"></h3>
-                        <h3 value="{{render2.collection}}"></h3>
-                        
-                        <h3 value="{{render2.data.personal_info.email}}"></h3>
+                    <div class="template card" data-render_array="render2.data.testing_array">
+                        <h3 data-attribute="{{render2.data.testing_array.email}}" name="email" class="{{render2.data.testing_array.email}}" value="">{{render2.data.testing_array.email}}</h3>
+                        <h3 value="">{{render2.collection}}</h3>
+                        <h3 value="{{render2.data.personal_info.email}}">{{render2.collection}}</h3>
                         <div>*******************************************</div>
                     </div>
-                    <div class="template card " 
-                        data-render_array="render2.data.string_array" data-render_key="string_">
+                    <div class="template card" data-render_array="render2.data.string_array" data-render_key="string">
                         
                         <h3 name="test" 
                             data-attribute="{{string_.--}}" 
                             class="{{string_.--}}" 
-                            value="{{string_.--}}"></h3>
+                            value="{{string_.--}}">{{string[]}}array</h3>
                         
                     </div>
                     
@@ -48,7 +44,7 @@
              <h1>Paste in your browser console</h1>
         
              /** Example of array object from  db -- render2 is an example of data-render_id**/
-            CoCreate.render.data({
+        CoCreate.render.data({
             selector: '[data-template_id=abc1]',
             data: {
                  render2: {
@@ -89,7 +85,7 @@
                     ]
                 }
             }
-            })
+        })
             
          </pre>
         <script>
