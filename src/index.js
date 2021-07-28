@@ -72,8 +72,8 @@ const CoCreateRender = {
 	},
 	
 	setArray: function(template, data) {
-		const type = template.getAttribute('data-render_array') || "data";
-		const render_key = template.getAttribute('data-render_key') || type;
+		const type = template.getAttribute('render-array') || "data";
+		const render_key = template.getAttribute('render-key') || type;
 		const self = this;
 		const arrayData = this.__getValueFromObject(data, type);
 
@@ -102,7 +102,7 @@ const CoCreateRender = {
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(e => {
-			let passId = e.getAttribute('data-pass_id');
+			let passId = e.getAttribute('pass_id');
 			if (passTo && passId != passTo) {
 				return;
 			}
@@ -167,7 +167,7 @@ const CoCreateRender = {
 			return;
 		}
 		if (Array.isArray(dataResult)) {
-			template_div.setAttribute('data-render_array', 'test');
+			template_div.setAttribute('render-array', 'test');
 			this.setValue([template_div], {test: dataResult});
 		} else {
 			this.setValue(template_div.children, dataResult);

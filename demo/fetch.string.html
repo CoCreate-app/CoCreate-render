@@ -10,8 +10,8 @@
     </style>
     <body>
         
-        <cocreate-select name="current_org" data-template_id="abc1">
-            <selected class="template" data-template_id="abc1" data-render_array="data">
+        <cocreate-select name="current_org" template_id="abc1">
+            <selected class="template" template_id="abc1" render-array="data">
                 <cc-option class="template" value="{{data.current_org}}">
                     <h3>{{data.current_org}}</h3>
                 </cc-option>
@@ -22,9 +22,9 @@
          <pre>
              <h1>Paste in your browser console</h1>
         
-        /** Example of array object from  db -- render2 is an example of data-render_id**/
+        /** Example of array object from  db -- render2 is an example of render_id**/
         CoCreate.render.data({
-            selector: '[data-template_id=abc1]',
+            selector: '[template_id=abc1]',
             data: {
                 collection : 'dededede',
                 data: [{

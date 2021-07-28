@@ -10,9 +10,9 @@
     </style>
     <body>
         
-        <cocreate-select name="current_org" data-template_id="abc1">
-            <selected class="template" data-template_id="abc1" data-render_array="data">
-                <cc-option class="template" data-render_array="data.current_org" data-render_key="current_org" value="{{current_org[]}}">
+        <cocreate-select name="current_org" template_id="abc1">
+            <selected class="template" template_id="abc1" render-array="data">
+                <cc-option class="template" render-array="data.current_org" render-key="current_org" value="{{current_org[]}}">
                     <h3>{{current_org[]}}</h3>
                 </cc-option>
             </selected>
@@ -24,7 +24,7 @@
         
         /** Example **/
         CoCreate.render.data({
-            selector: '[data-template_id=abc1]',
+            selector: '[template_id=abc1]',
             data: {
                 collection : 'dededede',
                 data: [{

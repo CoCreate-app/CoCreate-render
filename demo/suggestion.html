@@ -7,13 +7,13 @@
     </head>
     <body>
         
-        <div data-template_id="abc1" data-fetch_collection="render_test">
+        <div template_id="abc1" fetch-collection="render_test">
             <div class="template card {{render2.collection}} card margin:10px firstname" 
                 data-value="{{render2.data._id}}" 
-                data-template_id="abc1" 
-                data-render_array="render2.data">
+                template_id="abc1" 
+                render-array="render2.data">
                 <div class="card-body padding:15px" collection="{{render2.collection}}">
-                    <div class="template card" data-render_array="render2.data.string_array" data-render_key="lol">  
+                    <div class="template card" render-array="render2.data.string_array" render-key="lol">  
                         <h3 name="test" data-attribute="{{lol[]}}" class="{{lol[]}}" value="{{lol[]}}"></h3>
                     </div>
                     
@@ -25,9 +25,9 @@
          <pre>
              <h1>Paste in your browser console</h1>
         
-             /** Example of array object from  db -- render2 is an example of data-render_id**/
+             /** Example of array object from  db -- render2 is an example of render_id**/
             CoCreate.render.data({
-            selector: '[data-template_id=abc1]',
+            selector: '[template_id=abc1]',
             data: {
                  render2: {
                     collection : 'dededede',

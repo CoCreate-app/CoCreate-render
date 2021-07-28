@@ -76,11 +76,11 @@
 
 				<div class="margin-top:10px">
 					<pre><code class="language-html">
-	&lt;div data-template_id=&quot;abc1&quot; data-fetch_collection=&quot;render_test&quot;&gt;
+	&lt;div template_id=&quot;abc1&quot; fetch-collection=&quot;render_test&quot;&gt;
 	    &lt;div class=&quot;template card {{render2.collection}} card margin:10px firstname&quot; 
 	        data-value=&quot;{{render2.data._id}}&quot; 
-	        data-template_id=&quot;abc1&quot; 
-	        data-render_array=&quot;render2.data&quot;&gt;
+	        template_id=&quot;abc1&quot; 
+	        render-array=&quot;render2.data&quot;&gt;
 	        &lt;div class=&quot;card-body padding:15px&quot; collection=&quot;{{render2.collection}}&quot;&gt;
 	            &lt;h3 class=&quot;{{render2.data.firstname}} blue&quot; value=&quot;{{render2.data.lastname}} - {{render2.data.firstname}}&quot;&gt;--&lt;/h3&gt;
 	            &lt;h3 data-value=&quot;{{ render2.data.lastname }}&quot; value=&quot;{{lastname}}&quot;&gt;&lt;/h3&gt;
@@ -90,7 +90,7 @@
 	            &lt;h3 data-attribute=&quot;{{render2.data.personal_info.email}}&quot; name=&quot;email&quot; value=&quot;{{render2.data.personal_info.email}}&quot;&gt;&lt;/h3&gt;
 	            
 	            &lt;div class=&quot;template card &quot; 
-	                data-render_array=&quot;render2.data.testing_array&quot;&gt;
+	                render-array=&quot;render2.data.testing_array&quot;&gt;
 	                
 	                &lt;h3 data-attribute=&quot;{{render2.data.testing_array.email}}&quot; name=&quot;email&quot; class=&quot;{{render2.data.testing_array.email}}&quot; value=&quot;{{render2.data.testing_array.email}}&quot;&gt;&lt;/h3&gt;
 	                &lt;h3 value=&quot;{{render2.collection}}&quot;&gt;&lt;/h3&gt;
@@ -98,7 +98,7 @@
 	                &lt;h3 value=&quot;{{render2.data.personal_info.email}}&quot;&gt;&lt;/h3&gt;
 	            &lt;/div&gt;
 	            &lt;div class=&quot;template card &quot; 
-	                data-render_array=&quot;render2.data.string_array&quot; data-render_key=&quot;string_&quot;&gt;
+	                render-array=&quot;render2.data.string_array&quot; render-key=&quot;string_&quot;&gt;
 	                
 	                &lt;h3 name=&quot;test&quot; 
 	                    data-attribute=&quot;{{string_.--}}&quot; 
@@ -115,7 +115,7 @@
 				<p class="padding:10px_0px line-height:1.5">Description.</p>
 				<pre><code class="language-html">
 	CoCreate.render.data({
-		selector: '[data-template_id=abc1]',
+		selector: '[template_id=abc1]',
 		data: {
 			 render2: {
 				collection : 'dededede',
@@ -156,13 +156,13 @@
 				</div>
 				<ul class="list-style-type:none ">
 					<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-						<h4><span>data-render_array</span> <span class="cocreate-badge warning">optional</span><span class="cocreate-badge danger">required</span></h4>
+						<h4><span>render-array</span> <span class="cocreate-badge warning">optional</span><span class="cocreate-badge danger">required</span></h4>
 						<p>To render the array data, this attribute should define by the object selector path</p>
 					</li>
 					<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-						<h4><span>data-render_key</span> <span class="cocreate-badge warning">optional</span><span class="cocreate-badge">Default: data-render_array's value</span></h4>
-						<p>If data-render_array defined, this attribute can define</p>
-						<p>Default value is value of data-render_array</p>
+						<h4><span>render-key</span> <span class="cocreate-badge warning">optional</span><span class="cocreate-badge">Default: render-array's value</span></h4>
+						<p>If render-array defined, this attribute can define</p>
+						<p>Default value is value of render-array</p>
 					</li>
 				</ul>
 
@@ -216,7 +216,7 @@
 				<h2 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">How Does It Works</h2>
 				<p>CoCreate-render works based on attributes and template, The attributes to render should be wrapper "{{ }}", and attributes can include the combine "{{}}" wrapper.</p>
 
-				<p>To render the array data, Render need to define <code class="language-js">class="template"</code>. <code class="language-js">data-render_array</code></p>
+				<p>To render the array data, Render need to define <code class="language-js">class="template"</code>. <code class="language-js">render-array</code></p>
 
 				<h2 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">Effects and Styles</h2>
 
@@ -234,8 +234,8 @@
 				<div class="position:sticky top:0 padding:15px_0px height:100vh">
 					<div class="container svColumn overflow:hidden card border-radius:2px width:auto height:100%" id="sandbox">
 						<div class="font-size:20px position:absolute top:10px right:10px opacity:0.6 z-index:7"> <a class="margin-right:10px" id="preview" data-show="preview" data-hide="code"><i class="far fa-eye"></i></a> <a class="margin-right:10px hidden" id="code" data-show="code" data-hide="preview"><i class="fas fa-code"></i></a>
-							<!--<a class="margin-right:10px"><i class="far fa-window-maximize"></i></a>--><a target="modal" href="module_activity_datatable.html" data-pass_collection="modules" data-pass_document_id="" data-pass_fetch_value="" data-pass_prefix="" data-pass_to="render" data-modal_width="600px" data-modal_height="400px" data-modal_color="#229954"
-							 data-modal_header="false" class="margin-right:10px">
+							<!--<a class="margin-right:10px"><i class="far fa-window-maximize"></i></a>--><a target="modal" href="module_activity_datatable.html" pass-collection="modules" pass-document_id="" pass-fetch_value="" pass-prefix="" pass_to="render" modal-width="600px" modal-height="400px" modal-color="#229954"
+							 modal-header="false" class="margin-right:10px">
 								<i class="fas fa-external-link-alt"></i>
 							 </a> <a class="margin-right:5px" data-fullscreen target="#sandbox"><i class="fas fa-expand"></i></a> </div>
 						<div class="svRow">
