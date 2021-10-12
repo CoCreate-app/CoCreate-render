@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.1.25...v1.2.0) (2021-10-12)
+
+
+### Features
+
+* improved support for object or array and html template structure ([ec24735](https://github.com/CoCreate-app/CoCreate-render/commit/ec24735a14bb8fee8d30d0d86b2c105f9352774d))
+
 ## [1.1.25](https://github.com/CoCreate-app/CoCreate-render/compare/v1.1.24...v1.1.25) (2021-10-06)
 
 
