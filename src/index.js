@@ -169,7 +169,7 @@ const CoCreateRender = {
 		if (selector) {
 			let template = document.querySelector(selector)
 			if (!template) return;
-			this.setValue([template], data, null, template);
+			this.setValue([template], data, passTo, template);
 		} else if (elements) {
 			this.setValue(elements, data, passTo);
 		}
