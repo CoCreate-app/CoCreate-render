@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.2.2...v1.3.0) (2021-10-13)
+
+
+### Features
+
+* action to remove element(cloned template) ([8b0fd1b](https://github.com/CoCreate-app/CoCreate-render/commit/8b0fd1be6f3d373eaacc3de55ac40b885ef4f4e6))
+
 ## [1.2.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.2.1...v1.2.2) (2021-10-13)
 
 
