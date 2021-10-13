@@ -1,5 +1,6 @@
+/*globals CustomEvent*/
+import action from '@cocreate/action';
 
-// import action from '@cocreate/action';
 
 const CoCreateRender = {
 
@@ -176,6 +177,22 @@ const CoCreateRender = {
 	}
 	
 }
+
+function  removeElement(btn) {
+	let element = btn.closest('[templateid]');
+    if (element)
+        element.remove();
+	document.dispatchEvent(new CustomEvent('removeElement', {detail: {}}));
+}
+
+action.init({
+	action: "removeElement",
+	endEvent: "removeElement",
+	callback: (btn, data) => {
+		removeElement(btn);
+	}
+});
+
 
 // function renderKey(element) {
 // 	const container = element.closest("form") || document;
