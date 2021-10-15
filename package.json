@@ -62,8 +62,8 @@
   },
   "dependencies": {
     "@cocreate/action": "^1.3.0",
-    "@cocreate/api": "^1.1.30",
-    "@cocreate/docs": "^1.2.32",
-    "@cocreate/render": "^1.3.0"
+    "@cocreate/api": "^1.1.31",
+    "@cocreate/docs": "^1.2.33",
+    "@cocreate/render": "^1.3.1"
   }
 }
