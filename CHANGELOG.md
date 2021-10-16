@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.3...v1.3.4) (2021-10-16)
+
+
+### Bug Fixes
+
+* update socket package to fix bug in docs ([dfb51a7](https://github.com/CoCreate-app/CoCreate-render/commit/dfb51a7c7dbadb51e5df98cfe0f6fabc6d4b5c7b))
+
 ## [1.3.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.2...v1.3.3) (2021-10-15)
 
 
