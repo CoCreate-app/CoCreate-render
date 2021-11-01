@@ -1,3 +1,10 @@
+## [1.3.7](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.6...v1.3.7) (2021-11-01)
+
+
+### Bug Fixes
+
+* update package dependencies ([d45798a](https://github.com/CoCreate-app/CoCreate-render/commit/d45798a36a1c0709a9120fdb2b44688c3ecd134a))
+
 ## [1.3.6](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.5...v1.3.6) (2021-10-29)
 
 
