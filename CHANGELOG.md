@@ -1,3 +1,10 @@
+## [1.3.16](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.15...v1.3.16) (2021-11-19)
+
+
+### Bug Fixes
+
+* if element has class template cloneEl then insert values ([7556035](https://github.com/CoCreate-app/CoCreate-render/commit/75560356eaa9cec8db27a73acb60bd9a44c27d7b))
+
 ## [1.3.15](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.14...v1.3.15) (2021-11-18)
 
 
