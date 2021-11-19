@@ -83,6 +83,7 @@ const CoCreateRender = {
 		if (!arrayData){
 			let cloneEl = this.cloneEl(template);
 			cloneEl.classList.add('cloned');
+			self.setValue([cloneEl], data);
 			template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
 		}
 		if (type && Array.isArray(arrayData)) {
@@ -117,9 +118,13 @@ const CoCreateRender = {
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
+			
 			// let passId = e.getAttribute('pass_id');
 			// if (passTo && passId != passTo) {
 			// 	return;
+			// }
+			// if (el.classList.contains('template')) {
+			// 	el = this.cloneEl(el);
 			// }
 			Array.from(el.attributes).forEach(attr=>{
 				let attr_name = attr.name.toLowerCase();
@@ -170,10 +175,15 @@ const CoCreateRender = {
 		if (selector) {
 			let template = document.querySelector(selector)
 			if (!template) return;
-			this.setValue([template], data, passTo, template);
+			if (template.classList.contains('template')) {
+				this.render(template, data)
+			}
+			else
+				this.setValue([template], data, passTo, template);
 		} else if (elements) {
 			this.setValue(elements, data, passTo);
 		}
+		
 	}
 	
 }
