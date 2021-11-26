@@ -1,3 +1,11 @@
+## [1.3.19](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.18...v1.3.19) (2021-11-26)
+
+
+### Bug Fixes
+
+* docs sidenav width ([9d92d7c](https://github.com/CoCreate-app/CoCreate-render/commit/9d92d7c3d45cdbccf9ee24e437a218a38599d107))
+* updated action dependency to actions ([e82967f](https://github.com/CoCreate-app/CoCreate-render/commit/e82967f7399ee2c3de20f3bec4321eb753cb1280))
+
 ## [1.3.18](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.17...v1.3.18) (2021-11-23)
 
 
