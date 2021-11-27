@@ -1,5 +1,5 @@
 /*globals CustomEvent*/
-import action from '@cocreate/action';
+import action from '@cocreate/actions';
 
 
 const CoCreateRender = {
