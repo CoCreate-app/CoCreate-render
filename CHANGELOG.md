@@ -1,3 +1,10 @@
+## [1.3.20](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.19...v1.3.20) (2021-11-27)
+
+
+### Bug Fixes
+
+* update docs api and cocreateJS script ([4be5bab](https://github.com/CoCreate-app/CoCreate-render/commit/4be5bab259f66725353fea102262e6bd9879fe40))
+
 ## [1.3.19](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.18...v1.3.19) (2021-11-26)
 
 
