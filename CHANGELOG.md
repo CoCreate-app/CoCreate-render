@@ -1,3 +1,10 @@
+## [1.3.23](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.22...v1.3.23) (2021-11-27)
+
+
+### Bug Fixes
+
+* actions import typo ([d041be1](https://github.com/CoCreate-app/CoCreate-render/commit/d041be131927e24da6ed0bcc22ce4ccafcdad289))
+
 ## [1.3.22](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.21...v1.3.22) (2021-11-27)
 
 
