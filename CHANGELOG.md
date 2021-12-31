@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.25...v1.4.0) (2021-12-31)
+
+
+### Features
+
+* added renderKey function ([dbe7190](https://github.com/CoCreate-app/CoCreate-render/commit/dbe7190e9f358ba8e85f510d326fd31bf03e40a5))
+
 ## [1.3.25](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.24...v1.3.25) (2021-12-15)
 
 
