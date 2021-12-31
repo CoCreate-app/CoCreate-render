@@ -1,6 +1,6 @@
 /*globals CustomEvent*/
 import action from '@cocreate/actions';
-
+// import CoCreateApi from '@cocreate/api';
 
 const CoCreateRender = {
 
@@ -114,41 +114,19 @@ const CoCreateRender = {
 		return cloneEl;
 	},
  
-	setValue:function(els, data, passTo, template){
+	setValue:function(els, data, template){
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
-			
-			// let passId = e.getAttribute('pass_id');
-			// if (passTo && passId != passTo) {
-			// 	return;
-			// }
 			// if (el.classList.contains('template')) {
 			// 	el = this.cloneEl(el);
 			// }
 			Array.from(el.attributes).forEach(attr=>{
 				let attr_name = attr.name.toLowerCase();
-				// let  isPass = false;
 				let attrValue = attr.value;
 				attrValue = that.__replaceValue(data, attrValue);
 				
 				if (attrValue) {
-					// if(attr_name == 'value'){
-					// 	let tag = e.tagName.toLowerCase();
-					// 	switch (tag) {
-					// 		case 'input':
-					// 			 e.setAttribute(attr_name, attrValue);
-					// 			break;
-					// 		case 'textarea':
-					// 			e.setAttribute(attr_name, attrValue);
-					// 			e.textContent = attrValue;
-					// 			break;
-					// 		default:
-					// 			if (e.children.length === 0) {
-					// 				e.innerHTML =  attrValue;
-					// 			}
-					// 	}
-					// }
 					el.setAttribute(attr_name, attrValue);
 				}
 			});
@@ -162,7 +140,7 @@ const CoCreateRender = {
 			}
 			
 			if(el.children.length > 0) {
-				that.setValue(el.children, data, passTo, template);
+				that.setValue(el.children, data, template);
 			}
 			if (el.classList.contains('template')) {
 				that.render(el, data);
@@ -171,7 +149,7 @@ const CoCreateRender = {
 		});
 	},
 	
-	data: function({selector, data, elements, passTo}) {
+	data: function({selector, data, elements}) {
 		if (selector) {
 			let template = document.querySelector(selector)
 			if (!template) return;
@@ -179,9 +157,9 @@ const CoCreateRender = {
 				this.render(template, data)
 			}
 			else
-				this.setValue([template], data, passTo, template);
+				this.setValue([template], data, template);
 		} else if (elements) {
-			this.setValue(elements, data, passTo);
+			this.setValue(elements, data);
 		}
 		
 	}
@@ -204,26 +182,26 @@ action.init({
 });
 
 
-// function renderKey(element) {
-// 	const container = element.closest("form") || document;
-// 	let data = form.getFormData(this.id, 'renderKey',  container);
+function renderKey(element) {
+	const form = element.closest("form") || document;
+	let data = CoCreate.api.getFormData('key', 'renderKey',  form);
 
-// 	CoCreateRender.data({
-// 		selector: "[template_id='renderKey']",
-// 		data: data
-// 	});
+	CoCreateRender.data({
+		selector: "[template_id='renderKey']",
+		data: {renderKey: data}
+	});
 	
-// 	document.dispatchEvent(new CustomEvent('renderKey', {
-// 		detail: { data }
-// 	}));
-// }
+	document.dispatchEvent(new CustomEvent('renderKey', {
+		detail: { data }
+	}));
+}
 
-// action.init({
-// 	action: "renderKey",
-// 	endEvent: "renderKey",
-// 	callback: (btn, data) => {
-// 		renderKey(btn);
-// 	}
-// });
+action.init({
+	action: "renderKey",
+	endEvent: "renderKey",
+	callback: (btn, data) => {
+		renderKey(btn);
+	}
+});
 
 export default CoCreateRender;
