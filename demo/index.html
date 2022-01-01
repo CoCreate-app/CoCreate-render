@@ -9,12 +9,12 @@
         
         <div template_id="abc1">
             <div class="template card {{render2.collection}} card margin:10px firstname" 
-                data-value="{{render2.data._id}}" 
+                value="{{render2.data._id}}" 
                 template_id="abc1" 
                 render-array="render2.data">
                 <div class="card-body padding:15px" collection="{{render2.collection}}">
                     <h3 class="{{render2.data.firstname}} blue" value="{{render2.data.lastname}} - {{render2.data.firstname}}">--</h3>
-                    <h3 data-value="{{ render2.data.lastname }}" value="{{lastname}}"></h3>
+                    <h3 value="{{ render2.data.lastname }}" value="{{lastname}}"></h3>
                     <input value="{{ render2.collection }}"/>
                     <h3 class="email" value="{{render2.data.email}}">--</h3>
                     <textarea value="{{render2.data.lastname}}"></textarea>

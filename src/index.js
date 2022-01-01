@@ -184,7 +184,7 @@ action.init({
 
 function renderKey(element) {
 	const form = element.closest("form") || document;
-	let data = CoCreate.api.getFormData('key', 'renderKey',  form);
+	let data = CoCreate.api.getFormData('render-key', 'renderKey',  form);
 
 	CoCreateRender.data({
 		selector: "[template_id='renderKey']",

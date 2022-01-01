@@ -77,12 +77,12 @@
 					<pre><code class="language-html">
 	&lt;div template_id=&quot;abc1&quot; fetch-collection=&quot;render_test&quot;&gt;
 	    &lt;div class=&quot;template card {{render2.collection}} card margin:10px firstname&quot; 
-	        data-value=&quot;{{render2.data._id}}&quot; 
+	        value=&quot;{{render2.data._id}}&quot; 
 	        template_id=&quot;abc1&quot; 
 	        render-array=&quot;render2.data&quot;&gt;
 	        &lt;div class=&quot;card-body padding:15px&quot; collection=&quot;{{render2.collection}}&quot;&gt;
 	            &lt;h3 class=&quot;{{render2.data.firstname}} blue&quot; value=&quot;{{render2.data.lastname}} - {{render2.data.firstname}}&quot;&gt;--&lt;/h3&gt;
-	            &lt;h3 data-value=&quot;{{ render2.data.lastname }}&quot; value=&quot;{{lastname}}&quot;&gt;&lt;/h3&gt;
+	            &lt;h3 value=&quot;{{ render2.data.lastname }}&quot; value=&quot;{{lastname}}&quot;&gt;&lt;/h3&gt;
 	            &lt;input value=&quot;{{ render2.collection }}&quot;/&gt;
 	            &lt;h3 class=&quot;email&quot; value=&quot;{{render2.data.email}}&quot;&gt;--&lt;/h3&gt;
 	            &lt;textarea value=&quot;{{render2.data.lastname}}&quot;&gt;&lt;/textarea&gt;
