@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.4.0...v1.4.1) (2022-01-01)
+
+
+### Bug Fixes
+
+* removed data- from attributes ([62e95f9](https://github.com/CoCreate-app/CoCreate-render/commit/62e95f94719dfc19b6dd1df339ab587098b6f65c))
+
 # [1.4.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.3.25...v1.4.0) (2021-12-31)
 
 
