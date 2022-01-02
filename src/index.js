@@ -167,10 +167,23 @@ const CoCreateRender = {
 }
 
 function  removeElement(btn) {
-	let element = btn.closest('[templateid]');
-    if (element)
-        element.remove();
+	let elements;
+	let selector  = btn.getAttribute('remove-target');
+	if (selector)
+		elements = document.querySelectorAll(selector)
+	else {
+		selector = btn.getAttribute('remove-closest');
+		if (selector)
+			elements = [btn.closest(selector)] 
+		else
+			elements = [btn.closest('[templateid]')];
+	}	
+	for(let element of elements){
+	    if (element)
+	        element.remove();
+	}
 	document.dispatchEvent(new CustomEvent('removeElement', {detail: {}}));
+
 }
 
 action.init({
