@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.4.2...v1.5.0) (2022-01-02)
+
+
+### Features
+
+* removeElement now supports remove-target, remove-closest ([154d637](https://github.com/CoCreate-app/CoCreate-render/commit/154d63761e2c76e5cf8499524583d2e3bbf4c94f))
+
 ## [1.4.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.4.1...v1.4.2) (2022-01-01)
 
 
