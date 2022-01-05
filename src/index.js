@@ -34,11 +34,11 @@ const CoCreateRender = {
 		try {
 			if (!path) return data;
 			
-			let keys = path.split('.')
+			let keys = path.split('.');
 			let newObject = data;
 
 			for (var  i = keys.length - 1; i >= 0; i--) {
-				newObject = {[keys[i]]: newObject}				
+				newObject = {[keys[i]]: newObject};				
 			}
 			return newObject;
 			
@@ -57,12 +57,12 @@ const CoCreateRender = {
 		let variables = inputValue.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/g);
 		if (variables) {
 			variables.forEach((attr) => {
-				let value = self.__getValue(data, attr)
+				let value = self.__getValue(data, attr);
 				if (value && typeof(value) !== "object") {
 					isPass = true;
 					inputValue = inputValue.replace(attr, value);
 				}
-			})
+			});
 			
 			if (isPass) {
 				resultValue = inputValue;
@@ -101,14 +101,14 @@ const CoCreateRender = {
 
 				self.setValue([cloneEl], r_data);
 				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
-			})
+			});
 		}
 	},
 	
 	cloneEl: function(template) {
 		let cloneEl = template.cloneNode(true);
 		cloneEl.classList.remove('template');
-		let templateId = cloneEl.getAttribute('template_id')
+		let templateId = cloneEl.getAttribute('template_id');
 		cloneEl.removeAttribute('template_id');
 		cloneEl.setAttribute('templateId', templateId);
 		return cloneEl;
@@ -151,10 +151,10 @@ const CoCreateRender = {
 	
 	data: function({selector, data, elements}) {
 		if (selector) {
-			let template = document.querySelector(selector)
+			let template = document.querySelector(selector);
 			if (!template) return;
 			if (template.classList.contains('template')) {
-				this.render(template, data)
+				this.render(template, data);
 			}
 			else
 				this.setValue([template], data, template);
@@ -164,36 +164,7 @@ const CoCreateRender = {
 		
 	}
 	
-}
-
-function  removeElement(btn) {
-	let elements;
-	let selector  = btn.getAttribute('remove-target');
-	if (selector)
-		elements = document.querySelectorAll(selector)
-	else {
-		selector = btn.getAttribute('remove-closest');
-		if (selector)
-			elements = [btn.closest(selector)] 
-		else
-			elements = [btn.closest('[templateid]')];
-	}	
-	for(let element of elements){
-	    if (element)
-	        element.remove();
-	}
-	document.dispatchEvent(new CustomEvent('removeElement', {detail: {}}));
-
-}
-
-action.init({
-	action: "removeElement",
-	endEvent: "removeElement",
-	callback: (btn, data) => {
-		removeElement(btn);
-	}
-});
-
+};
 
 function renderKey(element) {
 	const form = element.closest("form") || document;
