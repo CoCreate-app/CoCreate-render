@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.5.0...v1.5.1) (2022-01-16)
+
+
+### Bug Fixes
+
+* removeElement relocated to its owwn coomponent @cocreate/remove ([0ddf532](https://github.com/CoCreate-app/CoCreate-render/commit/0ddf532c289aa365b727d8faeddeffb9be6949c9))
+
 # [1.5.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.4.2...v1.5.0) (2022-01-02)
 
 
