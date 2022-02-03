@@ -135,7 +135,7 @@ const CoCreateRender = {
 				let textContent = el.textContent;
 				textContent = that.__replaceValue(data, textContent);
 				if (textContent) {
-					el.textContent = textContent;
+					el.innerHTML = textContent;
 				}
 			}
 			
