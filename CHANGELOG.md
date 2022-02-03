@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.5.3...v1.5.4) (2022-02-03)
+
+
+### Bug Fixes
+
+* setValue as innerHTML ([2b07f7b](https://github.com/CoCreate-app/CoCreate-render/commit/2b07f7b9a4d71fbef652148c62cd88d5c1a5efa4))
+
 ## [1.5.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.5.2...v1.5.3) (2022-02-03)
 
 
