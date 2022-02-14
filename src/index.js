@@ -1,6 +1,5 @@
 /*globals CustomEvent*/
 import action from '@cocreate/actions';
-// import CoCreateApi from '@cocreate/api';
 
 const CoCreateRender = {
 
@@ -181,7 +180,7 @@ function renderKey(element) {
 }
 
 action.init({
-	action: "renderKey",
+	name: "renderKey",
 	endEvent: "renderKey",
 	callback: (btn, data) => {
 		renderKey(btn);
