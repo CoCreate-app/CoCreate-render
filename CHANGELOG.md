@@ -1,3 +1,10 @@
+## [1.5.7](https://github.com/CoCreate-app/CoCreate-render/compare/v1.5.6...v1.5.7) (2022-02-16)
+
+
+### Bug Fixes
+
+* remove @cocreate/api ([880c6b7](https://github.com/CoCreate-app/CoCreate-render/commit/880c6b7bffba8821204e5d786ac02d41f4ada28e))
+
 ## [1.5.6](https://github.com/CoCreate-app/CoCreate-render/compare/v1.5.5...v1.5.6) (2022-02-10)
 
 
