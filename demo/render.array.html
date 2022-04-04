@@ -10,40 +10,33 @@
     </style>
     <body>
         
-        <cocreate-select name="current_org" template_id="abc1">
-            <selected class="template" template_id="abc1" render-array="data">
-                <cc-option class="template" render-array="data.current_org" render-key="current_org" value="{{current_org[]}}">
+        <body>
+        
+            <div class="template" template_id="abc1">
+                <div class="template" render-array="data.current_org" render-key="current_org" value="{{current_org[]}}">
                     <h3>{{current_org[]}}</h3>
-                </cc-option>
-            </selected>
-        </cocreate-select>
+                </div>
+            </div>
      
- 
-         <pre>
-             <h1>Paste in your browser console</h1>
-        
-        /** Example **/
-        CoCreate.render.data({
-            selector: '[template_id=abc1]',
-            data: {
-                collection : 'dededede',
-                data: [{
-                     _id : '123kijfhgfkel45',
-                     current_org: ['test1', 'test2', 'test31', 'test3']
-                 }]
-            }
+             <pre>
+                 <h1>Paste in your browser console</h1>
             
-        })
+            /** Example **/
+            CoCreate.render.data({
+                selector: '[template_id=abc1]',
+                data: {
+                    collection : 'dededede',
+                    data: [{
+                         _id : '123kijfhgfkel45',
+                         current_org: ['test1', 'test2', 'test31', 'test3']
+                     }]
+                }
+                
+            })
+                
+             </pre>
             
-         </pre>
-        <script>
-          var config = {
-            apiKey: 'c2b08663-06e3-440c-ef6f-13978b42883a',
-                    organization_Id: '5de0387b12e200ea63204d6c'
-          }
-        </script>
-        
-        <!-- CoCreate JS CDN -->
-        <script src="../dist/CoCreate-render.js" ></script>
-    </body>
-</html>
+            <!-- CoCreate JS CDN -->
+            <script src="../../../CoCreateJS/dist/CoCreate.js" ></script>
+        </body>
+    </html>

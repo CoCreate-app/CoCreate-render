@@ -79,7 +79,7 @@ const CoCreateRender = {
 		let arrayData = data;
 		if (!Array.isArray(data))
 			arrayData = this.__getValueFromObject(data, type);
-		if (!arrayData){
+		if (!arrayData) {
 			let cloneEl = this.cloneEl(template);
 			cloneEl.classList.add('cloned');
 			self.setValue([cloneEl], data);
