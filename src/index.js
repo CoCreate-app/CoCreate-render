@@ -71,14 +71,24 @@ const CoCreateRender = {
 	},
 	
 	render: function(template, data) {
-		const type = template.getAttribute('render-array') || "data";
+		let type = template.getAttribute('render-array') || "data";
 		const render_key = template.getAttribute('render-key') || type;
 		const self = this;
 
 		// const arrayData = this.__getValueFromObject(data, type);
 		let arrayData = data;
-		if (!Array.isArray(data))
+
+		const isRenderObject = template.hasAttribute('render-object');
+		if (isRenderObject){
+			const renderObject = template.getAttribute('render-object');
+			if (renderObject)
+				arrayData = data[renderObject];
+			arrayData = Object.keys(arrayData);
+			type = renderObject || 'data'
+		}
+		if (!Array.isArray(arrayData))
 			arrayData = this.__getValueFromObject(data, type);
+			
 		if (!arrayData) {
 			let cloneEl = this.cloneEl(template);
 			cloneEl.classList.add('cloned');
@@ -92,10 +102,11 @@ const CoCreateRender = {
 				let new_key = render_key;
 				if (typeof item !== 'object') {
 					// item = {"--": item};
-					new_key = new_key + "[]";
-				} else {
-					item['index'] = index;
+					// new_key = new_key + "[]";
 				}
+				// } else {
+				// 	item['index'] = index;
+				// }
 				let r_data = self.__createObject(item, new_key);
 
 				self.setValue([cloneEl], r_data);
@@ -130,8 +141,8 @@ const CoCreateRender = {
 				}
 			});
 			
-			if (el.children.length == 0 && el.textContent) {
-				let textContent = el.textContent;
+			if (el.innerHTML) {
+				let textContent = el.innerHTML;
 				textContent = that.__replaceValue(data, textContent);
 				if (textContent) {
 					el.innerHTML = textContent;
@@ -141,6 +152,9 @@ const CoCreateRender = {
 			if(el.children.length > 0) {
 				that.setValue(el.children, data, template);
 			}
+			// if(el.childNodes.length > 0) {
+			// 	that.setValue(el.childNodes, data, template);
+			// }
 			if (el.classList.contains('template')) {
 				that.render(el, data);
 			} 
