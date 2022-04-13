@@ -86,15 +86,26 @@ const CoCreateRender = {
 			arrayData = Object.keys(arrayData);
 			type = renderObject || 'data'
 		}
+
+		const isRenderArray = template.hasAttribute('render-array');
+		if (isRenderArray){
+			const renderArray = template.getAttribute('render-array');
+			if (renderArray)
+				arrayData = data[renderArray];
+			type = renderArray || 'data'
+		}
+
 		if (!Array.isArray(arrayData))
+			// self.setValue([template], data);
 			arrayData = this.__getValueFromObject(data, type);
-			
+
 		if (!arrayData) {
 			let cloneEl = this.cloneEl(template);
 			cloneEl.classList.add('cloned');
 			self.setValue([cloneEl], data);
 			template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
 		}
+
 		if (type && Array.isArray(arrayData)) {
 			arrayData.forEach((item, index) => {
 				let cloneEl = this.cloneEl(template);

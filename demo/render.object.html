@@ -11,7 +11,7 @@
     <body>
         
         <div class="template" template_id="abc1">
-            <h1>{{data.collection}} {{collection}} {{data._id}}</h1>
+            <h1> {{data.collection}} {{data._id}}</h1>
             <div class="template" render-object="data" render-key="one">
                 <h3>{{one}} : <b att="{{one.key}}, {{one.value}}">{{one}}</b> {{one}}</h3>
             </div>
@@ -29,9 +29,10 @@
             data: {
                 collection : 'dededede',
                 data: [{
-                     _id : '123kijfhgfkel45',
-                     current_org: ['test1', 'test2', 'test31', 'test3']
-                 }]
+                    collection : 'dededede',
+                    _id : '123kijfhgfkel45',
+                    current_org: ['test1', 'test2', 'test31', 'test3']
+                }]
             }
             
         })
