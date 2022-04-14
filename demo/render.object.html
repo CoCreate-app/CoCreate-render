@@ -13,8 +13,8 @@
         <div class="template" template_id="abc1">
             <div>{{data}}</div>
             <h1> {{data.collection}} {{data._id}}</h1>
-            <div class="template" render-object="data" render-key="one">
-                <h3>{{one.key}} : {{one.value}}</h3>
+            <div class="template" render-object="" render-key="one">
+                <h5>{{one.key}}: {{one.value}}</h5>
             </div>
             <div class="template" render-array="data.current_org" render-key="current_org" value="{{current_org[]}}">
                 <h3>{{current_org}}</h3>
