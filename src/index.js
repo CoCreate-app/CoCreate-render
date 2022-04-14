@@ -57,7 +57,16 @@ const CoCreateRender = {
 		if (variables) {
 			variables.forEach((attr) => {
 				let value = self.__getValue(data, attr);
-				if (value && typeof(value) !== "object") {
+				// if (value && typeof(value) !== "object") {
+				if (value) {
+					if (!Array.isArray(value) && typeof(value) == "object") {
+						let str = '';
+						for (const [key, val] of Object.entries(value)) {
+							str += `${key}: ${val}\n`;
+						}
+						value = str	
+					}	
+						
 					isPass = true;
 					inputValue = inputValue.replace(attr, value);
 				}
@@ -83,7 +92,15 @@ const CoCreateRender = {
 			const renderObject = template.getAttribute('render-object');
 			if (renderObject)
 				arrayData = data[renderObject];
-			arrayData = Object.keys(arrayData);
+			
+			let array = []
+			for (const [key, value] of Object.entries(arrayData)) {
+				array.push({key: key, value: value})
+			}
+			if (array.length > 0)
+				arrayData = array
+			
+			// arrayData = Object.entries(arrayData);
 			type = renderObject || 'data'
 		}
 
