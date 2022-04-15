@@ -55,16 +55,18 @@ const CoCreateRender = {
 		if (variables) {
 			variables.forEach((attr) => {
 				let value = self.__getValue(data, attr);
-				if (value) {
+				// if (value) {
+				// if (value && typeof(value) !== "object") {
+				if (value && !Array.isArray(value)) {
 					// converts object to string
-					if (!Array.isArray(value) && typeof(value) == "object") {
+					// if (!Array.isArray(value) && typeof(value) == "object") {
+					if (typeof(value) == "object") {
 						let str = '';
 						for (const [key, val] of Object.entries(value)) {
 							str += `${key}: ${val}\n`;
 						}
 						value = str	
 					}	
-						
 					isPass = true;
 					inputValue = inputValue.replace(attr, value);
 				}
