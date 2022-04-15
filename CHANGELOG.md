@@ -1,3 +1,17 @@
+# [1.6.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.5.9...v1.6.0) (2022-04-15)
+
+
+### Bug Fixes
+
+* if array use template if object render as string. removed [] ([fa6abd5](https://github.com/CoCreate-app/CoCreate-render/commit/fa6abd529c63ed6db2ea0a6ace487bc59f38804c))
+* isRenderArray ([7367578](https://github.com/CoCreate-app/CoCreate-render/commit/7367578d69d8f95f6f31b60abe9d22f6128fc660))
+
+
+### Features
+
+* attribute render-object to treat an object as an array and render the object key name ([3b61640](https://github.com/CoCreate-app/CoCreate-render/commit/3b61640a651b8c39709c975e1a7302066a32dfa6))
+* supports rendering objects as key and value. If value is an object convert to string for rendering ([a4985b0](https://github.com/CoCreate-app/CoCreate-render/commit/a4985b09ef7512d608722a0ab11b971d6ffedcd2))
+
 ## [1.5.9](https://github.com/CoCreate-app/CoCreate-render/compare/v1.5.8...v1.5.9) (2022-02-24)
 
 
