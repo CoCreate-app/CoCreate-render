@@ -51,14 +51,12 @@ const CoCreateRender = {
 		let isPass = false;
 		let self = this;
 		let resultValue = null;
-		// let variables = inputValue.match(/{{\s*(\S+)\s*}}/g);
-		// let variables = inputValue.match(/{{([A-Za-z0-9_.,\- ]*)}}/g);
 		let variables = inputValue.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/g);
 		if (variables) {
 			variables.forEach((attr) => {
 				let value = self.__getValue(data, attr);
-				// if (value && typeof(value) !== "object") {
 				if (value) {
+					// converts object to string
 					if (!Array.isArray(value) && typeof(value) == "object") {
 						let str = '';
 						for (const [key, val] of Object.entries(value)) {
@@ -100,7 +98,6 @@ const CoCreateRender = {
 			if (array.length > 0)
 				arrayData = array
 			
-			// arrayData = Object.entries(arrayData);
 			type = renderObject || 'data'
 		}
 
@@ -109,11 +106,10 @@ const CoCreateRender = {
 			const renderArray = template.getAttribute('render-array');
 			if (renderArray)
 				arrayData = data[renderArray];
-			type = renderArray || 'data'
+			type = renderArray || 'data';
 		}
 
 		if (!Array.isArray(arrayData))
-			// self.setValue([template], data);
 			arrayData = this.__getValueFromObject(data, type);
 
 		if (!arrayData) {
@@ -124,18 +120,10 @@ const CoCreateRender = {
 		}
 
 		if (type && Array.isArray(arrayData)) {
-			arrayData.forEach((item, index) => {
+			arrayData.forEach((item) => {
 				let cloneEl = this.cloneEl(template);
 				cloneEl.classList.add('clone_' + type);
-				let new_key = render_key;
-				if (typeof item !== 'object') {
-					// item = {"--": item};
-					// new_key = new_key + "[]";
-				}
-				// } else {
-				// 	item['index'] = index;
-				// }
-				let r_data = self.__createObject(item, new_key);
+				let r_data = self.__createObject(item, render_key);
 
 				self.setValue([cloneEl], r_data);
 				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
@@ -156,9 +144,6 @@ const CoCreateRender = {
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
-			// if (el.classList.contains('template')) {
-			// 	el = this.cloneEl(el);
-			// }
 			Array.from(el.attributes).forEach(attr=>{
 				let attr_name = attr.name.toLowerCase();
 				let attrValue = attr.value;
@@ -180,9 +165,6 @@ const CoCreateRender = {
 			if(el.children.length > 0) {
 				that.setValue(el.children, data, template);
 			}
-			// if(el.childNodes.length > 0) {
-			// 	that.setValue(el.childNodes, data, template);
-			// }
 			if (el.classList.contains('template')) {
 				that.render(el, data);
 			} 
