@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Render-key | CoCreateJS</title>
+    
+        <!-- CoCreate Favicon -->
+        <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
+    </head>
+    
+    <body class="padding:20px">
+    
+        <form>
+            <input render-key="renderKey.name">
+            <div template_id="renderKey">
+                <div>This is <b>{{renderKey.name}}</b></div>
+                <p>This {{renderKey.name}}</p>
+                <input value="{{renderKey.name}}">
+                <button actions='renderKey' href="https://{{renderKey.name}}/admin/signin.html">Create Form</button>
+            </div>
+    
+        </form>
+    
+        <!--<script src="../dist/CoCreate-render-key.js"></script>-->
+        <script src="../../../CoCreateJS/dist/CoCreate.js"></script>
+        <!-- <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script> -->
+
+    </body>
+
+</html>

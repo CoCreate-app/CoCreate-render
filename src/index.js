@@ -1,5 +1,6 @@
 /*globals CustomEvent*/
 import action from '@cocreate/actions';
+// import api from '@cocreate/api';
 
 const CoCreateRender = {
 
@@ -146,30 +147,39 @@ const CoCreateRender = {
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
-			Array.from(el.attributes).forEach(attr=>{
-				let attr_name = attr.name.toLowerCase();
-				let attrValue = attr.value;
-				attrValue = that.__replaceValue(data, attrValue);
-				
-				if (attrValue) {
-					el.setAttribute(attr_name, attrValue);
+			if (el.nodeType == 1) {
+				Array.from(el.attributes).forEach(attr=>{
+					let attr_name = attr.name.toLowerCase();
+					let attrValue = attr.value;
+					attrValue = that.__replaceValue(data, attrValue);
+					
+					if (attrValue) {
+						el.setAttribute(attr_name, attrValue);
+					}
+				});
+
+				if(el.childNodes.length > 0) {
+					that.setValue(el.childNodes, data, template);
 				}
-			});
-			
-			if (el.innerHTML) {
-				let textContent = el.innerHTML;
-				textContent = that.__replaceValue(data, textContent);
-				if (textContent) {
-					el.innerHTML = textContent;
-				}
+				if (el.classList.contains('template')) {
+					that.render(el, data);
+				} 
 			}
 			
-			if(el.children.length > 0) {
-				that.setValue(el.children, data, template);
+			// if (el.innerHTML) {
+			// 	let textContent = el.innerHTML;
+			// 	textContent = that.__replaceValue(data, textContent);
+			// 	if (textContent) {
+			// 		el.innerHTML = textContent;
+			// 	}
+			// }
+			if (el.nodeType == 3) {
+				let textContent = el.textContent;
+				let text = that.__replaceValue(data, textContent);
+				if (text) {
+					el.textContent = text;
+				}
 			}
-			if (el.classList.contains('template')) {
-				that.render(el, data);
-			} 
 
 		});
 	},
