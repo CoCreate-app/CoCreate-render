@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.6.0...v1.6.1) (2022-05-03)
+
+
+### Bug Fixes
+
+* iterate through childNodes and replace textContent of textNodes ([df1012a](https://github.com/CoCreate-app/CoCreate-render/commit/df1012abb99158050e5f6898e56006e676b6d54f))
+
 # [1.6.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.5.9...v1.6.0) (2022-04-15)
 
 
