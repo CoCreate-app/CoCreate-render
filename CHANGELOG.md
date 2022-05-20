@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.7.1...v1.8.0) (2022-05-20)
+
+
+### Features
+
+* abiltiy to replace placeholder with Elements or textNodes ([64b5b37](https://github.com/CoCreate-app/CoCreate-render/commit/64b5b378f941067bc093930e54f36fdbbad7f6ab))
+
 ## [1.7.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.7.0...v1.7.1) (2022-05-17)
 
 
