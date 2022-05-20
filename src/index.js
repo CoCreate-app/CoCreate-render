@@ -166,18 +166,13 @@ const CoCreateRender = {
 				} 
 			}
 			
-			// if (el.innerHTML) {
-			// 	let textContent = el.innerHTML;
-			// 	textContent = that.__replaceValue(data, textContent);
-			// 	if (textContent) {
-			// 		el.innerHTML = textContent;
-			// 	}
-			// }
 			if (el.nodeType == 3) {
 				let textContent = el.textContent;
 				let text = that.__replaceValue(data, textContent);
 				if (text) {
-					el.textContent = text;
+					const newNode = document.createElement('div');
+					newNode.innerHTML = text;
+					el.replaceWith(...newNode.childNodes)
 				}
 			}
 
