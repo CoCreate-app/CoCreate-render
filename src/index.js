@@ -48,7 +48,7 @@ const CoCreateRender = {
 		}
 	},
 	
-	__replaceValue: function(data, inputValue) {
+	__replaceValue: function(data, inputValue, renderKey) {
 		let isPass = false;
 		let self = this;
 		let resultValue = null;
@@ -71,6 +71,9 @@ const CoCreateRender = {
 					isPass = true;
 					inputValue = inputValue.replace(attr, value);
 				}
+				if (!isPass && renderKey && attr.includes(`{{${renderKey}.`)) {
+					resultValue = '';
+				}
 			});
 			
 			if (isPass) {
@@ -82,7 +85,7 @@ const CoCreateRender = {
 	
 	render: function(template, data) {
 		let type = template.getAttribute('render-array') || "data";
-		const render_key = template.getAttribute('render-key') || type;
+		const renderKey = template.getAttribute('render-key') || type;
 		const self = this;
 
 		// const arrayData = this.__getValueFromObject(data, type);
@@ -118,7 +121,7 @@ const CoCreateRender = {
 		if (!arrayData) {
 			let cloneEl = this.cloneEl(template);
 			cloneEl.classList.add('cloned');
-			self.setValue([cloneEl], data);
+			self.setValue([cloneEl], data, renderKey);
 			template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
 		}
 
@@ -126,9 +129,9 @@ const CoCreateRender = {
 			arrayData.forEach((item) => {
 				let cloneEl = this.cloneEl(template);
 				cloneEl.classList.add('clone_' + type);
-				let r_data = self.__createObject(item, render_key);
+				let r_data = self.__createObject(item, renderKey);
 
-				self.setValue([cloneEl], r_data);
+				self.setValue([cloneEl], r_data, renderKey);
 				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
 			});
 		}
@@ -143,7 +146,7 @@ const CoCreateRender = {
 		return cloneEl;
 	},
  
-	setValue:function(els, data, template){
+	setValue:function(els, data, renderKey){
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
@@ -151,15 +154,15 @@ const CoCreateRender = {
 				Array.from(el.attributes).forEach(attr=>{
 					let attr_name = attr.name.toLowerCase();
 					let attrValue = attr.value;
-					attrValue = that.__replaceValue(data, attrValue);
+					attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
-					if (attrValue) {
+					if (attrValue || attrValue == "") {
 						el.setAttribute(attr_name, attrValue);
 					}
 				});
 
 				if(el.childNodes.length > 0) {
-					that.setValue(el.childNodes, data, template);
+					that.setValue(el.childNodes, data, renderKey);
 				}
 				if (el.classList.contains('template')) {
 					that.render(el, data);
@@ -168,8 +171,8 @@ const CoCreateRender = {
 			
 			if (el.nodeType == 3) {
 				let textContent = el.textContent;
-				let text = that.__replaceValue(data, textContent);
-				if (text) {
+				let text = that.__replaceValue(data, textContent, renderKey);
+				if (text || text == "") {
 					const newNode = document.createElement('div');
 					newNode.innerHTML = text;
 					el.replaceWith(...newNode.childNodes)
@@ -187,7 +190,7 @@ const CoCreateRender = {
 				this.render(template, data);
 			}
 			else
-				this.setValue([template], data, template);
+				this.setValue([template], data);
 		} else if (elements) {
 			this.setValue(elements, data);
 		}
