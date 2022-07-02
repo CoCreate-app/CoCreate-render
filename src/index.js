@@ -1,5 +1,6 @@
 /*globals CustomEvent*/
 import action from '@cocreate/actions';
+import { queryDocumentSelector } from '@cocreate/utils';
 // import api from '@cocreate/api';
 
 const CoCreateRender = {
@@ -184,7 +185,7 @@ const CoCreateRender = {
 	
 	data: function({selector, data, elements}) {
 		if (selector) {
-			let template = document.querySelector(selector);
+			let template = queryDocumentSelector(selector);
 			if (!template) return;
 			if (template.classList.contains('template')) {
 				this.render(template, data);
