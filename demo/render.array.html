@@ -19,8 +19,8 @@
                 </cc-options>
 
             <div class="template" template_id="abc1">
-                <div class="template" render-array="data.current_org" render-key="current_org"  value="{{current_org}}">
-                    <h3>{{current_org}}</h3>
+                <div class="template" render-array="data.current" render-key="current_org"  value="{{current_org.name}}">
+                    <h3>{{current_org.name}}</h3>
                 </div>
             </div>
      
@@ -34,7 +34,8 @@
                     collection : 'dededede',
                     data: [{
                          _id : '123kijfhgfkel45',
-                         current_org: ['test1', 'test2', 'test31', 'test3']
+                         current_org: ['test1', 'test2', 'test31', 'test3'],
+                         current: [{name: 'test1w'}, {name: 'test2'}, {name: 'test31'}, {name: 'test3'}]
                      }]
                 }
                 

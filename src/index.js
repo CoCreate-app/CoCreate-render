@@ -162,6 +162,13 @@ const CoCreateRender = {
 					}
 				});
 
+				// if (el.classList.contains('template')) {
+				// 	that.render(el, data);
+				// } 
+				// if(el.childNodes.length > 0) {
+				// 	that.setValue(el.childNodes, data, renderKey);
+				// }
+
 				if(el.childNodes.length > 0) {
 					that.setValue(el.childNodes, data, renderKey);
 				}
@@ -171,12 +178,17 @@ const CoCreateRender = {
 			}
 			
 			if (el.nodeType == 3) {
+				let valueType = el.parentElement.getAttribute('value-type')
 				let textContent = el.textContent;
 				let text = that.__replaceValue(data, textContent, renderKey);
 				if (text || text == "") {
-					const newNode = document.createElement('div');
-					newNode.innerHTML = text;
-					el.replaceWith(...newNode.childNodes)
+					if (valueType == 'text' || valueType == 'string'){
+						el.textContent = text;
+					} else {
+						const newNode = document.createElement('div');
+						newNode.innerHTML = text;
+						el.replaceWith(...newNode.childNodes)
+					}
 				}
 			}
 
