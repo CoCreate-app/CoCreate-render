@@ -1,3 +1,11 @@
+# [1.9.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.8.4...v1.9.0) (2022-07-03)
+
+
+### Features
+
+* added @cocreate/utils queryDocumentSelector to return an element from ann irframe or parent of iframe ([b9bb90f](https://github.com/CoCreate-app/CoCreate-render/commit/b9bb90f9ab72fc24fc71e64a37bcfee73a0c0c9c))
+* support for value-type attribute to define if render will be a string, text, innerHTML. Defaults to innerHTML ([a14fcc2](https://github.com/CoCreate-app/CoCreate-render/commit/a14fcc2ff886df7207c537cca67c3343be2da997))
+
 ## [1.8.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.8.3...v1.8.4) (2022-06-19)
 
 
