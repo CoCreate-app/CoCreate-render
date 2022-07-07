@@ -195,8 +195,6 @@ const CoCreateRender = {
 			if (el.nodeType == 1) {
 				Array.from(el.attributes).forEach(attr=>{
 					let attr_name = attr.name.toLowerCase();
-					if (attr_name == 'collection')
-						console.log('test')
 					let attrValue = attr.value;
 					attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
