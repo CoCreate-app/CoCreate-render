@@ -1,6 +1,7 @@
 /*globals CustomEvent*/
 import action from '@cocreate/actions';
 import { queryDocumentSelector } from '@cocreate/utils';
+// import { getValue } from '../../CoCreate-elements/src/getValue';
 // import api from '@cocreate/api';
 
 const CoCreateRender = {
@@ -9,6 +10,8 @@ const CoCreateRender = {
 		try {
 			if(typeof json == 'undefined' || !path)
 				return false;
+			if (path.indexOf('.') == -1)
+				json = this.dataOriginal
 			let jsonData = json, subpath = path.split('.');
 			
 			for (let i = 0; i < subpath.length; i++) {
@@ -56,18 +59,24 @@ const CoCreateRender = {
 		let variables = inputValue.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/g);
 		if (variables) {
 			variables.forEach((attr) => {
+				if (attr.includes(`collection`))
+					if( this.dataOriginal[renderKey] && this.dataOriginal[renderKey]['collection'] && attr.includes(`{{${renderKey}.`))
+						data[renderKey]['collection'] = this.dataOriginal[renderKey]['collection']
+
 				let value = self.__getValue(data, attr);
 				// if (value) {
 				// if (value && typeof(value) !== "object") {
-				if (value && !Array.isArray(value)) {
+				// if (value && !Array.isArray(value)) {
+				if (value) {
 					// converts object to string
 					// if (!Array.isArray(value) && typeof(value) == "object") {
 					if (typeof(value) == "object") {
-						let str = '';
-						for (const [key, val] of Object.entries(value)) {
-							str += `${key}: ${val}\n`;
-						}
-						value = str	
+						// let str = '';
+						// for (const [key, val] of Object.entries(value)) {
+						// 	str += `${key}: ${val}\n`;
+						// }
+						
+						value = this.generateString(value)	
 					}	
 					isPass = true;
 					inputValue = inputValue.replace(attr, value);
@@ -83,6 +92,25 @@ const CoCreateRender = {
 		}
 		return resultValue;
 	},
+
+	generateString: function(value, str = ''){
+		// let str = '';
+		// do {
+			let flag = true;
+			if (str)
+				flag = false;
+			for (const [key, val] of Object.entries(value)) {
+				if (typeof(val) == "object") {
+					str += `${key}: \n`;
+					this.generateString(val, str)
+				}
+				else
+					str += `${key}: ${val}\n`;
+			}
+		// } while()
+		if (flag)
+			return str
+	},
 	
 	render: function(template, data) {
 		let type = template.getAttribute('render-array') || "data";
@@ -94,17 +122,7 @@ const CoCreateRender = {
 
 		const isRenderObject = template.hasAttribute('render-object');
 		if (isRenderObject){
-			const renderObject = template.getAttribute('render-object');
-			if (renderObject)
-				arrayData = data[renderObject];
-			
-			let array = []
-			for (const [key, value] of Object.entries(arrayData)) {
-				array.push({key: key, value: value})
-			}
-			if (array.length > 0)
-				arrayData = array
-			
+			const renderObject = template.getAttribute('render-object');			
 			type = renderObject || 'data'
 		}
 
@@ -115,29 +133,52 @@ const CoCreateRender = {
 				arrayData = data[renderArray];
 			type = renderArray || 'data';
 		}
-
-		if (!Array.isArray(arrayData))
-			arrayData = this.__getValueFromObject(data, type);
-
-		if (!arrayData) {
-			let cloneEl = this.cloneEl(template);
-			cloneEl.classList.add('cloned');
-			self.setValue([cloneEl], data, renderKey);
-			template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
-		}
-
-		if (type && Array.isArray(arrayData)) {
-			arrayData.forEach((item) => {
+		if (isRenderObject && type) {
+			let r_data = self.isRenderObject(arrayData[type], renderKey)
+			for (let sdata of r_data) {
 				let cloneEl = this.cloneEl(template);
-				cloneEl.classList.add('clone_' + type);
-				let r_data = self.__createObject(item, renderKey);
-
-				self.setValue([cloneEl], r_data, renderKey);
+				cloneEl.classList.add('clone_' + type);	
+				self.setValue([cloneEl], sdata, renderKey);
 				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
-			});
+			}
+		} else {
+
+			if (!Array.isArray(arrayData))
+				arrayData = this.__getValueFromObject(data, type);
+
+			if (!arrayData) {
+				let cloneEl = this.cloneEl(template);
+				cloneEl.classList.add('cloned');
+				self.setValue([cloneEl], data, renderKey);
+				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
+			}
+
+			if(type && Array.isArray(arrayData)) {
+				arrayData.forEach((item) => {
+					let cloneEl = this.cloneEl(template);
+					cloneEl.classList.add('clone_' + type);
+					let r_data = self.__createObject(item, renderKey);
+					self.setValue([cloneEl], r_data, renderKey);
+					template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
+				});
+			}
 		}
 	},
 	
+	isRenderObject: function(data, renderKey) {	
+		let array = []
+		for (const [key, value] of Object.entries(data)) {
+			let type = 'string';
+			if (typeof(value) == "object")
+				if (Array.isArray(value))
+					type = 'array'
+				else
+					type = 'object'
+			array.push({[renderKey]: {key, value, type}})
+		}
+		return array
+	},
+
 	cloneEl: function(template) {
 		let cloneEl = template.cloneNode(true);
 		cloneEl.classList.remove('template');
@@ -146,14 +187,16 @@ const CoCreateRender = {
 		cloneEl.setAttribute('templateId', templateId);
 		return cloneEl;
 	},
- 
-	setValue:function(els, data, renderKey){
+
+	setValue: function(els, data, renderKey){
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
 			if (el.nodeType == 1) {
 				Array.from(el.attributes).forEach(attr=>{
 					let attr_name = attr.name.toLowerCase();
+					if (attr_name == 'collection')
+						console.log('test')
 					let attrValue = attr.value;
 					attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
@@ -162,17 +205,10 @@ const CoCreateRender = {
 					}
 				});
 
-				// if (el.classList.contains('template')) {
-				// 	that.render(el, data);
-				// } 
-				// if(el.childNodes.length > 0) {
-				// 	that.setValue(el.childNodes, data, renderKey);
-				// }
-
 				if(el.childNodes.length > 0) {
 					that.setValue(el.childNodes, data, renderKey);
 				}
-				if (el.classList.contains('template')) {
+				if (el.classList.contains('template') && !el.hasAttribute('template_id')) {
 					that.render(el, data);
 				} 
 			}
@@ -195,7 +231,9 @@ const CoCreateRender = {
 		});
 	},
 	
+	dataOriginal: {},
 	data: function({selector, data, elements}) {
+		this.dataOriginal = data;
 		if (selector) {
 			let template = queryDocumentSelector(selector);
 			if (!template) return;
@@ -205,7 +243,16 @@ const CoCreateRender = {
 			else
 				this.setValue([template], data);
 		} else if (elements) {
-			this.setValue(elements, data);
+			if (elements.length == 1 && elements[0].classList.contains('template'))
+				this.render(elements[0], data);
+			else
+				this.setValue(elements, data);
+			// for (let element of elements) {
+			// 	if (element.classList.contains('template'))
+			// 		this.render(element, data);
+			// 	else
+			// 		this.setValue([element], data);
+			// }
 		}
 		
 	}
