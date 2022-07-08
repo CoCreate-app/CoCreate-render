@@ -1,3 +1,11 @@
+## [1.9.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.9.0...v1.9.1) (2022-07-08)
+
+
+### Bug Fixes
+
+* remove test console.log ([e70647f](https://github.com/CoCreate-app/CoCreate-render/commit/e70647f9aaedfab5ecdc4f38e755eb7cf7c564fe))
+* store original data while rendering to have access to root fields eg. collection ([c769747](https://github.com/CoCreate-app/CoCreate-render/commit/c76974721597e1c8d3d8b531a81bf9216b40c731))
+
 # [1.9.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.8.4...v1.9.0) (2022-07-03)
 
 
