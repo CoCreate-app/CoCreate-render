@@ -199,6 +199,7 @@ const CoCreateRender = {
 					attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
 					if (attrValue || attrValue == "") {
+						// el[renderPaceholder] = {attribute: attr_name ,placeholder: attr.value}
 						el.setAttribute(attr_name, attrValue);
 					}
 				});
