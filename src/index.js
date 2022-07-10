@@ -10,7 +10,7 @@ const CoCreateRender = {
 		try {
 			if(typeof json == 'undefined' || !path)
 				return false;
-			if (path.indexOf('.') == -1)
+			if (path.indexOf('.') == -1 && path.includes('collection'))
 				json = this.dataOriginal
 			let jsonData = json, subpath = path.split('.');
 			
@@ -64,18 +64,8 @@ const CoCreateRender = {
 						data[renderKey]['collection'] = this.dataOriginal[renderKey]['collection']
 
 				let value = self.__getValue(data, attr);
-				// if (value) {
-				// if (value && typeof(value) !== "object") {
-				// if (value && !Array.isArray(value)) {
 				if (value) {
-					// converts object to string
-					// if (!Array.isArray(value) && typeof(value) == "object") {
 					if (typeof(value) == "object") {
-						// let str = '';
-						// for (const [key, val] of Object.entries(value)) {
-						// 	str += `${key}: ${val}\n`;
-						// }
-						
 						value = this.generateString(value)	
 					}	
 					isPass = true;
@@ -117,7 +107,6 @@ const CoCreateRender = {
 		const renderKey = template.getAttribute('render-key') || type;
 		const self = this;
 
-		// const arrayData = this.__getValueFromObject(data, type);
 		let arrayData = data;
 
 		const isRenderObject = template.hasAttribute('render-object');
@@ -199,7 +188,6 @@ const CoCreateRender = {
 					attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
 					if (attrValue || attrValue == "") {
-						// el[renderPaceholder] = {attribute: attr_name ,placeholder: attr.value}
 						el.setAttribute(attr_name, attrValue);
 					}
 				});
@@ -246,12 +234,6 @@ const CoCreateRender = {
 				this.render(elements[0], data);
 			else
 				this.setValue(elements, data);
-			// for (let element of elements) {
-			// 	if (element.classList.contains('template'))
-			// 		this.render(element, data);
-			// 	else
-			// 		this.setValue([element], data);
-			// }
 		}
 		
 	}
