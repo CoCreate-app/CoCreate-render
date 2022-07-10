@@ -10,7 +10,7 @@ const CoCreateRender = {
 		try {
 			if(typeof json == 'undefined' || !path)
 				return false;
-			if (path.indexOf('.') == -1)
+			if (path.indexOf('.') == -1 && path.includes('collection'))
 				json = this.dataOriginal
 			let jsonData = json, subpath = path.split('.');
 			
@@ -52,7 +52,7 @@ const CoCreateRender = {
 		}
 	},
 	
-	__replaceValue: function(data, inputValue, renderKey) {
+	__replaceValue: function(data, inputValue, renderKey, valueType) {
 		let isPass = false;
 		let self = this;
 		let resultValue = null;
@@ -64,18 +64,9 @@ const CoCreateRender = {
 						data[renderKey]['collection'] = this.dataOriginal[renderKey]['collection']
 
 				let value = self.__getValue(data, attr);
-				// if (value) {
-				// if (value && typeof(value) !== "object") {
-				// if (value && !Array.isArray(value)) {
+
 				if (value) {
-					// converts object to string
-					// if (!Array.isArray(value) && typeof(value) == "object") {
 					if (typeof(value) == "object") {
-						// let str = '';
-						// for (const [key, val] of Object.entries(value)) {
-						// 	str += `${key}: ${val}\n`;
-						// }
-						
 						value = this.generateString(value)	
 					}	
 					isPass = true;
@@ -117,7 +108,6 @@ const CoCreateRender = {
 		const renderKey = template.getAttribute('render-key') || type;
 		const self = this;
 
-		// const arrayData = this.__getValueFromObject(data, type);
 		let arrayData = data;
 
 		const isRenderObject = template.hasAttribute('render-object');
@@ -192,14 +182,22 @@ const CoCreateRender = {
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
+			if (!el.renderPlaceholders)
+				el['renderPlaceholders'] = new Map();
+
 			if (el.nodeType == 1) {
 				Array.from(el.attributes).forEach(attr=>{
 					let attr_name = attr.name.toLowerCase();
 					let attrValue = attr.value;
+
+					let placeholder = el.renderPlaceholders.get(attr_name)
+					if(placeholder)
+						attrValue = placeholder;
+
 					attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
 					if (attrValue || attrValue == "") {
-						// el[renderPaceholder] = {attribute: attr_name ,placeholder: attr.value}
+						el['renderPlaceholders'].set(attr_name, attr.value)
 						el.setAttribute(attr_name, attrValue);
 					}
 				});
@@ -214,14 +212,19 @@ const CoCreateRender = {
 			
 			if (el.nodeType == 3) {
 				let valueType = el.parentElement.getAttribute('value-type')
-				let textContent = el.textContent;
-				let text = that.__replaceValue(data, textContent, renderKey);
+				let textContent = el['renderPlaceholders'].get(el)
+				if (!textContent)
+					textContent = el.textContent;
+				// let textContent = el.textContent;
+				let text = that.__replaceValue(data, textContent, renderKey, valueType);
 				if (text || text == "") {
 					if (valueType == 'text' || valueType == 'string'){
+						el['renderPlaceholders'].set(el, textContent)
 						el.textContent = text;
 					} else {
 						const newNode = document.createElement('div');
 						newNode.innerHTML = text;
+						el.parentElement['renderPlaceholders'].set(el, {els: newNode.childNodes, placeholder: textContent})
 						el.replaceWith(...newNode.childNodes)
 					}
 				}
@@ -246,12 +249,6 @@ const CoCreateRender = {
 				this.render(elements[0], data);
 			else
 				this.setValue(elements, data);
-			// for (let element of elements) {
-			// 	if (element.classList.contains('template'))
-			// 		this.render(element, data);
-			// 	else
-			// 		this.setValue([element], data);
-			// }
 		}
 		
 	}
