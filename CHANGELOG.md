@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.9.1...v1.9.2) (2022-07-10)
+
+
+### Bug Fixes
+
+* use dataOriginal if path includes collection ([e6b9288](https://github.com/CoCreate-app/CoCreate-render/commit/e6b92886bad560fa64e487609c69f37268d87587))
+
 ## [1.9.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.9.0...v1.9.1) (2022-07-08)
 
 
