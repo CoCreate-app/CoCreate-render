@@ -52,7 +52,7 @@ const CoCreateRender = {
 		}
 	},
 	
-	__replaceValue: function(data, inputValue, renderKey) {
+	__replaceValue: function(data, inputValue, renderKey, valueType) {
 		let isPass = false;
 		let self = this;
 		let resultValue = null;
@@ -128,7 +128,7 @@ const CoCreateRender = {
 				let cloneEl = this.cloneEl(template);
 				cloneEl.classList.add('clone_' + type);	
 				self.setValue([cloneEl], sdata, renderKey);
-				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
+				template.insertAdjacentElement('beforebegin', cloneEl);
 			}
 		} else {
 
@@ -139,7 +139,7 @@ const CoCreateRender = {
 				let cloneEl = this.cloneEl(template);
 				cloneEl.classList.add('cloned');
 				self.setValue([cloneEl], data, renderKey);
-				template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
+				template.insertAdjacentElement('beforebegin', cloneEl);
 			}
 
 			if(type && Array.isArray(arrayData)) {
@@ -148,7 +148,7 @@ const CoCreateRender = {
 					cloneEl.classList.add('clone_' + type);
 					let r_data = self.__createObject(item, renderKey);
 					self.setValue([cloneEl], r_data, renderKey);
-					template.insertAdjacentHTML('beforebegin', cloneEl.outerHTML);
+					template.insertAdjacentElement('beforebegin', cloneEl);
 				});
 			}
 		}
@@ -181,41 +181,100 @@ const CoCreateRender = {
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
+
 			if (el.nodeType == 1) {
+				if (el.renderMap) {
+					let placeholder = el.renderMap.get(el)
+					if (placeholder){
+						el.innerHTML = placeholder.placeholder
+						renderKey = placeholder.renderKey
+						if (data[renderKey][0])
+							data = {[renderKey]: data[renderKey][0]}
+					}
+				}
+
 				Array.from(el.attributes).forEach(attr=>{
 					let attr_name = attr.name.toLowerCase();
 					let attrValue = attr.value;
-					attrValue = that.__replaceValue(data, attrValue, renderKey);
+
+					// get placeholder
+					let placeholder
+					if (attr.renderMap)
+						placeholder = attr.renderMap.get(attr)
+					else
+						that.renderMap(attr, attr.value, renderKey)
+
+					if(placeholder){
+						attrValue = placeholder.placeholder;
+						renderKey = placeholder.renderKey
+						let updateData = data;
+						if (data[renderKey][0])
+							updateData = {[renderKey]: data[renderKey][0]}
+						attrValue = that.__replaceValue(updateData, attrValue, renderKey);
+					}
+					else
+						attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
 					if (attrValue || attrValue == "") {
 						el.setAttribute(attr_name, attrValue);
 					}
 				});
 
-				if(el.childNodes.length > 0) {
+				if(el.childNodes.length > 0) {		
 					that.setValue(el.childNodes, data, renderKey);
 				}
 				if (el.classList.contains('template') && !el.hasAttribute('template_id')) {
 					that.render(el, data);
 				} 
 			}
-			
+
 			if (el.nodeType == 3) {
 				let valueType = el.parentElement.getAttribute('value-type')
-				let textContent = el.textContent;
-				let text = that.__replaceValue(data, textContent, renderKey);
+				
+				// get placeholder
+				let textContent, placeholder, text;
+				if (el.renderMap)
+					placeholder = el.renderMap.get(el)
+					if (placeholder) {
+						textContent = placeholder.placeholder
+						renderKey = placeholder.renderKey
+						let updateData = data;
+						if (data[renderKey][0])
+							updateData = {[renderKey]: data[renderKey][0]}
+						text = that.__replaceValue(updateData, textContent, renderKey, valueType);
+					}
+				if (!text) {
+					textContent = el.textContent;
+					that.renderMap(el, textContent, renderKey)
+					text = that.__replaceValue(data, textContent, renderKey, valueType);
+				}
+
+				// let textContent = el.textContent;
+				// let text = that.__replaceValue(data, textContent, renderKey, valueType);
 				if (text || text == "") {
 					if (valueType == 'text' || valueType == 'string'){
 						el.textContent = text;
 					} else {
 						const newNode = document.createElement('div');
 						newNode.innerHTML = text;
+						let parentElement = el.parentElement
+						if (!parentElement.renderMap) {
+							that.renderMap(parentElement, textContent, renderKey)
+						} else if (!parentElement['renderMap'].has(parentElement))
+							that.renderMap(parentElement, textContent, renderKey)
 						el.replaceWith(...newNode.childNodes)
 					}
 				}
 			}
-
 		});
+	},
+
+	renderMap: function(node, placeholder, renderKey) {
+		if (!node.renderMap) {
+			node['renderMap'] = new Map();
+		}
+		if (placeholder && renderKey)
+			node['renderMap'].set(node, {placeholder, renderKey})
 	},
 	
 	dataOriginal: {},
