@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.9.2...v1.10.0) (2022-07-14)
+
+
+### Features
+
+* renderMap function to apply map containing placeholder to node object in order to render new values ([7afffa0](https://github.com/CoCreate-app/CoCreate-render/commit/7afffa07b2cc1dd562e96d1ee558433d3f6d043a))
+
 ## [1.9.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.9.1...v1.9.2) (2022-07-10)
 
 
