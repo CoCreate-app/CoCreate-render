@@ -173,7 +173,8 @@ const CoCreateRender = {
 		cloneEl.classList.remove('template');
 		let templateId = cloneEl.getAttribute('template_id');
 		cloneEl.removeAttribute('template_id');
-		cloneEl.setAttribute('templateId', templateId);
+		if (templateId)
+			cloneEl.setAttribute('templateId', templateId);
 		return cloneEl;
 	},
 
