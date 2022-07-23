@@ -1,5 +1,7 @@
 /*globals CustomEvent*/
 import action from '@cocreate/actions';
+import observer from '@cocreate/observer';
+import uuid from '@cocreate/uuid';
 import { queryDocumentSelector } from '@cocreate/utils';
 // import { getValue } from '../../CoCreate-elements/src/getValue';
 // import api from '@cocreate/api';
@@ -103,31 +105,32 @@ const CoCreateRender = {
 	},
 	
 	render: function(template, data) {
-		let type = template.getAttribute('render-array') || "data";
-		const renderKey = template.getAttribute('render-key') || type;
 		const self = this;
-
+		let type = '';
 		let arrayData = data;
 
 		const isRenderObject = template.hasAttribute('render-object');
 		if (isRenderObject){
-			const renderObject = template.getAttribute('render-object');			
-			type = renderObject || 'data'
+			const renderObject = template.getAttribute('render-object');
+			type = renderObject || ''
 		}
 
 		const isRenderArray = template.hasAttribute('render-array');
 		if (isRenderArray){
-			const renderArray = template.getAttribute('render-array');
+			var renderArray = template.getAttribute('render-array');
 			if (renderArray)
 				arrayData = data[renderArray];
-			type = renderArray || 'data';
+			type = renderArray || '';
 		}
+
+		let renderKey = template.getAttribute('render-key') || type;
+
 		if (isRenderObject && type) {
-			let r_data = self.isRenderObject(arrayData[type], renderKey)
-			for (let sdata of r_data) {
+			let Data = self.__getValueFromObject(arrayData, type);
+			let array = self.isRenderObject(Data, renderKey)
+			for (let item of array) {
 				let cloneEl = this.cloneEl(template);
-				cloneEl.classList.add('clone_' + type);	
-				self.setValue([cloneEl], sdata, renderKey);
+				self.setValue([cloneEl], item, renderArray, renderKey);
 				template.insertAdjacentElement('beforebegin', cloneEl);
 			}
 		} else {
@@ -137,17 +140,15 @@ const CoCreateRender = {
 
 			if (!arrayData) {
 				let cloneEl = this.cloneEl(template);
-				cloneEl.classList.add('cloned');
-				self.setValue([cloneEl], data, renderKey);
+				self.setValue([cloneEl], data, renderArray, renderKey);
 				template.insertAdjacentElement('beforebegin', cloneEl);
 			}
 
 			if(type && Array.isArray(arrayData)) {
 				arrayData.forEach((item) => {
 					let cloneEl = this.cloneEl(template);
-					cloneEl.classList.add('clone_' + type);
-					let r_data = self.__createObject(item, renderKey);
-					self.setValue([cloneEl], r_data, renderKey);
+					let object = self.__createObject(item, renderKey);
+					self.setValue([cloneEl], object, renderArray, renderKey);
 					template.insertAdjacentElement('beforebegin', cloneEl);
 				});
 			}
@@ -156,6 +157,8 @@ const CoCreateRender = {
 	
 	isRenderObject: function(data, renderKey) {	
 		let array = []
+		if (!data) 
+			return array
 		for (const [key, value] of Object.entries(data)) {
 			let type = 'string';
 			if (typeof(value) == "object")
@@ -170,27 +173,45 @@ const CoCreateRender = {
 
 	cloneEl: function(template) {
 		let cloneEl = template.cloneNode(true);
-		cloneEl.classList.remove('template');
+
 		let templateId = cloneEl.getAttribute('template_id');
-		cloneEl.removeAttribute('template_id');
 		if (templateId)
 			cloneEl.setAttribute('templateId', templateId);
+
+		cloneEl.removeAttribute('template_id');
+		cloneEl.setAttribute('render-clone', '');	
+		cloneEl.classList.remove('template');
+
+		if (template.dataOriginal)
+			cloneEl.dataOriginal = template.dataOriginal
+
 		return cloneEl;
 	},
 
-	setValue: function(els, data, renderKey){
+	setValue: function(els, data, renderArray, renderKey){
 		if (!data) return;
 		const that = this;
 		Array.from(els).forEach(el => {
+			let updateData;
 
 			if (el.nodeType == 1) {
+				if (el.hasAttribute('render-clone')) {
+					el.renderData = {...data}
+				}
 				if (el.renderMap) {
 					let placeholder = el.renderMap.get(el)
 					if (placeholder){
-						el.innerHTML = placeholder.placeholder
+						console.log('innerhtml', el, placeholder.placeholder)
 						renderKey = placeholder.renderKey
-						if (data[renderKey][0])
-							data = {[renderKey]: data[renderKey][0]}
+						renderArray = placeholder.renderArray
+						if (renderArray)
+						updateData = data[renderArray][0]
+						if (renderKey)
+						updateData = {[renderKey]: updateData}
+						let textContent = placeholder.placeholder
+						let text = that.__replaceValue(updateData, textContent, renderKey, valueType);
+						if (text)
+							el.innerHTML = placeholder.placeholder
 					}
 				}
 
@@ -198,31 +219,38 @@ const CoCreateRender = {
 					let attr_name = attr.name.toLowerCase();
 					let attrValue = attr.value;
 
-					// get placeholder
 					let placeholder
 					if (attr.renderMap)
 						placeholder = attr.renderMap.get(attr)
 					else
-						that.renderMap(attr, attr.value, renderKey)
+						that.renderMap(attr, attr.value, renderArray, renderKey)
 
 					if(placeholder){
+						let updateData = data;
 						attrValue = placeholder.placeholder;
 						renderKey = placeholder.renderKey
-						let updateData = data;
-						if (data[renderKey][0])
-							updateData = {[renderKey]: data[renderKey][0]}
+						renderArray = placeholder.renderArray
+						if (renderArray)
+							updateData = data[renderArray][0]
+						if (renderKey)
+							updateData = {[renderKey]: updateData}
+	
 						attrValue = that.__replaceValue(updateData, attrValue, renderKey);
 					}
 					else
 						attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
+					
+					// ToDo support attibute name replace if has {{}}
+					// attr_name = that.__replaceValue(data, attr_name, renderKey);
+
 					if (attrValue || attrValue == "") {
 						el.setAttribute(attr_name, attrValue);
 					}
 				});
 
 				if(el.childNodes.length > 0) {		
-					that.setValue(el.childNodes, data, renderKey);
+					that.setValue(el.childNodes, updateData || data, renderArray, renderKey);
 				}
 				if (el.classList.contains('template') && !el.hasAttribute('template_id')) {
 					that.render(el, data);
@@ -232,26 +260,26 @@ const CoCreateRender = {
 			if (el.nodeType == 3) {
 				let valueType = el.parentElement.getAttribute('value-type')
 				
-				// get placeholder
 				let textContent, placeholder, text;
 				if (el.renderMap)
 					placeholder = el.renderMap.get(el)
 					if (placeholder) {
+						let updateData = data;
 						textContent = placeholder.placeholder
 						renderKey = placeholder.renderKey
-						let updateData = data;
-						if (data[renderKey][0])
-							updateData = {[renderKey]: data[renderKey][0]}
+						renderArray = placeholder.renderArray
+						if (renderArray)
+							updateData = data[renderArray][0]
+						if (renderKey)
+							updateData = {[renderKey]: updateData}
 						text = that.__replaceValue(updateData, textContent, renderKey, valueType);
 					}
 				if (!text) {
 					textContent = el.textContent;
-					that.renderMap(el, textContent, renderKey)
+					that.renderMap(el, textContent, renderArray, renderKey)
 					text = that.__replaceValue(data, textContent, renderKey, valueType);
 				}
 
-				// let textContent = el.textContent;
-				// let text = that.__replaceValue(data, textContent, renderKey, valueType);
 				if (text || text == "") {
 					if (valueType == 'text' || valueType == 'string'){
 						el.textContent = text;
@@ -260,9 +288,9 @@ const CoCreateRender = {
 						newNode.innerHTML = text;
 						let parentElement = el.parentElement
 						if (!parentElement.renderMap) {
-							that.renderMap(parentElement, textContent, renderKey)
+							that.renderMap(parentElement, textContent, renderArray, renderKey)
 						} else if (!parentElement['renderMap'].has(parentElement))
-							that.renderMap(parentElement, textContent, renderKey)
+							that.renderMap(parentElement, textContent, renderArray, renderKey)
 						el.replaceWith(...newNode.childNodes)
 					}
 				}
@@ -270,28 +298,36 @@ const CoCreateRender = {
 		});
 	},
 
-	renderMap: function(node, placeholder, renderKey) {
+	renderMap: function(node, placeholder, renderArray, renderKey) {
 		if (!node.renderMap) {
 			node['renderMap'] = new Map();
 		}
 		if (placeholder && renderKey)
-			node['renderMap'].set(node, {placeholder, renderKey})
+			node['renderMap'].set(node, {placeholder, renderArray, renderKey})
 	},
 	
 	dataOriginal: {},
 	data: function({selector, data, elements}) {
-		this.dataOriginal = data;
+		this.dataOriginal = {...data};
+		this.dataString = {...data};
+		delete this.dataOriginal.data
+
+		for (let element of elements)
+			element.dataOriginal = {...this.dataOriginal};
+
 		if (selector) {
 			let template = queryDocumentSelector(selector);
 			if (!template) return;
+			template.dataOriginal = {...data}
 			if (template.classList.contains('template')) {
 				this.render(template, data);
 			}
 			else
 				this.setValue([template], data);
 		} else if (elements) {
-			if (elements.length == 1 && elements[0].classList.contains('template'))
+			if (elements.length == 1 && elements[0].classList.contains('template')){
 				this.render(elements[0], data);
+			}
 			else
 				this.setValue(elements, data);
 		}
@@ -314,11 +350,147 @@ function renderKey(element) {
 	}));
 }
 
+function renderKeys(elements, autoKey, parentKey, parentKeys) {
+	Array.from(elements).forEach(el => {
+		if (el.nodeType == 1) {
+			Array.from(el.attributes).forEach(attr=>{
+				let attr_name = attr.name.toLowerCase();
+				let attr_value = attr.value || '';
+				if (attr_name)
+					attr_name = replaceKeys(attr_name, autoKey, parentKey, parentKeys)
+				if (attr_value)
+					attr_value = replaceKeys(attr_value, autoKey, parentKey, parentKeys)
+				if (attr_name) {
+					el.setAttribute(attr_name, attr_value);
+				}
+			});
+
+			if(el.childNodes.length > 0) {		
+				renderKeys(el.childNodes, autoKey, parentKey, parentKeys);
+			}
+		}
+
+		if (el.nodeType == 3) {			
+			let text = el.textContent;
+			text = replaceKeys(text, autoKey, parentKey, parentKeys)
+			el.textContent = text;
+		}
+	});
+}
+
+function replaceKeys(string, autoKey, parentKey, parentKeys) {
+	if (autoKey)
+		string = string.replace(/\$auto/g, autoKey);
+	if (parentKeys)
+		string = string.replace(/\$parents/g, parentKeys);
+	if (parentKey)
+		string = string.replace(/\$parent/g, parentKey);
+	return string
+}
+
 action.init({
 	name: "renderKey",
 	endEvent: "renderKey",
 	callback: (btn, data) => {
 		renderKey(btn);
+	}
+});
+
+observer.init({
+	name: 'render',
+	observe: ['addedNodes'],
+	target: '[render]',
+	callback: function(mutation) {
+		let element = mutation.target
+		element.removeAttribute('render')
+
+		let parentElement = element.parentElement
+		if (parentElement) {
+			parentElement.removeAttribute('get-value')
+			let el = element
+			let parentKeys = [];
+			let renderData = new Map();
+			do {
+				let data;
+				el = el.parentElement
+				if (el) {
+					if (el.dataOriginal)
+						renderData.set(el.dataOriginal, '')
+					if (el.hasAttribute('render-clone'))
+						data = el.renderData
+					if (data)
+						renderData.set(data, '')
+					
+					let parentKey = el.getAttribute('parentKey')
+					if(parentKey && parentKey != null) {
+						if (/^\d+$/.test(parentKey))
+							parentKey = `[${parentKey}]`
+						parentKeys.push(parentKey)
+					}
+				}
+			} while (el)
+			
+			let renderKey = element.getAttribute('render-key')
+
+			let parentKey;
+			parentKey = parentElement.getAttribute('parentKey')
+			if(renderKey == '$auto' || parentKey || parentKeys) {
+				// let autoKey = uuid.generate(6)
+				// let parentKeysString = "";
+				// if (parentKeys.length > 0) {
+				// 	if (parentKeys.length == 1){
+				// 		parentKeysString = parentKeys[0]
+				// 	}
+				// 	else {
+				// 		parentKeysString = parentKeys.reverse().join('.')	
+				// 		parentKeysString = parentKeysString.replace(/.\[/g, '[');
+				// 	}
+				// }
+
+				// renderKeys([element], autoKey, parentKey, parentKeysString)
+				let template = element.outerHTML
+				if (renderKey) {				
+					template = template.replace(/\$auto/g, uuid.generate(6));
+				}
+				if (parentKeys.length > 0) {
+					let string = ''	
+					if (parentKeys.length == 1){
+						string = parentKeys[0]
+					}
+					else
+						string = parentKeys.reverse().join('.')	
+						string = string.replace(/.\[/g, '[');
+					template = template.replace(/\$parents/g, string);
+				}
+				if (parentKey) {				
+					template = template.replace(/\$parent/g, parentKey);
+				}
+	
+				// let div = document.createElement('div')
+				// div.innerHTML = template
+				// if (!alreadyRendered.has(parentElement)) {
+					// alreadyRendered.set(parentElement, '')
+					parentElement.innerHTML = template
+				// }
+				// else
+				// 	console.log('already rendered', template)
+				// parentElement.replaceChildren(...div.childNodes)
+				// element.replaceWith(...div.childNodes);
+
+			}
+
+			element = parentElement.firstElementChild
+			let obj = {}
+			let array = Array.from(renderData.keys())
+			for (let data of array.reverse()){
+				obj = {...obj, ...data}
+			}
+
+			CoCreateRender.data({
+				elements: [element],
+				data: obj
+			});
+		}
 	}
 });
 
