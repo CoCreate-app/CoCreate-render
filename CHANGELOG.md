@@ -1,3 +1,16 @@
+# [1.11.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.10.0...v1.11.0) (2022-07-25)
+
+
+### Bug Fixes
+
+* if templateId setAttribute ([41e30b3](https://github.com/CoCreate-app/CoCreate-render/commit/41e30b3a748aa8900d9f9397584f14052d637197))
+
+
+### Features
+
+* getValueFromObject supports deeply nested array and objects ([db7fefd](https://github.com/CoCreate-app/CoCreate-render/commit/db7fefd81a908ba6f68dbf4c43d62639aa73e3f8))
+* observe new elements with atrribute render, if elements detected replace placholders with values ([90d7d98](https://github.com/CoCreate-app/CoCreate-render/commit/90d7d982eedf83b194cfae0704d06e110914ca52))
+
 # [1.10.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.9.2...v1.10.0) (2022-07-14)
 
 
