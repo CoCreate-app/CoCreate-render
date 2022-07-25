@@ -14,6 +14,13 @@ const CoCreateRender = {
 				return false;
 			if (path.indexOf('.') == -1 && path.includes('collection'))
 				json = this.dataOriginal
+			if (/\[([0-9]*)\]/g.test(path)) {
+				path = path.replace(/\[/g, '.');
+				if (path.endsWith(']'))
+					path = path.slice(0, -1)
+				path = path.replace(/\]./g, '.');
+				path = path.replace(/\]/g, '.');
+			}
 			let jsonData = json, subpath = path.split('.');
 			
 			for (let i = 0; i < subpath.length; i++) {
@@ -201,7 +208,6 @@ const CoCreateRender = {
 				if (el.renderMap) {
 					let placeholder = el.renderMap.get(el)
 					if (placeholder){
-						console.log('innerhtml', el, placeholder.placeholder)
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
 						if (renderArray)
@@ -239,7 +245,6 @@ const CoCreateRender = {
 					}
 					else
 						attrValue = that.__replaceValue(data, attrValue, renderKey);
-					
 					
 					// ToDo support attibute name replace if has {{}}
 					// attr_name = that.__replaceValue(data, attr_name, renderKey);
@@ -350,44 +355,6 @@ function renderKey(element) {
 	}));
 }
 
-function renderKeys(elements, autoKey, parentKey, parentKeys) {
-	Array.from(elements).forEach(el => {
-		if (el.nodeType == 1) {
-			Array.from(el.attributes).forEach(attr=>{
-				let attr_name = attr.name.toLowerCase();
-				let attr_value = attr.value || '';
-				if (attr_name)
-					attr_name = replaceKeys(attr_name, autoKey, parentKey, parentKeys)
-				if (attr_value)
-					attr_value = replaceKeys(attr_value, autoKey, parentKey, parentKeys)
-				if (attr_name) {
-					el.setAttribute(attr_name, attr_value);
-				}
-			});
-
-			if(el.childNodes.length > 0) {		
-				renderKeys(el.childNodes, autoKey, parentKey, parentKeys);
-			}
-		}
-
-		if (el.nodeType == 3) {			
-			let text = el.textContent;
-			text = replaceKeys(text, autoKey, parentKey, parentKeys)
-			el.textContent = text;
-		}
-	});
-}
-
-function replaceKeys(string, autoKey, parentKey, parentKeys) {
-	if (autoKey)
-		string = string.replace(/\$auto/g, autoKey);
-	if (parentKeys)
-		string = string.replace(/\$parents/g, parentKeys);
-	if (parentKey)
-		string = string.replace(/\$parent/g, parentKey);
-	return string
-}
-
 action.init({
 	name: "renderKey",
 	endEvent: "renderKey",
@@ -406,7 +373,6 @@ observer.init({
 
 		let parentElement = element.parentElement
 		if (parentElement) {
-			parentElement.removeAttribute('get-value')
 			let el = element
 			let parentKeys = [];
 			let renderData = new Map();
@@ -435,19 +401,6 @@ observer.init({
 			let parentKey;
 			parentKey = parentElement.getAttribute('parentKey')
 			if(renderKey == '$auto' || parentKey || parentKeys) {
-				// let autoKey = uuid.generate(6)
-				// let parentKeysString = "";
-				// if (parentKeys.length > 0) {
-				// 	if (parentKeys.length == 1){
-				// 		parentKeysString = parentKeys[0]
-				// 	}
-				// 	else {
-				// 		parentKeysString = parentKeys.reverse().join('.')	
-				// 		parentKeysString = parentKeysString.replace(/.\[/g, '[');
-				// 	}
-				// }
-
-				// renderKeys([element], autoKey, parentKey, parentKeysString)
 				let template = element.outerHTML
 				if (renderKey) {				
 					template = template.replace(/\$auto/g, uuid.generate(6));
@@ -466,16 +419,7 @@ observer.init({
 					template = template.replace(/\$parent/g, parentKey);
 				}
 	
-				// let div = document.createElement('div')
-				// div.innerHTML = template
-				// if (!alreadyRendered.has(parentElement)) {
-					// alreadyRendered.set(parentElement, '')
-					parentElement.innerHTML = template
-				// }
-				// else
-				// 	console.log('already rendered', template)
-				// parentElement.replaceChildren(...div.childNodes)
-				// element.replaceWith(...div.childNodes);
+				parentElement.innerHTML = template
 
 			}
 
