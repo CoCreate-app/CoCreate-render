@@ -7,7 +7,7 @@ import { queryDocumentSelector } from '@cocreate/utils';
 // import api from '@cocreate/api';
 
 const CoCreateRender = {
-
+	// Can be called from crud getObjectValueByPath
 	__getValueFromObject : function(json, path) {
 		try {
 			if(typeof json == 'undefined' || !path)
