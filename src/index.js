@@ -231,9 +231,13 @@ const CoCreateRender = {
 					else
 						that.renderMap(attr, attr.value, renderArray, renderKey)
 
+					if (el.tagName == "P" && attr_name == 'document_id')
+						console.log('tessssst')
+
 					if(placeholder){
 						let updateData = data;
-						attrValue = placeholder.placeholder;
+						let oldValue = attrValue 
+						let temp = placeholder.placeholder;
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
 						if (renderArray)
@@ -241,7 +245,9 @@ const CoCreateRender = {
 						if (renderKey)
 							updateData = {[renderKey]: updateData}
 	
-						attrValue = that.__replaceValue(updateData, attrValue, renderKey);
+						attrValue = that.__replaceValue(updateData, temp, renderKey);
+						if (attrValue == oldValue)
+							attrValue = undefined
 					}
 					else
 						attrValue = that.__replaceValue(data, attrValue, renderKey);
@@ -279,7 +285,7 @@ const CoCreateRender = {
 							updateData = {[renderKey]: updateData}
 						text = that.__replaceValue(updateData, textContent, renderKey, valueType);
 					}
-				if (!text) {
+				if (!placeholder && !text) {
 					textContent = el.textContent;
 					that.renderMap(el, textContent, renderArray, renderKey)
 					text = that.__replaceValue(data, textContent, renderKey, valueType);
