@@ -1,3 +1,15 @@
+# [1.12.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.11.0...v1.12.0) (2022-07-29)
+
+
+### Bug Fixes
+
+* replace attribute value if new and old value are not equal ([3dc25d8](https://github.com/CoCreate-app/CoCreate-render/commit/3dc25d884510a6ad14455b232d9068eb5e1302a8))
+
+
+### Features
+
+* if oldValues same as new value will not update text, html or attributes ([9cfe3f0](https://github.com/CoCreate-app/CoCreate-render/commit/9cfe3f017e706a5a7211449c294158d60fa2098c))
+
 # [1.11.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.10.0...v1.11.0) (2022-07-25)
 
 
