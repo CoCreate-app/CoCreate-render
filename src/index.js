@@ -208,6 +208,7 @@ const CoCreateRender = {
 				if (el.renderMap) {
 					let placeholder = el.renderMap.get(el)
 					if (placeholder){
+						let valueType = el.getAttribute('value-type')
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
 						if (renderArray)
@@ -216,7 +217,7 @@ const CoCreateRender = {
 						updateData = {[renderKey]: updateData}
 						let textContent = placeholder.placeholder
 						let text = that.__replaceValue(updateData, textContent, renderKey, valueType);
-						if (text)
+						if (text && text != el.renderedValue)
 							el.innerHTML = placeholder.placeholder
 					}
 				}
@@ -231,12 +232,9 @@ const CoCreateRender = {
 					else
 						that.renderMap(attr, attr.value, renderArray, renderKey)
 
-					if (el.tagName == "P" && attr_name == 'document_id')
-						console.log('tessssst')
-
 					if(placeholder){
 						let updateData = data;
-						let oldValue = attrValue 
+						// let oldValue = attrValue 
 						let temp = placeholder.placeholder;
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
@@ -246,7 +244,7 @@ const CoCreateRender = {
 							updateData = {[renderKey]: updateData}
 	
 						attrValue = that.__replaceValue(updateData, temp, renderKey);
-						if (attrValue == oldValue)
+						if (attrValue == attr.value)
 							attrValue = undefined
 					}
 					else
@@ -292,17 +290,22 @@ const CoCreateRender = {
 				}
 
 				if (text || text == "") {
-					if (valueType == 'text' || valueType == 'string'){
-						el.textContent = text;
-					} else {
-						const newNode = document.createElement('div');
-						newNode.innerHTML = text;
-						let parentElement = el.parentElement
-						if (!parentElement.renderMap) {
-							that.renderMap(parentElement, textContent, renderArray, renderKey)
-						} else if (!parentElement['renderMap'].has(parentElement))
-							that.renderMap(parentElement, textContent, renderArray, renderKey)
-						el.replaceWith(...newNode.childNodes)
+					if (text != el.renderedValue) {
+						el.renderedValue = text
+						if (valueType == 'text' || valueType == 'string'){
+							el.renderedValue = text
+							el.textContent = text;
+						} else {
+							const newNode = document.createElement('div');
+							newNode.innerHTML = text;
+							let parentElement = el.parentElement
+							parentElement.renderedValue = text
+							if (!parentElement.renderMap) {
+								that.renderMap(parentElement, textContent, renderArray, renderKey)
+							} else if (!parentElement['renderMap'].has(parentElement))
+								that.renderMap(parentElement, textContent, renderArray, renderKey)
+							el.replaceWith(...newNode.childNodes)
+						}
 					}
 				}
 			}
@@ -320,7 +323,6 @@ const CoCreateRender = {
 	dataOriginal: {},
 	data: function({selector, data, elements}) {
 		this.dataOriginal = {...data};
-		this.dataString = {...data};
 		delete this.dataOriginal.data
 
 		for (let element of elements)
