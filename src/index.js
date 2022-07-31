@@ -263,7 +263,13 @@ const CoCreateRender = {
 				}
 				if (el.classList.contains('template') && !el.hasAttribute('template_id')) {
 					that.render(el, data);
-				} 
+				}
+				// if (el.hasAttribute('render-array') || el.hasAttribute('render-object')) {
+				// 	if (!el.dataOriginal) {
+				// 		that.render(el, data);
+				// 	}
+				// }
+
 			}
 
 			if (el.nodeType == 3) {
@@ -325,9 +331,6 @@ const CoCreateRender = {
 		this.dataOriginal = {...data};
 		delete this.dataOriginal.data
 
-		for (let element of elements)
-			element.dataOriginal = {...this.dataOriginal};
-
 		if (selector) {
 			let template = queryDocumentSelector(selector);
 			if (!template) return;
@@ -338,6 +341,9 @@ const CoCreateRender = {
 			else
 				this.setValue([template], data);
 		} else if (elements) {
+			for (let element of elements)
+				element.dataOriginal = {...this.dataOriginal};
+
 			if (elements.length == 1 && elements[0].classList.contains('template')){
 				this.render(elements[0], data);
 			}
