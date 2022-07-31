@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.12.0...v1.12.1) (2022-07-31)
+
+
+### Bug Fixes
+
+* moved the of loop that adds dataOriginal to inside if elements ([a1db516](https://github.com/CoCreate-app/CoCreate-render/commit/a1db516d6c4739581ab59db5ab5e746e8f409985))
+
 # [1.12.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.11.0...v1.12.0) (2022-07-29)
 
 
