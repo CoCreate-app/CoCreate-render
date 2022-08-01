@@ -1,3 +1,10 @@
+## [1.12.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.12.1...v1.12.2) (2022-08-01)
+
+
+### Bug Fixes
+
+* renderKey action does not work with renderMap. added isRenderKey to skip renderMap as temp solution ([7e90de8](https://github.com/CoCreate-app/CoCreate-render/commit/7e90de81b596154d3ab0b36e7326dfb8e67e6684))
+
 ## [1.12.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.12.0...v1.12.1) (2022-07-31)
 
 
