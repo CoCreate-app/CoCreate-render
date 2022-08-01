@@ -3,6 +3,7 @@ import action from '@cocreate/actions';
 import observer from '@cocreate/observer';
 import uuid from '@cocreate/uuid';
 import { queryDocumentSelector } from '@cocreate/utils';
+import './index.css';
 // import { getValue } from '../../CoCreate-elements/src/getValue';
 // import api from '@cocreate/api';
 
@@ -338,6 +339,8 @@ const CoCreateRender = {
 		if (selector) {
 			let template = queryDocumentSelector(selector);
 			if (!template) return;
+			if (template.tagNmae === 'TEMPLATE')
+				template = template.childNodes;
 			template.dataOriginal = {...data}
 			if (template.classList.contains('template')) {
 				this.render(template, data);
