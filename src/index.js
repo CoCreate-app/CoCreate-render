@@ -229,9 +229,6 @@ const CoCreateRender = {
 				Array.from(el.attributes).forEach(attr=>{
 					let attr_name = attr.name.toLowerCase();
 					let attrValue = attr.value;
-					let dir = el.getAttribute('name')
-					if (dir == 'directory')
-						console.log('directory')
 					let placeholder
 					if (attr.renderMap)
 						placeholder = attr.renderMap.get(attr)
