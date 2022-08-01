@@ -197,6 +197,10 @@ const CoCreateRender = {
 
 	setValue: function(els, data, renderArray, renderKey){
 		if (!data) return;
+		let isRenderKey
+		if (data.renderKey)
+			isRenderKey = true
+			
 		const that = this;
 		Array.from(els).forEach(el => {
 			let updateData;
@@ -205,16 +209,16 @@ const CoCreateRender = {
 				if (el.hasAttribute('render-clone')) {
 					el.renderData = {...data}
 				}
-				if (el.renderMap) {
+				if (el.renderMap && !isRenderKey) {
 					let placeholder = el.renderMap.get(el)
 					if (placeholder){
 						let valueType = el.getAttribute('value-type')
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
-						if (renderArray)
-						updateData = data[renderArray][0]
+						if (renderArray && Array.isArray(data[renderArray]))
+							updateData = data[renderArray][0]
 						if (renderKey)
-						updateData = {[renderKey]: updateData}
+							updateData = {[renderKey]: updateData}
 						let textContent = placeholder.placeholder
 						let text = that.__replaceValue(updateData, textContent, renderKey, valueType);
 						if (text && text != el.renderedValue)
@@ -225,20 +229,22 @@ const CoCreateRender = {
 				Array.from(el.attributes).forEach(attr=>{
 					let attr_name = attr.name.toLowerCase();
 					let attrValue = attr.value;
-
+					let dir = el.getAttribute('name')
+					if (dir == 'directory')
+						console.log('directory')
 					let placeholder
 					if (attr.renderMap)
 						placeholder = attr.renderMap.get(attr)
 					else
 						that.renderMap(attr, attr.value, renderArray, renderKey)
 
-					if(placeholder){
+					if(placeholder && !isRenderKey){
 						let updateData = data;
 						// let oldValue = attrValue 
 						let temp = placeholder.placeholder;
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
-						if (renderArray)
+						if (renderArray && Array.isArray(data[renderArray]))
 							updateData = data[renderArray][0]
 						if (renderKey)
 							updateData = {[renderKey]: updateData}
@@ -278,12 +284,12 @@ const CoCreateRender = {
 				let textContent, placeholder, text;
 				if (el.renderMap)
 					placeholder = el.renderMap.get(el)
-					if (placeholder) {
+					if (placeholder && !isRenderKey) {
 						let updateData = data;
 						textContent = placeholder.placeholder
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
-						if (renderArray)
+						if (renderArray &&  Array.isArray(data[renderArray]))
 							updateData = data[renderArray][0]
 						if (renderKey)
 							updateData = {[renderKey]: updateData}
@@ -291,7 +297,8 @@ const CoCreateRender = {
 					}
 				if (!placeholder && !text) {
 					textContent = el.textContent;
-					that.renderMap(el, textContent, renderArray, renderKey)
+					if (!el.renderMap)
+						that.renderMap(el, textContent, renderArray, renderKey)
 					text = that.__replaceValue(data, textContent, renderKey, valueType);
 				}
 
