@@ -1,6 +1,6 @@
 {
   "name": "@cocreate/render",
-  "version": "1.12.2",
+  "version": "1.12.3",
   "description": "A simple render component in vanilla javascript. Easily configured using HTML5 attributes and/or JavaScript API.",
   "keywords": [
     "render",

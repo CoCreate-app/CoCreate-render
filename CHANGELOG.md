@@ -1,3 +1,10 @@
+## [1.12.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.12.2...v1.12.3) (2022-08-19)
+
+
+### Bug Fixes
+
+* add css file for class template display none ([4cfa7ee](https://github.com/CoCreate-app/CoCreate-render/commit/4cfa7ee8a6a1d4105f9144ce713a3435db4090f6))
+
 ## [1.12.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.12.1...v1.12.2) (2022-08-01)
 
 
