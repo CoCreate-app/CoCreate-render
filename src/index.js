@@ -9,7 +9,7 @@ import './index.css';
 
 const CoCreateRender = {
 	// Can be called from crud getObjectValueByPath
-	__getValueFromObject : function(json, path) {
+	__getValueFromObject: function(json, path) {
 		try {
 			if(typeof json == 'undefined' || !path)
 				return false;
@@ -114,6 +114,7 @@ const CoCreateRender = {
 	
 	render: function(template, data) {
 		const self = this;
+		const templateId =  template.getAttribute('templateId')
 		let type = '';
 		let arrayData = data;
 
@@ -132,14 +133,20 @@ const CoCreateRender = {
 		}
 
 		let renderKey = template.getAttribute('render-key') || type;
-
+		
+		if (!template.renderedKeys)
+			template.renderedKeys = new Map()
+		
 		if (isRenderObject && type) {
 			let Data = self.__getValueFromObject(arrayData, type);
 			let array = self.isRenderObject(Data, renderKey)
 			for (let item of array) {
-				let cloneEl = this.cloneEl(template);
-				self.setValue([cloneEl], item, renderArray, renderKey);
-				template.insertAdjacentElement('beforebegin', cloneEl);
+				if (!template.renderedKeys.has(item[renderKey].key)){
+					template.renderedKeys.set(item[renderKey].key, '')
+					let cloneEl = this.cloneEl(template);
+					self.setValue([cloneEl], item, renderArray, renderKey);
+					template.insertAdjacentElement('beforebegin', cloneEl);
+				}
 			}
 		} else {
 
@@ -154,10 +161,14 @@ const CoCreateRender = {
 
 			if(type && Array.isArray(arrayData)) {
 				arrayData.forEach((item) => {
-					let cloneEl = this.cloneEl(template);
-					let object = self.__createObject(item, renderKey);
-					self.setValue([cloneEl], object, renderArray, renderKey);
-					template.insertAdjacentElement('beforebegin', cloneEl);
+					if (!template.renderedKeys.has(item)){
+						template.renderedKeys.set(item, '')
+	
+						let cloneEl = this.cloneEl(template);
+						let object = self.__createObject(item, renderKey);
+						self.setValue([cloneEl], object, renderArray, renderKey);
+						template.insertAdjacentElement('beforebegin', cloneEl);
+					}
 				});
 			}
 		}
@@ -265,7 +276,7 @@ const CoCreateRender = {
 				if(el.childNodes.length > 0) {		
 					that.setValue(el.childNodes, updateData || data, renderArray, renderKey);
 				}
-				if (el.classList.contains('template') && !el.hasAttribute('template_id')) {
+				if ((el.tagName == 'TEMPLATE' || el.classList.contains('template')) && !el.hasAttribute('template_id')) {
 					that.render(el, data);
 				}
 				// if (el.hasAttribute('render-array') || el.hasAttribute('render-object')) {
