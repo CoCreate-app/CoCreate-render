@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.12.3...v1.13.0) (2022-08-23)
+
+
+### Features
+
+* add a map containing rendered keys to templates, if key not rendered clone template and render key ([0fd8cfd](https://github.com/CoCreate-app/CoCreate-render/commit/0fd8cfd3695280e19b6e518fd45d873d1637ed6e))
+
 ## [1.12.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.12.2...v1.12.3) (2022-08-19)
 
 
