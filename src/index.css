@@ -1,1 +1,1 @@
-.template {display: none !important;}
+.template, [template] {display: none !important;}

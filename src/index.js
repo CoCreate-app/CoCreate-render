@@ -194,12 +194,24 @@ const CoCreateRender = {
 		let cloneEl = template.cloneNode(true);
 
 		let templateId = cloneEl.getAttribute('template_id');
-		if (templateId)
-			cloneEl.setAttribute('templateId', templateId);
-
-		cloneEl.removeAttribute('template_id');
+	 	if (templateId) {
+		 	cloneEl.setAttribute('templateId', templateId);
+			cloneEl.removeAttribute('template_id');
+		}
+		
+		if(cloneEl.tagName == 'TEMPLATE'){
+			cloneEl = template.content.firstElementChild
+			for (let attribute of template.attributes){
+				let attrName = attribute.name;
+				let attrValue = attribute.value || '';
+				cloneEl.setAttribute(attrName, attrValue);
+			}
+		}
+		else {
+			cloneEl.classList.remove('template');
+			cloneEl.removeAttribute('template');
+		}
 		cloneEl.setAttribute('render-clone', '');	
-		cloneEl.classList.remove('template');
 
 		if (template.dataOriginal)
 			cloneEl.dataOriginal = template.dataOriginal
@@ -276,7 +288,7 @@ const CoCreateRender = {
 				if(el.childNodes.length > 0) {		
 					that.setValue(el.childNodes, updateData || data, renderArray, renderKey);
 				}
-				if ((el.tagName == 'TEMPLATE' || el.classList.contains('template')) && !el.hasAttribute('template_id')) {
+				if ((el.tagName == 'TEMPLATE' || el.hasAttribute('template') || el.classList.contains('template')) && !el.hasAttribute('template_id')) {
 					that.render(el, data);
 				}
 				// if (el.hasAttribute('render-array') || el.hasAttribute('render-object')) {
@@ -350,10 +362,10 @@ const CoCreateRender = {
 		if (selector) {
 			let template = queryDocumentSelector(selector);
 			if (!template) return;
-			if (template.tagNmae === 'TEMPLATE')
-				template = template.childNodes;
+			// if (template.tagNmae === 'TEMPLATE')
+			// 	template = template.childNodes;
 			template.dataOriginal = {...data}
-			if (template.classList.contains('template')) {
+			if (template.tagName == 'TEMPLATE' || template.hasAttribute('template') || template.classList.contains('template')) {
 				this.render(template, data);
 			}
 			else
@@ -362,7 +374,7 @@ const CoCreateRender = {
 			for (let element of elements)
 				element.dataOriginal = {...this.dataOriginal};
 
-			if (elements.length == 1 && elements[0].classList.contains('template')){
+			if (elements.length == 1 && (elements[0].tagName == 'TEMPLATE' || elements[0].hasAttribute('template') || elements[0].classList.contains('template'))){
 				this.render(elements[0], data);
 			}
 			else
