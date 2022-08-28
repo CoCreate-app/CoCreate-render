@@ -68,11 +68,15 @@ const CoCreateRender = {
 		let variables = inputValue.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/g);
 		if (variables) {
 			variables.forEach((attr) => {
-				if (attr.includes(`collection`))
-					if( this.dataOriginal[renderKey] && this.dataOriginal[renderKey]['collection'] && attr.includes(`{{${renderKey}.`))
-						data[renderKey]['collection'] = this.dataOriginal[renderKey]['collection']
+				let value;
 
-				let value = self.__getValue(data, attr);
+				if (attr == "{{data._id}}" || attr == `{{${renderKey}._id}}` ||  attr == "{{document_id}}")
+					value = this.document_id;
+				else if (attr == "{{collection}" || attr == `{{${renderKey}.collection}}`)
+					value = this.collection;
+				else 
+					value = self.__getValue(data, attr);
+				
 				if (value) {
 					if (typeof(value) == "object") {
 						value = this.generateString(value)	
@@ -221,14 +225,16 @@ const CoCreateRender = {
 	document_id: '',
 	setValue: function(els, data, renderArray, renderKey){
 		if (!data) return;
+		
 		let isRenderKey
 		if (data.renderKey)
 			isRenderKey = true
 
-		if(data.document_id || data.data && data.data._id ) {
-			let id = data.document_id || data.data._id;
-			this.document_id = id;
-		}
+		if (data.data && data.data._id )
+			this.document_id =  data.data._id;
+			
+		if (data.collection)
+			this.collection = data.collection;
 			
 		const that = this;
 		Array.from(els).forEach(el => {
@@ -285,12 +291,6 @@ const CoCreateRender = {
 					// ToDo support attibute name replace if has {{}}
 					// attr_name = that.__replaceValue(data, attr_name, renderKey);
 
-					if (attr.value == "{{data._id}}" || attr.value == "{{document_id}}") {
-						// if(data.data || data.document_id) {
-							// let id = data.data._id || data.document_id;
-							el.setAttribute(attr_name, this.document_id);
-						// }
-					}
 					if (attrValue || attrValue == "") {
 						el.setAttribute(attr_name, attrValue);
 					}
@@ -485,8 +485,8 @@ observer.init({
 				obj = {...obj, ...data}
 			}
 			
-			if (!obj['document_id'] && obj.data._id)
-				obj['document_id'] = obj.data._id
+			// if (!obj['document_id'] && obj.data._id)
+			// 	obj['document_id'] = obj.data._id
 
 			CoCreateRender.data({
 				elements: [element],
