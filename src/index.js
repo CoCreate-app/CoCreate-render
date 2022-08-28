@@ -41,7 +41,6 @@ const CoCreateRender = {
 			return this.__getValueFromObject(data, result[1].trim());
 		}
 		return false;
-		
 	},
 	
 	__createObject: function (data, path) {
@@ -219,11 +218,17 @@ const CoCreateRender = {
 		return cloneEl;
 	},
 
+	document_id: '',
 	setValue: function(els, data, renderArray, renderKey){
 		if (!data) return;
 		let isRenderKey
 		if (data.renderKey)
 			isRenderKey = true
+
+		if(data.document_id || data.data && data.data._id ) {
+			let id = data.document_id || data.data._id;
+			this.document_id = id;
+		}
 			
 		const that = this;
 		Array.from(els).forEach(el => {
@@ -280,6 +285,12 @@ const CoCreateRender = {
 					// ToDo support attibute name replace if has {{}}
 					// attr_name = that.__replaceValue(data, attr_name, renderKey);
 
+					if (attr.value == "{{data._id}}" || attr.value == "{{document_id}}") {
+						// if(data.data || data.document_id) {
+							// let id = data.data._id || data.document_id;
+							el.setAttribute(attr_name, this.document_id);
+						// }
+					}
 					if (attrValue || attrValue == "") {
 						el.setAttribute(attr_name, attrValue);
 					}
@@ -473,6 +484,9 @@ observer.init({
 			for (let data of array.reverse()){
 				obj = {...obj, ...data}
 			}
+			
+			if (!obj['document_id'] && obj.data._id)
+				obj['document_id'] = obj.data._id
 
 			CoCreateRender.data({
 				elements: [element],
