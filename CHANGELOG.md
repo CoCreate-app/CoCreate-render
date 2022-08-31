@@ -1,3 +1,15 @@
+# [1.14.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.13.0...v1.14.0) (2022-08-31)
+
+
+### Bug Fixes
+
+* document_id was not inserting on some of the nested elements ([0ef42c7](https://github.com/CoCreate-app/CoCreate-render/commit/0ef42c73100f1af539c82c8cd0968c34c88655e6))
+
+
+### Features
+
+* render collection and document_id with and without a renderKey ([1f80cf3](https://github.com/CoCreate-app/CoCreate-render/commit/1f80cf3f224f9b894a9107bd009993f9673879c0))
+
 # [1.13.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.12.3...v1.13.0) (2022-08-23)
 
 
