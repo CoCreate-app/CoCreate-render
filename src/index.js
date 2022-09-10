@@ -225,13 +225,13 @@ const CoCreateRender = {
 	document_id: '',
 	setValue: function(els, data, renderArray, renderKey){
 		if (!data) return;
-		
+
 		let isRenderKey
 		if (data.renderKey)
 			isRenderKey = true
 
-		if (data.data && data.data._id )
-			this.document_id =  data.data._id;
+		if (data.document_id || data.data && data.data._id)
+			this.document_id =  data.document_id || data.data._id;
 			
 		if (data.collection)
 			this.collection = data.collection;
@@ -252,6 +252,8 @@ const CoCreateRender = {
 						renderArray = placeholder.renderArray
 						if (renderArray && Array.isArray(data[renderArray]))
 							updateData = data[renderArray][0]
+						else
+							updateData = data[renderArray]
 						if (renderKey)
 							updateData = {[renderKey]: updateData}
 						let textContent = placeholder.placeholder
@@ -278,7 +280,9 @@ const CoCreateRender = {
 						renderArray = placeholder.renderArray
 						if (renderArray && Array.isArray(data[renderArray]))
 							updateData = data[renderArray][0]
-						if (renderKey)
+						else
+							updateData = data[renderArray]
+						if (renderKey && updateData)
 							updateData = {[renderKey]: updateData}
 	
 						attrValue = that.__replaceValue(updateData, temp, renderKey);
@@ -321,8 +325,10 @@ const CoCreateRender = {
 						textContent = placeholder.placeholder
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
-						if (renderArray &&  Array.isArray(data[renderArray]))
+						if (renderArray && Array.isArray(data[renderArray]))
 							updateData = data[renderArray][0]
+						else
+							updateData = data[renderArray]
 						if (renderKey)
 							updateData = {[renderKey]: updateData}
 						text = that.__replaceValue(updateData, textContent, renderKey, valueType);
