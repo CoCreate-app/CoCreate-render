@@ -147,6 +147,7 @@ const CoCreateRender = {
 				if (!template.renderedKeys.has(item[renderKey].key)){
 					template.renderedKeys.set(item[renderKey].key, '')
 					let cloneEl = this.cloneEl(template);
+					cloneEl.setAttribute('renderedKey', item[renderKey].key)
 					self.setValue([cloneEl], item, renderArray, renderKey);
 					template.insertAdjacentElement('beforebegin', cloneEl);
 				}
