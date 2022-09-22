@@ -1,3 +1,15 @@
+# [1.15.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.14.1...v1.15.0) (2022-09-22)
+
+
+### Bug Fixes
+
+* get data from an array or object. ([402102c](https://github.com/CoCreate-app/CoCreate-render/commit/402102cdeffdfc5750f473623bc43e4e1acba1fc))
+
+
+### Features
+
+* render changes of keys and there values ([7b016e9](https://github.com/CoCreate-app/CoCreate-render/commit/7b016e9a0a98b344629d6a0e4e2682e7c34ac876))
+
 ## [1.14.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.14.0...v1.14.1) (2022-09-01)
 
 
