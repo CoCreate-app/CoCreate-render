@@ -293,7 +293,7 @@ const CoCreateRender = {
 					else
 						attrValue = that.__replaceValue(data, attrValue, renderKey);
 					
-					// ToDo support attibute name replace if has {{}}
+					// ToDo: support attibute name replace if has {{}}
 					// attr_name = that.__replaceValue(data, attr_name, renderKey);
 
 					if (attrValue || attrValue == "") {
