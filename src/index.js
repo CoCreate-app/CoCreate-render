@@ -163,6 +163,9 @@ const CoCreateRender = {
 				template.insertAdjacentElement('beforebegin', cloneEl);
 			}
 
+			if (!Array.isArray(arrayData))
+				arrayData = [arrayData]
+
 			if(type && Array.isArray(arrayData)) {
 				arrayData.forEach((item) => {
 					if (!template.renderedKeys.has(item)){
