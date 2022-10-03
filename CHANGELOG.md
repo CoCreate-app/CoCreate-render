@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.15.11...v1.16.0) (2022-10-03)
+
+
+### Features
+
+* render Array will convert an object to array ([85bc9bd](https://github.com/CoCreate-app/CoCreate-render/commit/85bc9bd21040f5e75f63cc16f7002796a53f114a))
+
 ## [1.15.11](https://github.com/CoCreate-app/CoCreate-render/compare/v1.15.10...v1.15.11) (2022-10-02)
 
 
