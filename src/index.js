@@ -234,8 +234,8 @@ const CoCreateRender = {
 		if (data.renderKey)
 			isRenderKey = true
 
-		if (data.document_id || data.data && data.data._id)
-			this.document_id =  data.document_id || data.data._id;
+		if (data.document._id)
+			this.document_id =  data.document._id;
 			
 		if (data.collection)
 			this.collection = data.collection;
