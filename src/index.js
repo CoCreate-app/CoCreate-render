@@ -3,8 +3,8 @@ import action from '@cocreate/actions';
 import observer from '@cocreate/observer';
 import uuid from '@cocreate/uuid';
 import { queryDocumentSelector } from '@cocreate/utils';
+import '@cocreate/element-prototype';
 import './index.css';
-// import { getValue } from '../../CoCreate-elements/src/getValue';
 // import api from '@cocreate/api';
 
 const CoCreateRender = {
@@ -70,11 +70,11 @@ const CoCreateRender = {
 			variables.forEach((attr) => {
 				let value;
 
-				if (attr == "{{data._id}}" || attr == `{{${renderKey}._id}}` ||  attr == "{{document_id}}")
-					value = this.document_id;
-				else if (attr == "{{collection}" || attr == `{{${renderKey}.collection}}`)
-					value = this.collection;
-				else 
+				// if (attr == "{{data._id}}" || attr == `{{${renderKey}._id}}` ||  attr == "{{document_id}}" ||  attr == "{{document._id}}")
+				// 	value = this.document_id;
+				// else if (attr == "{{collection}" || attr == `{{${renderKey}.collection}}`)
+				// 	value = this.collection;
+				// else 
 					value = self.__getValue(data, attr);
 				
 				if (value) {
@@ -234,11 +234,11 @@ const CoCreateRender = {
 		if (data.renderKey)
 			isRenderKey = true
 
-		if (data.document._id)
-			this.document_id =  data.document._id;
+		// if (data.document._id)
+		// 	this.document_id =  data.document._id;
 			
-		if (data.collection)
-			this.collection = data.collection;
+		// if (data.collection)
+		// 	this.collection = data.collection;
 			
 		const that = this;
 		Array.from(els).forEach(el => {

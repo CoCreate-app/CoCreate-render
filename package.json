@@ -64,6 +64,7 @@
     "@cocreate/actions": "^1.5.12",
     "@cocreate/api": "^1.4.12",
     "@cocreate/docs": "^1.3.18",
+    "@cocreate/element-prototype": "^1.0.0",
     "@cocreate/utils": "^1.10.12"
   }
 }
