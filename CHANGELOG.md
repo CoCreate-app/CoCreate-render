@@ -1,3 +1,12 @@
+## [1.16.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.0...v1.16.1) (2022-11-21)
+
+
+### Bug Fixes
+
+* data.document._id ([b416a9c](https://github.com/CoCreate-app/CoCreate-render/commit/b416a9cfe975d8454a34d176a60c326a4dbf82c4))
+* improved handling of data structure, added @cocreate/element-prototype ([e458cfc](https://github.com/CoCreate-app/CoCreate-render/commit/e458cfc7fbf034701cc7e90bacc625d6705c4259))
+* renamed {{data.key}} to {{document.key}} ([f108b83](https://github.com/CoCreate-app/CoCreate-render/commit/f108b8324f80f22b3b784f02738949e7b357912f))
+
 # [1.16.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.15.11...v1.16.0) (2022-10-03)
 
 
