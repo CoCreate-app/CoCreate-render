@@ -11,7 +11,7 @@ const CoCreateRender = {
 	// Can be called from crud getObjectValueByPath
 	__getValueFromObject: function(json, path) {
 		try {
-			if(typeof json == 'undefined' || !path)
+			if (typeof json == 'undefined' || !path)
 				return false;
 			if (path.indexOf('.') == -1 && path.includes('collection'))
 				json = this.dataOriginal
@@ -166,7 +166,7 @@ const CoCreateRender = {
 			if (!Array.isArray(arrayData))
 				arrayData = [arrayData]
 
-			if(type && Array.isArray(arrayData)) {
+			if (type && Array.isArray(arrayData)) {
 				arrayData.forEach((item) => {
 					if (!template.renderedKeys.has(item)){
 						template.renderedKeys.set(item, '')
@@ -206,7 +206,7 @@ const CoCreateRender = {
 			cloneEl.removeAttribute('template_id');
 		}
 		
-		if(cloneEl.tagName == 'TEMPLATE'){
+		if (cloneEl.tagName == 'TEMPLATE'){
 			cloneEl = template.content.firstElementChild
 			for (let attribute of template.attributes){
 				let attrName = attribute.name;
@@ -276,7 +276,7 @@ const CoCreateRender = {
 					else
 						that.renderMap(attr, attr.value, renderArray, renderKey)
 
-					if(placeholder && !isRenderKey){
+					if (placeholder && !isRenderKey){
 						let updateData = data;
 						// let oldValue = attrValue 
 						let temp = placeholder.placeholder;
@@ -304,7 +304,7 @@ const CoCreateRender = {
 					}
 				});
 
-				if(el.childNodes.length > 0) {		
+				if (el.childNodes.length > 0) {		
 					that.setValue(el.childNodes, updateData || data, renderArray, renderKey);
 				}
 				if ((el.tagName == 'TEMPLATE' || el.hasAttribute('template') || el.classList.contains('template')) && !el.hasAttribute('template_id')) {
@@ -453,7 +453,7 @@ observer.init({
 						renderData.set(data, '')
 					
 					let parentKey = el.getAttribute('parentKey')
-					if(parentKey && parentKey != null) {
+					if (parentKey && parentKey != null) {
 						if (/^\d+$/.test(parentKey))
 							parentKey = `[${parentKey}]`
 						parentKeys.push(parentKey)
@@ -465,7 +465,7 @@ observer.init({
 
 			let parentKey;
 			parentKey = parentElement.getAttribute('parentKey')
-			if(renderKey == '$auto' || parentKey || parentKeys) {
+			if (renderKey == '$auto' || parentKey || parentKeys) {
 				let template = element.outerHTML
 				if (renderKey) {				
 					template = template.replace(/\$auto/g, uuid.generate(6));
