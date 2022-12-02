@@ -1,3 +1,10 @@
+## [1.16.15](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.14...v1.16.15) (2022-12-02)
+
+
+### Bug Fixes
+
+* bump dependencies ([ca244a9](https://github.com/CoCreate-app/CoCreate-render/commit/ca244a937c9590c3ec404e20e17c9513144bcd37))
+
 ## [1.16.14](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.13...v1.16.14) (2022-11-28)
 
 
