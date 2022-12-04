@@ -1,3 +1,11 @@
+## [1.16.17](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.16...v1.16.17) (2022-12-04)
+
+
+### Bug Fixes
+
+* bump dependencies ([400bc8f](https://github.com/CoCreate-app/CoCreate-render/commit/400bc8fdde09ecf5e90386136dcb62671a164581))
+* utis.getValueFromObject ([7f18477](https://github.com/CoCreate-app/CoCreate-render/commit/7f18477f4ee4f7debe7bd4dbc4b4befbe6fa837c))
+
 ## [1.16.16](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.15...v1.16.16) (2022-12-02)
 
 
