@@ -2,43 +2,17 @@
 import action from '@cocreate/actions';
 import observer from '@cocreate/observer';
 import uuid from '@cocreate/uuid';
-import { queryDocumentSelector } from '@cocreate/utils';
+import { queryDocumentSelector, getValueFromObject } from '@cocreate/utils';
 import '@cocreate/element-prototype';
 import './index.css';
 // import api from '@cocreate/api';
 
 const CoCreateRender = {
-	// Can be called from utils getValueFromObject
-	__getValueFromObject: function(json, path) {
-		try {
-			if (typeof json == 'undefined' || !path)
-				return false;
-			if (path.indexOf('.') == -1 && path.includes('collection'))
-				json = this.dataOriginal
-			if (/\[([0-9]*)\]/g.test(path)) {
-				path = path.replace(/\[/g, '.');
-				if (path.endsWith(']'))
-					path = path.slice(0, -1)
-				path = path.replace(/\]./g, '.');
-				path = path.replace(/\]/g, '.');
-			}
-			let jsonData = json, subpath = path.split('.');
-			
-			for (let i = 0; i < subpath.length; i++) {
-				jsonData = jsonData[subpath[i]];
-				if (!jsonData) return false;
-			}
-			return jsonData;
-		}catch(error){
-			console.log("Error in getValueFromObject", error);
-			return false;
-		}
-	},
 	
 	__getValue: function(data, attrValue) {
 		let result = /{{\s*([\w\W]+)\s*}}/g.exec(attrValue);
 		if (result) {
-			return this.__getValueFromObject(data, result[1].trim());
+			return getValueFromObject(data, result[1].trim());
 		}
 		return false;
 	},
@@ -141,7 +115,7 @@ const CoCreateRender = {
 			template.renderedKeys = new Map()
 		
 		if (isRenderObject && type) {
-			let Data = self.__getValueFromObject(arrayData, type);
+			let Data = self.getValueFromObject(arrayData, type);
 			let array = self.isRenderObject(Data, renderKey)
 			for (let item of array) {
 				if (!template.renderedKeys.has(item[renderKey].key)){
@@ -155,7 +129,7 @@ const CoCreateRender = {
 		} else {
 
 			if (!Array.isArray(arrayData))
-				arrayData = this.__getValueFromObject(data, type);
+				arrayData = getValueFromObject(data, type);
 
 			if (!arrayData) {
 				let cloneEl = this.cloneEl(template);
