@@ -1,6 +1,6 @@
 {
   "name": "@cocreate/render",
-  "version": "1.16.17",
+  "version": "1.16.18",
   "description": "A simple render component in vanilla javascript. Easily configured using HTML5 attributes and/or JavaScript API.",
   "keywords": [
     "render",
@@ -20,7 +20,9 @@
     "html5-framework",
     "javascript-framework"
   ],
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "start": "npx webpack --config webpack.config.js",
     "build": "NODE_ENV=production npx webpack --config webpack.config.js",
@@ -34,7 +36,9 @@
   },
   "author": "CoCreate LLC",
   "license": "MIT",
-  "bugs": { "url": "https://github.com/CoCreate-app/CoCreate-render/issues" },
+  "bugs": {
+    "url": "https://github.com/CoCreate-app/CoCreate-render/issues"
+  },
   "homepage": "https://cocreate.app/docs/render",
   "funding": {
     "type": "GitHub Sponsors ❤",
