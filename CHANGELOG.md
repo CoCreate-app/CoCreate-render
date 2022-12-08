@@ -1,3 +1,10 @@
+## [1.16.19](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.18...v1.16.19) (2022-12-08)
+
+
+### Bug Fixes
+
+* add @cocreate/observer ([d3da675](https://github.com/CoCreate-app/CoCreate-render/commit/d3da6752716e4a67d89ce655c313608a6ef9abfc))
+
 ## [1.16.18](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.17...v1.16.18) (2022-12-07)
 
 
