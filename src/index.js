@@ -91,12 +91,18 @@ const CoCreateRender = {
 	
 	render: function(template, data) {
 		const self = this;
-		const templateId =  template.getAttribute('templateId')
 		let type = '';
 		let arrayData = data;
 
+		let exclude = template.getAttribute('render-exclude')
+		if (exclude) {
+			exclude = exclude.replace(/ /g, '').split(",")
+			if (!Array.isArray(exclude))
+				exclude = [exclude]
+		}
+
 		const isRenderObject = template.hasAttribute('render-object');
-		if (isRenderObject){
+		if (isRenderObject) {
 			const renderObject = template.getAttribute('render-object');
 			type = renderObject || ''
 		}
@@ -115,8 +121,8 @@ const CoCreateRender = {
 			template.renderedKeys = new Map()
 		
 		if (isRenderObject && type) {
-			let Data = self.getValueFromObject(arrayData, type);
-			let array = self.isRenderObject(Data, renderKey)
+			let Data = getValueFromObject(arrayData, type);
+			let array = self.renderObject(Data, renderKey, exclude)
 			for (let item of array) {
 				if (!template.renderedKeys.has(item[renderKey].key)){
 					template.renderedKeys.set(item[renderKey].key, '')
@@ -155,18 +161,20 @@ const CoCreateRender = {
 		}
 	},
 	
-	isRenderObject: function(data, renderKey) {	
+	renderObject: function(data, renderKey, exclude) {	
 		let array = []
 		if (!data) 
 			return array
 		for (const [key, value] of Object.entries(data)) {
-			let type = 'string';
-			if (typeof(value) == "object")
-				if (Array.isArray(value))
-					type = 'array'
-				else
-					type = 'object'
-			array.push({[renderKey]: {key, value, type}})
+			if (!exclude.includes(key)) {
+				let type = 'string';
+				if (typeof(value) == "object")
+					if (Array.isArray(value))
+						type = 'array'
+					else
+						type = 'object'
+				array.push({[renderKey]: {key, value, type}})
+			}
 		}
 		return array
 	},
@@ -194,9 +202,6 @@ const CoCreateRender = {
 		}
 		cloneEl.setAttribute('render-clone', '');	
 
-		if (template.dataOriginal)
-			cloneEl.dataOriginal = template.dataOriginal
-
 		return cloneEl;
 	},
 
@@ -207,12 +212,6 @@ const CoCreateRender = {
 		let isRenderKey
 		if (data.renderKey)
 			isRenderKey = true
-
-		// if (data.document._id)
-		// 	this.document_id =  data.document._id;
-			
-		// if (data.collection)
-		// 	this.collection = data.collection;
 			
 		const that = this;
 		Array.from(els).forEach(el => {
@@ -284,11 +283,6 @@ const CoCreateRender = {
 				if ((el.tagName == 'TEMPLATE' || el.hasAttribute('template') || el.classList.contains('template')) && !el.hasAttribute('template_id')) {
 					that.render(el, data);
 				}
-				// if (el.hasAttribute('render-array') || el.hasAttribute('render-object')) {
-				// 	if (!el.dataOriginal) {
-				// 		that.render(el, data);
-				// 	}
-				// }
 
 			}
 
@@ -349,26 +343,16 @@ const CoCreateRender = {
 			node['renderMap'].set(node, {placeholder, renderArray, renderKey})
 	},
 	
-	dataOriginal: {},
 	data: function({selector, data, elements}) {
-		this.dataOriginal = {...data};
-		delete this.dataOriginal.data
-
 		if (selector) {
 			let template = queryDocumentSelector(selector);
 			if (!template) return;
-			// if (template.tagNmae === 'TEMPLATE')
-			// 	template = template.childNodes;
-			template.dataOriginal = {...data}
 			if (template.tagName == 'TEMPLATE' || template.hasAttribute('template') || template.classList.contains('template')) {
 				this.render(template, data);
 			}
 			else
 				this.setValue([template], data);
 		} else if (elements) {
-			for (let element of elements)
-				element.dataOriginal = {...this.dataOriginal};
-
 			if (elements.length == 1 && (elements[0].tagName == 'TEMPLATE' || elements[0].hasAttribute('template') || elements[0].classList.contains('template'))){
 				this.render(elements[0], data);
 			}
@@ -419,13 +403,11 @@ observer.init({
 				let data;
 				el = el.parentElement
 				if (el) {
-					if (el.dataOriginal)
-						renderData.set(el.dataOriginal, '')
 					if (el.hasAttribute('render-clone'))
 						data = el.renderData
-					if (data)
+					if (data) {
 						renderData.set(data, '')
-					
+					}
 					let parentKey = el.getAttribute('parentKey')
 					if (parentKey && parentKey != null) {
 						if (/^\d+$/.test(parentKey))
@@ -469,9 +451,6 @@ observer.init({
 				obj = {...obj, ...data}
 			}
 			
-			// if (!obj['document_id'] && obj.data._id)
-			// 	obj['document_id'] = obj.data._id
-
 			CoCreateRender.data({
 				elements: [element],
 				data: obj
