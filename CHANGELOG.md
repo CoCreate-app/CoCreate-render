@@ -1,3 +1,15 @@
+# [1.17.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.21...v1.17.0) (2022-12-11)
+
+
+### Bug Fixes
+
+* bump dependencies ([eb9a3c7](https://github.com/CoCreate-app/CoCreate-render/commit/eb9a3c79fadb6bf22829b3d1cf42334530936581))
+
+
+### Features
+
+* render-exclude to define keys to be excluded from rendering.  depreciated dataOriginal ([475b641](https://github.com/CoCreate-app/CoCreate-render/commit/475b641c4d37b4d0395142e03baa979df2bf0032))
+
 ## [1.16.21](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.20...v1.16.21) (2022-12-09)
 
 
