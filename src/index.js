@@ -94,7 +94,7 @@ const CoCreateRender = {
 		let type = '';
 		let arrayData = data;
 
-		let exclude = template.getAttribute('render-exclude')
+		let exclude = template.getAttribute('render-exclude') || ''
 		if (exclude) {
 			exclude = exclude.replace(/ /g, '').split(",")
 			if (!Array.isArray(exclude))
