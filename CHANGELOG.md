@@ -1,3 +1,11 @@
+## [1.17.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.17.0...v1.17.1) (2022-12-12)
+
+
+### Bug Fixes
+
+* bump dependencies ([c4fa546](https://github.com/CoCreate-app/CoCreate-render/commit/c4fa5468fe4ea0a9fb8c403176b42caf6fe74c57))
+* if render-exclude null set empty string ([d9c8a3e](https://github.com/CoCreate-app/CoCreate-render/commit/d9c8a3e41514ca0b6c897832754037d07a8f9c01))
+
 # [1.17.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.16.21...v1.17.0) (2022-12-11)
 
 
