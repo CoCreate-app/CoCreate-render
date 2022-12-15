@@ -1,3 +1,10 @@
+## [1.17.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.17.3...v1.17.4) (2022-12-15)
+
+
+### Bug Fixes
+
+* add missing dev dependency style-loader ([93e1502](https://github.com/CoCreate-app/CoCreate-render/commit/93e1502dab5c9216b8a487abcad875befdd7d4e9))
+
 ## [1.17.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.17.2...v1.17.3) (2022-12-13)
 
 
