@@ -1,3 +1,11 @@
+## [1.17.8](https://github.com/CoCreate-app/CoCreate-render/compare/v1.17.7...v1.17.8) (2022-12-22)
+
+
+### Bug Fixes
+
+* bump dependencies ([ed43963](https://github.com/CoCreate-app/CoCreate-render/commit/ed4396375657d5a08a6ba300517bab0d0a774f9c))
+* update cdn ([a637a2e](https://github.com/CoCreate-app/CoCreate-render/commit/a637a2e041657b369b01cc34d067394f9f8227d3))
+
 ## [1.17.7](https://github.com/CoCreate-app/CoCreate-render/compare/v1.17.6...v1.17.7) (2022-12-22)
 
 
