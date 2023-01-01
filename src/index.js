@@ -183,9 +183,13 @@ const CoCreateRender = {
 		let cloneEl = template.cloneNode(true);
 
 		let templateId = cloneEl.getAttribute('template_id');
+		if (!templateId)
+			templateId = cloneEl.getAttribute('template');
+
 	 	if (templateId) {
 		 	cloneEl.setAttribute('templateId', templateId);
 			cloneEl.removeAttribute('template_id');
+			cloneEl.removeAttribute('template');
 		}
 		
 		if (cloneEl.tagName == 'TEMPLATE'){
