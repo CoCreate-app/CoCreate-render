@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.18.1...v1.19.0) (2023-01-02)
+
+
+### Features
+
+* class="template" template_id="id" replaced with template="id" ([53b5abb](https://github.com/CoCreate-app/CoCreate-render/commit/53b5abbe94428e88e0d56207bb829109bae1ad68))
+
 ## [1.18.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.18.0...v1.18.1) (2023-01-01)
 
 
