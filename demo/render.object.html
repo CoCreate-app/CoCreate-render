@@ -10,7 +10,7 @@
     </style>
     <body>
         
-        <div class="template" template_id="abc1">
+        <div template="abc1">
             <!-- <div>{{data}}</div>
             <h1> {{document.collection}} {{document._id}}</h1> -->
             <div class="template" render-object="" render-key="one">
@@ -26,7 +26,7 @@
         
         /** Example **/
         CoCreate.render.data({
-            selector: '[template_id=abc1]',
+            selector: '[template=abc1]',
             data: {
                 collection : 'dededede',
                 data: [{

@@ -373,7 +373,7 @@ function renderKey(element) {
 	let data = CoCreate.api.getFormData('render-key', 'renderKey',  form);
 
 	CoCreateRender.data({
-		selector: "[template_id='renderKey']",
+		selector: "[template='renderKey']",
 		data: {renderKey: data}
 	});
 	

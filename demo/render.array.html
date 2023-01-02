@@ -18,7 +18,7 @@
                     </cc-option>
                 </cc-options>
 
-            <div class="template" template_id="abc1">
+            <div template="abc1">
                 <div class="template" render-array="data[0].current" render-key="current_org"  value="{{current_org.name}}">
                     <h3>{{current_org.name}}</h3>
                 </div>
@@ -29,7 +29,7 @@
             
             /** Example **/
             CoCreate.render.data({
-                selector: '[template_id=abc1]',
+                selector: '[template=abc1]',
                 data: {
                     collection : 'dededede',
                     data: [{
