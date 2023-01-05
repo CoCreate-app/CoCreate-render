@@ -1,3 +1,11 @@
+## [1.19.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.19.0...v1.19.1) (2023-01-05)
+
+
+### Bug Fixes
+
+* bump cdn to 1.39.4 ([24cb7e1](https://github.com/CoCreate-app/CoCreate-render/commit/24cb7e1c3a0a2dd5739998877ca67b2e54f227e8))
+* bump dependencies ([7329ec0](https://github.com/CoCreate-app/CoCreate-render/commit/7329ec043e12e45acb1c8c40891b16f122850a18))
+
 # [1.19.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.18.1...v1.19.0) (2023-01-02)
 
 
