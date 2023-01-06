@@ -1,3 +1,11 @@
+## [1.19.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.19.1...v1.19.2) (2023-01-06)
+
+
+### Bug Fixes
+
+* bump dependencies, worklow [@v3](https://github.com/v3) ([7c8e300](https://github.com/CoCreate-app/CoCreate-render/commit/7c8e3008558bb5b013cdb7bea0bd158532a27518))
+* edit in github btn styles ([8f7911f](https://github.com/CoCreate-app/CoCreate-render/commit/8f7911f377f7ab555634393cfb209498a2b73643))
+
 ## [1.19.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.19.0...v1.19.1) (2023-01-05)
 
 
