@@ -9,10 +9,27 @@ import './index.css';
 
 const CoCreateRender = {
 	
-	__getValue: function(data, attrValue) {
+	__getValue: function(data, attrValue, el) {
 		let result = /{{\s*([\w\W]+)\s*}}/g.exec(attrValue);
 		if (result) {
-			return getValueFromObject(data, result[1].trim());
+			let value = getValueFromObject(data, result[1].trim());
+			if (!value) {
+				// let parentTemplate
+				// if (el.hasAttribute('templateid') && el.parentElement)
+				// 	parentTemplate = el.parentElement.closest('[templateid]')
+				// else
+				// 	parentTemplate = el.closest('[templateid]')
+
+				// if (parentTemplate) {
+				// 	do {
+				// 		if (parentTemplate.renderData)
+				// 			value = getValueFromObject(parentTemplate.renderData, result[1].trim());
+				// 		if (!value && parentTemplate.parentElement || !value && parentTemplate.fetchElement)
+				// 			parentTemplate = parentTemplate.parentElement.closest('[templateid]') || parentTemplate.fetchElement.closest('[templateid]')
+				// 	} while (!value && parentTemplate)
+				// }
+			}
+			return value;
 		}
 		return false;
 	},
@@ -35,7 +52,7 @@ const CoCreateRender = {
 		}
 	},
 	
-	__replaceValue: function(data, inputValue, renderKey, valueType) {
+	__replaceValue: function(data, inputValue, renderKey, el) {
 		let isPass = false;
 		let self = this;
 		let resultValue = null;
@@ -49,7 +66,7 @@ const CoCreateRender = {
 				// else if (attr == "{{collection}" || attr == `{{${renderKey}.collection}}`)
 				// 	value = this.collection;
 				// else 
-					value = self.__getValue(data, attr);
+					value = self.__getValue(data, attr, el);
 				
 				if (value) {
 					if (typeof(value) == "object") {
@@ -228,7 +245,6 @@ const CoCreateRender = {
 				if (el.renderMap && !isRenderKey) {
 					let placeholder = el.renderMap.get(el)
 					if (placeholder){
-						let valueType = el.getAttribute('value-type')
 						renderKey = placeholder.renderKey
 						renderArray = placeholder.renderArray
 						if (renderArray && Array.isArray(data[renderArray]))
@@ -238,7 +254,7 @@ const CoCreateRender = {
 						if (renderKey)
 							updateData = {[renderKey]: updateData}
 						let textContent = placeholder.placeholder
-						let text = that.__replaceValue(updateData, textContent, renderKey, valueType);
+						let text = that.__replaceValue(updateData, textContent, renderKey, el);
 						if (text && text != el.renderedValue)
 							el.innerHTML = placeholder.placeholder
 					}
@@ -266,15 +282,15 @@ const CoCreateRender = {
 						if (renderKey && updateData)
 							updateData = {[renderKey]: updateData}
 	
-						attrValue = that.__replaceValue(updateData, temp, renderKey);
+						attrValue = that.__replaceValue(updateData, temp, renderKey, el);
 						if (attrValue == attr.value)
 							attrValue = undefined
 					}
 					else
-						attrValue = that.__replaceValue(data, attrValue, renderKey);
+						attrValue = that.__replaceValue(data, attrValue, renderKey, el);
 					
 					// ToDo: support attibute name replace if has {{}}
-					// attr_name = that.__replaceValue(data, attr_name, renderKey);
+					// attr_name = that.__replaceValue(data, attr_name, renderKey, el);
 
 					if (attrValue || attrValue == "") {
 						el.setAttribute(attr_name, attrValue);
@@ -307,13 +323,13 @@ const CoCreateRender = {
 							updateData = data[renderArray]
 						if (renderKey)
 							updateData = {[renderKey]: updateData}
-						text = that.__replaceValue(updateData, textContent, renderKey, valueType);
+						text = that.__replaceValue(updateData, textContent, renderKey, el);
 					}
 				if (!placeholder && !text) {
 					textContent = el.textContent;
 					if (!el.renderMap)
 						that.renderMap(el, textContent, renderArray, renderKey)
-					text = that.__replaceValue(data, textContent, renderKey, valueType);
+					text = that.__replaceValue(data, textContent, renderKey, el);
 				}
 
 				if (text || text == "") {
