@@ -14,20 +14,24 @@ const CoCreateRender = {
 		if (result) {
 			let value = getValueFromObject(data, result[1].trim());
 			if (!value) {
-				// let parentTemplate
-				// if (el.hasAttribute('templateid') && el.parentElement)
-				// 	parentTemplate = el.parentElement.closest('[templateid]')
-				// else
-				// 	parentTemplate = el.closest('[templateid]')
+				let parentTemplate
+				if (el && el.nodeType == 1) {
+					if (el.hasAttribute('templateid') && el.parentElement)
+						parentTemplate = el.parentElement.closest('[templateid]')
+					else
+						parentTemplate = el.closest('[templateid]')
+				}
 
-				// if (parentTemplate) {
-				// 	do {
-				// 		if (parentTemplate.renderData)
-				// 			value = getValueFromObject(parentTemplate.renderData, result[1].trim());
-				// 		if (!value && parentTemplate.parentElement || !value && parentTemplate.fetchElement)
-				// 			parentTemplate = parentTemplate.parentElement.closest('[templateid]') || parentTemplate.fetchElement.closest('[templateid]')
-				// 	} while (!value && parentTemplate)
-				// }
+				if (parentTemplate) {
+					do {
+						if (parentTemplate.renderData)
+							value = getValueFromObject(parentTemplate.renderData, result[1].trim());
+						if (!value && parentTemplate.parentElement)
+							parentTemplate = parentTemplate.parentElement.closest('[templateid]')
+						else
+							parentTemplate = ""
+					} while (!value && parentTemplate)
+				}
 			}
 			return value;
 		}
@@ -53,38 +57,23 @@ const CoCreateRender = {
 	},
 	
 	__replaceValue: function(data, inputValue, renderKey, el) {
-		let isPass = false;
-		let self = this;
-		let resultValue = null;
-		let variables = inputValue.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/g);
-		if (variables) {
-			variables.forEach((attr) => {
-				let value;
-
-				// if (attr == "{{data._id}}" || attr == `{{${renderKey}._id}}` ||  attr == "{{document_id}}" ||  attr == "{{document._id}}")
-				// 	value = this.document_id;
-				// else if (attr == "{{collection}" || attr == `{{${renderKey}.collection}}`)
-				// 	value = this.collection;
-				// else 
-					value = self.__getValue(data, attr, el);
+		let outputValue = null;
+		let placeholders = inputValue.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/g);
+		if (placeholders) {
+			for (let placeholder of placeholders) {
+				let value = this.__getValue(data, placeholder, el);
 				
 				if (value) {
-					if (typeof(value) == "object") {
+					if (typeof(value) == "object") 
 						value = this.generateString(value)	
-					}	
-					isPass = true;
-					inputValue = inputValue.replace(attr, value);
+
+					outputValue = inputValue.replace(placeholder, value);
+				} else if (renderKey && placeholder.includes(`{{${renderKey}.`)) {
+					outputValue = '';
 				}
-				if (!isPass && renderKey && attr.includes(`{{${renderKey}.`)) {
-					resultValue = '';
-				}
-			});
-			
-			if (isPass) {
-				resultValue = inputValue;
 			}
 		}
-		return resultValue;
+		return outputValue;
 	},
 
 	generateString: function(value, str = ''){
@@ -229,7 +218,6 @@ const CoCreateRender = {
 	document_id: '',
 	setValue: function(els, data, renderArray, renderKey){
 		if (!data) return;
-
 		let isRenderKey
 		if (data.renderKey)
 			isRenderKey = true
@@ -240,8 +228,14 @@ const CoCreateRender = {
 
 			if (el.nodeType == 1) {
 				if (el.hasAttribute('render-clone')) {
-					el.renderData = {...data}
+					if (!el.renderData)
+						el.renderData = {...data}
+					else if (Object.keys(el.renderData)[0] == Object.keys(data)[0]) {
+						el.renderData = {...data}
+					}
+
 				}
+
 				if (el.renderMap && !isRenderKey) {
 					let placeholder = el.renderMap.get(el)
 					if (placeholder){
@@ -249,10 +243,16 @@ const CoCreateRender = {
 						renderArray = placeholder.renderArray
 						if (renderArray && Array.isArray(data[renderArray]))
 							updateData = data[renderArray][0]
-						else
+						else if (data[renderArray])
 							updateData = data[renderArray]
-						if (renderKey)
-							updateData = {[renderKey]: updateData}
+
+						if (renderKey) {
+							if (updateData)
+								updateData = {[renderKey]: updateData}
+							else
+								updateData = {[renderKey]: data}
+						}
+
 						let textContent = placeholder.placeholder
 						let text = that.__replaceValue(updateData, textContent, renderKey, el);
 						if (text && text != el.renderedValue)
@@ -270,18 +270,22 @@ const CoCreateRender = {
 						that.renderMap(attr, attr.value, renderArray, renderKey)
 
 					if (placeholder && !isRenderKey){
-						let updateData = data;
-						// let oldValue = attrValue 
 						let temp = placeholder.placeholder;
-						renderKey = placeholder.renderKey
-						renderArray = placeholder.renderArray
-						if (renderArray && Array.isArray(data[renderArray]))
-							updateData = data[renderArray][0]
-						else
-							updateData = data[renderArray]
-						if (renderKey && updateData)
-							updateData = {[renderKey]: updateData}
-	
+						// let updateData
+						// renderKey = placeholder.renderKey
+						// renderArray = placeholder.renderArray
+						// if (renderArray && Array.isArray(data[renderArray]))
+						// 	updateData = data[renderArray][0]
+						// else if (data[renderArray])
+						// 	updateData = data[renderArray]
+						
+						// if (renderKey) {
+						// 	if (updateData)
+						// 		updateData = {[renderKey]: updateData}
+						// 	else
+						// 		updateData = {[renderKey]: data}
+						// }
+		
 						attrValue = that.__replaceValue(updateData, temp, renderKey, el);
 						if (attrValue == attr.value)
 							attrValue = undefined
@@ -301,7 +305,8 @@ const CoCreateRender = {
 					that.setValue(el.childNodes, updateData || data, renderArray, renderKey);
 				}
 				if ((el.tagName == 'TEMPLATE' || el.hasAttribute('template') || el.classList.contains('template')) && !el.hasAttribute('template_id')) {
-					that.render(el, data);
+					if (el.getAttribute('render-object') || el.getAttribute('render-array'))
+						that.render(el, data);
 				}
 
 			}
