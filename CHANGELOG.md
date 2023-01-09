@@ -1,3 +1,16 @@
+# [1.20.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.19.2...v1.20.0) (2023-01-09)
+
+
+### Bug Fixes
+
+* bump dependnecies ([0c049d8](https://github.com/CoCreate-app/CoCreate-render/commit/0c049d806a515842f2cf0928073f1cae14868ea2))
+* replaceValue send el for possible retrieval of data from parent templates ([902391a](https://github.com/CoCreate-app/CoCreate-render/commit/902391a0efa8b9491c2f13326eb93799516d803d))
+
+
+### Features
+
+* if key and value could not be found check in parent template ([b275832](https://github.com/CoCreate-app/CoCreate-render/commit/b27583278c5ee5ddda2697fa68deaded5f53374d))
+
 ## [1.19.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.19.1...v1.19.2) (2023-01-06)
 
 
