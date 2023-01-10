@@ -1,3 +1,15 @@
+# [1.21.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.20.0...v1.21.0) (2023-01-10)
+
+
+### Bug Fixes
+
+* bump dependencies ([115c000](https://github.com/CoCreate-app/CoCreate-render/commit/115c0005e3b4a0e4fc2cbc7c2dc80083bfa7b135))
+
+
+### Features
+
+* run cocreate.pass prior to rendering in dom ([968b82b](https://github.com/CoCreate-app/CoCreate-render/commit/968b82b9fa159e1196729555ebf40228cca92017))
+
 # [1.20.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.19.2...v1.20.0) (2023-01-09)
 
 
