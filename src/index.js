@@ -24,8 +24,8 @@ const CoCreateRender = {
 
 				if (parentTemplate) {
 					do {
-						if (parentTemplate.renderData)
-							value = getValueFromObject(parentTemplate.renderData, result[1].trim());
+						if (parentTemplate.renderedData)
+							value = getValueFromObject(parentTemplate.renderedData, result[1].trim());
 						if (!value && parentTemplate.parentElement)
 							parentTemplate = parentTemplate.parentElement.closest('[templateid]')
 						else
@@ -228,10 +228,10 @@ const CoCreateRender = {
 
 			if (el.nodeType == 1) {
 				if (el.hasAttribute('render-clone')) {
-					if (!el.renderData)
-						el.renderData = {...data}
-					else if (Object.keys(el.renderData)[0] == Object.keys(data)[0]) {
-						el.renderData = {...data}
+					if (!el.renderedData)
+						el.renderedData = {...data}
+					else if (Object.keys(el.renderedData)[0] == Object.keys(data)[0]) {
+						el.renderedData = {...data}
 					}
 
 				}
@@ -300,6 +300,11 @@ const CoCreateRender = {
 						el.setAttribute(attr_name, attrValue);
 					}
 				});
+
+				if (CoCreate.pass) {
+					if (el.hasAttribute('[pass_id]'))
+						CoCreate.pass.initElement(el)
+				}
 
 				if (el.childNodes.length > 0) {		
 					that.setValue(el.childNodes, updateData || data, renderArray, renderKey);
@@ -423,15 +428,15 @@ observer.init({
 		if (parentElement) {
 			let el = element
 			let parentKeys = [];
-			let renderData = new Map();
+			let renderedData = new Map();
 			do {
 				let data;
 				el = el.parentElement
 				if (el) {
 					if (el.hasAttribute('render-clone'))
-						data = el.renderData
+						data = el.renderedData
 					if (data) {
-						renderData.set(data, '')
+						renderedData.set(data, '')
 					}
 					let parentKey = el.getAttribute('parentKey')
 					if (parentKey && parentKey != null) {
@@ -471,7 +476,7 @@ observer.init({
 
 			element = parentElement.firstElementChild
 			let obj = {}
-			let array = Array.from(renderData.keys())
+			let array = Array.from(renderedData.keys())
 			for (let data of array.reverse()){
 				obj = {...obj, ...data}
 			}
