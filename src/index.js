@@ -306,9 +306,24 @@ const CoCreateRender = {
 						CoCreate.pass.initElement(el)
 				}
 
+				if (el.tagName === 'SCRIPT' && el.src) {
+					if (el.src.includes('CoCreate.js') || el.src.includes('CoCreate.min.js')) {
+						el.remove()
+						return
+					}
+				}
+
+				if (el.tagName === 'LINK' && el.href) {
+					if (el.href.includes('CoCreate.css') || el.href.includes('CoCreate.min.css')) {
+						el.remove()
+						return
+					}
+				}
+
 				if (el.childNodes.length > 0) {		
 					that.setValue(el.childNodes, updateData || data, renderArray, renderKey);
 				}
+				
 				if ((el.tagName == 'TEMPLATE' || el.hasAttribute('template') || el.classList.contains('template')) && !el.hasAttribute('template_id')) {
 					if (el.getAttribute('render-object') || el.getAttribute('render-array'))
 						that.render(el, data);
@@ -322,19 +337,20 @@ const CoCreateRender = {
 				let textContent, placeholder, text;
 				if (el.renderMap)
 					placeholder = el.renderMap.get(el)
-					if (placeholder && !isRenderKey) {
-						let updateData = data;
-						textContent = placeholder.placeholder
-						renderKey = placeholder.renderKey
-						renderArray = placeholder.renderArray
-						if (renderArray && Array.isArray(data[renderArray]))
-							updateData = data[renderArray][0]
-						else
-							updateData = data[renderArray]
-						if (renderKey)
-							updateData = {[renderKey]: updateData}
-						text = that.__replaceValue(updateData, textContent, renderKey, el);
-					}
+				if (placeholder && !isRenderKey) {
+					let updateData = data;
+					textContent = placeholder.placeholder
+					renderKey = placeholder.renderKey
+					renderArray = placeholder.renderArray
+					if (renderArray && Array.isArray(data[renderArray]))
+						updateData = data[renderArray][0]
+					else
+						updateData = data[renderArray]
+					if (renderKey)
+						updateData = {[renderKey]: updateData}
+					text = that.__replaceValue(updateData, textContent, renderKey, el);
+				}
+				
 				if (!placeholder && !text) {
 					textContent = el.textContent;
 					if (!el.renderMap)
@@ -358,6 +374,10 @@ const CoCreateRender = {
 							} else if (!parentElement['renderMap'].has(parentElement))
 								that.renderMap(parentElement, textContent, renderArray, renderKey)
 							el.replaceWith(...newNode.childNodes)
+
+							if (el.childNodes.length > 0) {		
+								that.setValue(el.childNodes, updateData || data, renderArray, renderKey);
+							}
 						}
 					}
 				}
