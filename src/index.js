@@ -13,7 +13,7 @@ const CoCreateRender = {
 		let result = /{{\s*([\w\W]+)\s*}}/g.exec(attrValue);
 		if (result) {
 			let value = getValueFromObject(data, result[1].trim());
-			if (!value) {
+			if (!value && value !== '') {
 				let parentTemplate
 				if (el && el.nodeType == 1) {
 					if (el.hasAttribute('templateid') && el.parentElement)
@@ -63,7 +63,7 @@ const CoCreateRender = {
 			for (let placeholder of placeholders) {
 				let value = this.__getValue(data, placeholder, el);
 				
-				if (value) {
+				if (value || value === "") {
 					if (typeof(value) == "object") 
 						value = this.generateString(value)	
 
@@ -398,6 +398,7 @@ const CoCreateRender = {
 			let template = queryDocumentSelector(selector);
 			if (!template) return;
 			if (template.tagName == 'TEMPLATE' || template.hasAttribute('template') || template.classList.contains('template')) {
+				template.renderedKeys = undefined
 				this.render(template, data);
 			}
 			else
