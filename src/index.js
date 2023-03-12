@@ -285,8 +285,8 @@ const CoCreateRender = {
 						// 	else
 						// 		updateData = {[renderKey]: data}
 						// }
-		
-						attrValue = that.__replaceValue(updateData, temp, renderKey, el);
+						if (updateData)
+							attrValue = that.__replaceValue(updateData, temp, renderKey, el);
 						if (attrValue == attr.value)
 							attrValue = undefined
 					}
