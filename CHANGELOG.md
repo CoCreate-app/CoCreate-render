@@ -1,3 +1,11 @@
+## [1.21.8](https://github.com/CoCreate-app/CoCreate-render/compare/v1.21.7...v1.21.8) (2023-03-15)
+
+
+### Bug Fixes
+
+* !updateData attrVaue set to undefined ([44e339f](https://github.com/CoCreate-app/CoCreate-render/commit/44e339fa3e5bd9868a31038a7b2cf0017fb53340))
+* supports empty string ([3dc45a9](https://github.com/CoCreate-app/CoCreate-render/commit/3dc45a92840f722a896f87a8e22a6bb44b5398e7))
+
 ## [1.21.7](https://github.com/CoCreate-app/CoCreate-render/compare/v1.21.6...v1.21.7) (2023-02-01)
 
 
