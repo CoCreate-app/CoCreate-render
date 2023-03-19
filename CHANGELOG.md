@@ -1,3 +1,10 @@
+## [1.22.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.22.2...v1.22.3) (2023-03-19)
+
+
+### Bug Fixes
+
+* updated demo cdn ([a4ccbe5](https://github.com/CoCreate-app/CoCreate-render/commit/a4ccbe54a91b6bbef543771a4c4a53468a2f36df))
+
 ## [1.22.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.22.1...v1.22.2) (2023-03-16)
 
 
