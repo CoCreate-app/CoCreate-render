@@ -1,3 +1,11 @@
+## [1.22.5](https://github.com/CoCreate-app/CoCreate-render/compare/v1.22.4...v1.22.5) (2023-04-11)
+
+
+### Bug Fixes
+
+* bump cdn to 1.49.0' ([fd1f26b](https://github.com/CoCreate-app/CoCreate-render/commit/fd1f26b8b192c3c537779cac73df861c7f9fdab9))
+* renamed domans to hosts ([40b4c49](https://github.com/CoCreate-app/CoCreate-render/commit/40b4c49efab5b4dd495177cecdc8aafd2672c8cf))
+
 ## [1.22.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.22.3...v1.22.4) (2023-03-30)
 
 
