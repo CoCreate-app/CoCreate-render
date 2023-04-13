@@ -82,7 +82,8 @@ const CoCreateRender = {
 			let flag = true;
 			if (str)
 				flag = false;
-			for (const [key, val] of Object.entries(value)) {
+			for (const key of Object.keys(value)) {
+				let val = value[key]
 				if (typeof(val) == "object") {
 					str += `${key}: \n`;
 					this.generateString(val, str)
@@ -171,7 +172,8 @@ const CoCreateRender = {
 		let array = []
 		if (!data) 
 			return array
-		for (const [key, value] of Object.entries(data)) {
+		for (const key of Object.keys(data)) {
+			let value = data[key]
 			if (!exclude.includes(key)) {
 				let type = 'string';
 				if (typeof(value) == "object")
