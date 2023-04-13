@@ -11,18 +11,19 @@
     <body class="padding:20px">
     
         <form>
-            <input render-key="renderKey.name">
-            <div template_id="renderKey">
-                <div>This is <b>{{renderKey.name}}</b></div>
-                <p>This {{renderKey.name}}</p>
-                <input value="{{renderKey.name}}">
-                <button actions='renderKey' href="https://{{renderKey.name}}/admin/signin.html">Create Form</button>
+            <input render-key="name" value="test">
+            <input render-key="domain" value="test.com">
+            <div template_id="render-key">
+                <div>This is <b>{{render-key.name}}</b></div>
+                <p>This {{render-key.name}}</p>
+                <input value="{{render-key.name}}">
+                <input value="{{render-key.domain}}">
+                <button actions='renderKey'>Create Form</button>
             </div>
         </form>
     
         <!-- <script src="../dist/CoCreate-render-key.js"></script> -->
-        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
-        <!-- <script src="https://cdn.cocreate.app/1.49.2/CoCreate.min.js"></script> -->
+        <script src="../../../CoCreateJS/dist/CoCreate.js"></script>
 
     </body>
 

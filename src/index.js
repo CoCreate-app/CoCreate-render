@@ -2,7 +2,7 @@
 import action from '@cocreate/actions';
 import observer from '@cocreate/observer';
 import uuid from '@cocreate/uuid';
-import { queryDocumentSelector, getValueFromObject } from '@cocreate/utils';
+import { queryDocumentSelector, getValueFromObject, dotNotationToObject } from '@cocreate/utils';
 import '@cocreate/element-prototype';
 import './index.css';
 // import api from '@cocreate/api';
@@ -415,14 +415,31 @@ const CoCreateRender = {
 	
 };
 
-function renderKey(element) {
+function renderKey(element, params) {
+	// ToDo: custom render-keys 
 	const form = element.closest("form") || document;
-	let data = CoCreate.api.getFormData('render-key', 'renderKey',  form);
+	if (!params)
+		params = 'render-key'
 
-	CoCreateRender.data({
-		selector: "[template='renderKey']",
-		data: {renderKey: data}
-	});
+	let data = {}
+	let selector = `[${params}]`
+	let elements = form.querySelectorAll(selector);
+	for (let el of elements) {
+		let attribute = el.getAttribute(params)
+		if (attribute)
+			data[attribute] = el.getValue()
+	}	
+	data = dotNotationToObject(data)
+	let renderData = {data: {[params]: data}}
+
+	let templateSelector = `[template_id='${params}']`
+	let template = document.querySelectorAll(templateSelector);
+	if (template)
+		renderData.elements = template
+	else
+		renderData.selector = `[template='${params}']`
+	
+	CoCreateRender.data(renderData);
 	
 	document.dispatchEvent(new CustomEvent('renderKey', {
 		detail: { data }
@@ -431,9 +448,8 @@ function renderKey(element) {
 
 action.init({
 	name: "renderKey",
-	endEvent: "renderKey",
-	callback: (btn, data) => {
-		renderKey(btn);
+	callback: (btn, params) => {
+		renderKey(btn, params);
 	}
 });
 
