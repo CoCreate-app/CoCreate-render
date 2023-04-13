@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.22.8...v1.23.0) (2023-04-13)
+
+
+### Features
+
+* render-key supports defing custom attribute by applying attribute name as a param in action. renderKey(customAttr) ([71ec778](https://github.com/CoCreate-app/CoCreate-render/commit/71ec77801d4d5a9b7e752d436352e68ba0e8d8e2))
+
 ## [1.22.8](https://github.com/CoCreate-app/CoCreate-render/compare/v1.22.7...v1.22.8) (2023-04-11)
 
 
