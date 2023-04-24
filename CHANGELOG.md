@@ -1,3 +1,11 @@
+## [1.24.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.2...v1.24.3) (2023-04-24)
+
+
+### Bug Fixes
+
+* updated worrkflows to v3 and node version 16 ([a8dae2a](https://github.com/CoCreate-app/CoCreate-render/commit/a8dae2a360c06b979fc8b5d4947f49eda77174d2))
+* workflow node version updated  16 ([a1d9fb8](https://github.com/CoCreate-app/CoCreate-render/commit/a1d9fb8b5292f827359addac72e9e0a431ef42f8))
+
 ## [1.24.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.1...v1.24.2) (2023-04-24)
 
 
