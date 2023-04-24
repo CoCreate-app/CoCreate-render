@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.23.1...v1.24.0) (2023-04-24)
+
+
+### Features
+
+* added pwa manifest ([cc18f50](https://github.com/CoCreate-app/CoCreate-render/commit/cc18f505580fbbffc7c9430b60958d5c178d4702))
+
 ## [1.23.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.23.0...v1.23.1) (2023-04-13)
 
 
