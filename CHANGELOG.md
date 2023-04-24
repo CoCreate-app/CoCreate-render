@@ -1,3 +1,10 @@
+## [1.24.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.1...v1.24.2) (2023-04-24)
+
+
+### Bug Fixes
+
+* bump [@cocreate](https://github.com/cocreate) dependencies ([2c4c09c](https://github.com/CoCreate-app/CoCreate-render/commit/2c4c09c3d05a6058995fb79278fbcaa49de66c1b))
+
 ## [1.24.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.0...v1.24.1) (2023-04-24)
 
 
