@@ -1,3 +1,10 @@
+## [1.24.8](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.7...v1.24.8) (2023-05-01)
+
+
+### Bug Fixes
+
+* removed debug code ([26077a8](https://github.com/CoCreate-app/CoCreate-render/commit/26077a869c95d304218bb6a0e92c413cfe99cc6f))
+
 ## [1.24.7](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.6...v1.24.7) (2023-05-01)
 
 
