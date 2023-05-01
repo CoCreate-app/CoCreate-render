@@ -271,8 +271,6 @@ const CoCreateRender = {
 					else
 						that.renderMap(attr, attr.value, renderArray, renderKey)
 
-					if (attr_name == 'modal-src' && data.document.name == 'Contacts')
-						console.log(attr_name)
 					if (placeholder && !isRenderKey){
 						let temp = placeholder.placeholder;
 						// let updateData
