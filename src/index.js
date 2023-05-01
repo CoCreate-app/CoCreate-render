@@ -57,7 +57,7 @@ const CoCreateRender = {
 	},
 	
 	__replaceValue: function(data, inputValue, renderKey, el) {
-		let outputValue = null;
+		let outputValue = inputValue;
 		let placeholders = inputValue.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/g);
 		if (placeholders) {
 			for (let placeholder of placeholders) {
@@ -67,7 +67,7 @@ const CoCreateRender = {
 					if (typeof(value) == "object") 
 						value = this.generateString(value)	
 
-					outputValue = inputValue.replace(placeholder, value);
+					outputValue = outputValue.replace(placeholder, value);
 				} else if (renderKey && placeholder.includes(`{{${renderKey}.`)) {
 					outputValue = '';
 				}
@@ -271,6 +271,8 @@ const CoCreateRender = {
 					else
 						that.renderMap(attr, attr.value, renderArray, renderKey)
 
+					if (attr_name == 'modal-src' && data.document.name == 'Contacts')
+						console.log(attr_name)
 					if (placeholder && !isRenderKey){
 						let temp = placeholder.placeholder;
 						// let updateData
