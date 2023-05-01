@@ -1,3 +1,10 @@
+## [1.24.7](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.6...v1.24.7) (2023-05-01)
+
+
+### Bug Fixes
+
+* issue with two or more placeholders rendering ([5db3937](https://github.com/CoCreate-app/CoCreate-render/commit/5db3937b142f37d565a30c1cd882cda39fb76133))
+
 ## [1.24.6](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.5...v1.24.6) (2023-05-01)
 
 
