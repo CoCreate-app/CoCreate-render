@@ -1,3 +1,10 @@
+## [1.24.10](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.9...v1.24.10) (2023-05-10)
+
+
+### Bug Fixes
+
+* apikey renamed to key ([0eee5dd](https://github.com/CoCreate-app/CoCreate-render/commit/0eee5dde5d4abc64526f452eb1cc72a1ed47c3e7))
+
 ## [1.24.9](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.8...v1.24.9) (2023-05-06)
 
 
