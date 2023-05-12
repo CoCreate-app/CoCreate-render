@@ -295,7 +295,7 @@ const CoCreateRender = {
 					else
 						attrValue = that.__replaceValue(data, attrValue, renderKey, el);
 					
-					// ToDo: support attibute name replace if has {{}}
+					// TODO: support attibute name replace if has {{}}
 					// attr_name = that.__replaceValue(data, attr_name, renderKey, el);
 
 					if (attrValue || attrValue == "") {
@@ -418,7 +418,7 @@ const CoCreateRender = {
 };
 
 function renderKey(element, params) {
-	// ToDo: custom render-keys 
+	// TODO: custom render-keys 
 	const form = element.closest("form") || document;
 	if (!params)
 		params = 'render-key'
