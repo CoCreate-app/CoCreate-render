@@ -60,8 +60,8 @@
   },
   "dependencies": {
     "@cocreate/actions": "^1.8.11",
-    "@cocreate/api": "^1.10.11",
-    "@cocreate/docs": "^1.7.11",
+    "@cocreate/api": "^1.10.12",
+    "@cocreate/docs": "^1.7.12",
     "@cocreate/element-prototype": "^1.8.11",
     "@cocreate/observer": "^1.7.9",
     "@cocreate/utils": "^1.20.9"
