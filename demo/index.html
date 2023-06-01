@@ -1,46 +1,72 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Render | CoCreateJS</title>
-        
+
         <!-- CoCreate Favicon -->
-        <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
-		<link rel="manifest" href="/manifest.webmanifest" />
-	</head>
+        <link
+            rel="icon"
+            href="https://cdn.cocreate.app/favicon.ico"
+            type="image/ico"
+            sizes="16x16" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+    </head>
     <body>
-        
         <div template_id="abc1">
-            <div class="template card {{render2.collection}} card margin:10px firstname" 
-                value="{{render2.data._id}}" 
-                template_id="abc1" 
+            <div
+                class="template card {{render2.collection}} card margin:10px firstname"
+                value="{{render2.data._id}}"
+                template_id="abc1"
                 render-array="render2.data">
-                <div class="card-body padding:15px" collection="{{render2.collection}}">
-                    <h3 class="{{render2.data.firstname}} blue" value="{{render2.data.lastname}} - {{render2.data.firstname}}">--</h3>
-                    <h3 value="{{ render2.data.lastname }}" value="{{lastname}}"></h3>
-                    <input value="{{ render2.collection }}"/>
+                <div
+                    class="card-body padding:15px"
+                    collection="{{render2.collection}}">
+                    <h3
+                        class="{{render2.data.firstname}} blue"
+                        value="{{render2.data.lastname}} - {{render2.data.firstname}}">
+                        --
+                    </h3>
+                    <h3
+                        value="{{ render2.data.lastname }}"
+                        test="{{lastname}}"></h3>
+                    <input value="{{ render2.collection }}" />
                     <h3 class="email" value="{{render2.data.email}}">--</h3>
                     <textarea value="{{render2.data.lastname}}"></textarea>
-                    <h3 data-attribute="{{render2.data.personal_info.email}}" name="email" value="{{render2.data.personal_info.email}}"></h3>
-                    
-                    <div class="template card" render-array="render2.data.testing_array">
+                    <h3
+                        data-attribute="{{render2.data.personal_info.email}}"
+                        name="email"
+                        value="{{render2.data.personal_info.email}}"></h3>
+
+                    <div
+                        class="template card"
+                        render-array="render2.data.testing_array">
                         testing-array template
-                        <h3 data-attribute="{{render2.data.testing_array.email}}" name="email" class="{{render2.data.testing_array.email}}" value="{{render2.data.testing_array.email}}"></h3>
+                        <h3
+                            data-attribute="{{render2.data.testing_array.email}}"
+                            name="email"
+                            class="{{render2.data.testing_array.email}}"
+                            value="{{render2.data.testing_array.email}}"></h3>
                         <h3 value="{{render2.collection}}"></h3>
-                        
+
                         <h3 value="{{render2.data.personal_info.email}}"></h3>
                         <div>*******************************************</div>
                     </div>
-                    <div class="template card" render-array="render2.data.string_array" render-key="string">
+                    <div
+                        class="template card"
+                        render-array="render2.data.string_array"
+                        render-key="string">
                         string - template
-                        <h3 name="test" data-attribute="{{string}}" class="{{string}}" value="{{string}}"></h3>
-                        
+                        <h3
+                            name="test"
+                            data-attribute="{{string}}"
+                            class="{{string}}"
+                            value="{{string}}"></h3>
                     </div>
-                    
                 </div>
             </div>
         </div>
-     
- 
-         <pre>
+
+        <pre>
              <h1>Paste in your browser console</h1>
         
              /** Example of array object from  db -- render2 is an example of render_id**/
@@ -88,8 +114,8 @@
             })
             
          </pre>
-	    
-	    <!--<script src="../dist/CoCreate-render.js"></script>-->
-	    <script src="https://cdn.cocreate.app/latest/CoCreate.min.js" ></script>
+
+        <!--<script src="../dist/CoCreate-render.js"></script>-->
+        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
     </body>
 </html>

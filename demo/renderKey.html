@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <title>Render-key | CoCreateJS</title>
-    
+
         <!-- CoCreate Favicon -->
-        <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
-		<link rel="manifest" href="/manifest.webmanifest" />
-	</head>
-    
+        <link
+            rel="icon"
+            href="https://cdn.cocreate.app/favicon.ico"
+            type="image/ico"
+            sizes="16x16" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+    </head>
+
     <body class="padding:20px">
-    
         <form>
-            <input render-key="name" value="test">
-            <input render-key="domain" value="test.com">
+            <input render-key="name" value="test" />
+            <input render-key="domain" value="test.com" />
             <div template_id="render-key">
                 <div>This is <b>{{render-key.name}}</b></div>
                 <p>This {{render-key.name}}</p>
-                <input value="{{render-key.name}}">
-                <input value="{{render-key.domain}}">
-                <button actions='renderKey'>Create Form</button>
+                <input value="{{render-key.name}}" />
+                <input value="{{render-key.domain}}" />
+                <button actions="renderKey">Create Form</button>
             </div>
         </form>
-    
+
         <!-- <script src="../dist/CoCreate-render-key.js"></script> -->
-		<script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
-
+        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
     </body>
-
 </html>

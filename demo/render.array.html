@@ -1,31 +1,51 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Render | CoCreateJS</title>
-        
-        <!-- CoCreate Favicon -->
-        <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
-		<link rel="manifest" href="/manifest.webmanifest" />
-	</head>
-    <style>
-        .template{display:none}
-    </style>
-    <body>
-        
-        <body>
-                <filter template_id="domains" filter-name="_id" filter-value="5ff747727005da1c272740ab"></filter>
-                <cc-options fetch-collection="organizations" fetch-name="domains" template_id="domains" class="overflow:auto">
-                    <cc-option class="template display:flex" template_id="domains" value="{{domains}}">
-                        <h4>{{domains}}</h4>
-                    </cc-option>
-                </cc-options>
 
-            <div template="abc1">
-                <div class="template" render-array="data[0].current" render-key="current_org"  value="{{current_org.name}}">
-                    <h3>{{current_org.name}}</h3>
-                </div>
+        <!-- CoCreate Favicon -->
+        <link
+            rel="icon"
+            href="https://cdn.cocreate.app/favicon.ico"
+            type="image/ico"
+            sizes="16x16" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+    </head>
+    <style>
+        .template {
+            display: none;
+        }
+    </style>
+
+    <body>
+        <filter
+            template_id="domains"
+            filter-name="_id"
+            filter-value="5ff747727005da1c272740ab"></filter>
+        <cc-options
+            fetch-collection="organizations"
+            fetch-name="domains"
+            template_id="domains"
+            class="overflow:auto">
+            <cc-option
+                class="template display:flex"
+                template_id="domains"
+                value="{{domains}}">
+                <h4>{{domains}}</h4>
+            </cc-option>
+        </cc-options>
+
+        <div template="abc1">
+            <div
+                class="template"
+                render-array="data[0].current"
+                render-key="current_org"
+                value="{{current_org.name}}">
+                <h3>{{current_org.name}}</h3>
             </div>
-     
-             <pre>
+        </div>
+
+        <pre>
                  <h1>Paste in your browser console</h1>
             
             /** Example **/
@@ -43,8 +63,8 @@
             })
                 
              </pre>
-            
-            <!-- CoCreate JS CDN -->
-            <script src="https://cdn.cocreate.app/latest/CoCreate.min.js" ></script>
-        </body>
-    </html>
+
+        <!-- CoCreate JS CDN -->
+        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
+    </body>
+</html>

@@ -1,28 +1,38 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Render | CoCreateJS</title>
-        
+
         <!-- CoCreate Favicon -->
-        <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
-		<link rel="manifest" href="/manifest.webmanifest" />
-	</head>
+        <link
+            rel="icon"
+            href="https://cdn.cocreate.app/favicon.ico"
+            type="image/ico"
+            sizes="16x16" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+    </head>
     <style>
-        .template{display:none}
+        .template {
+            display: none;
+        }
     </style>
     <body>
-        
         <div template="abc1">
             <!-- <div>{{data}}</div>
             <h1> {{document.collection}} {{document._id}}</h1> -->
             <div class="template" render-object="" render-key="one">
                 <h5>{{one.key}}: {{one.value}}</h5>
             </div>
-            <div class="template" render-array="data[0].current_org" render-key="current_org" value="{{current_org}}">
+            <div
+                class="template"
+                render-array="data[0].current_org"
+                render-key="current_org"
+                value="{{current_org}}">
                 <h3>{{current_org}}</h3>
             </div>
         </div>
- 
-         <pre>
+
+        <pre>
              <h1>Paste in your browser console</h1>
         
         /** Example **/
@@ -40,8 +50,8 @@
         })
             
          </pre>
-        
+
         <!-- CoCreate JS CDN -->
-        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js" ></script>
+        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
     </body>
 </html>
