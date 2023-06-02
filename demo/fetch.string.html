@@ -1,16 +1,22 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <title>Render | CoCreateJS</title>
-        
+
         <!-- CoCreate Favicon -->
-        <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
-		<link rel="manifest" href="/manifest.webmanifest" />
-	</head>
+        <link
+            rel="icon"
+            href="https://cdn.cocreate.app/favicon.ico"
+            type="image/ico"
+            sizes="16x16" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+    </head>
     <style>
-        .template{display:none}
+        .template {
+            display: none;
+        }
     </style>
     <body>
-        
         <cocreate-select name="current_org" template_id="abc1">
             <selected template="abc1" render-array="data">
                 <cc-option class="template" value="{{document.current_org}}">
@@ -18,9 +24,8 @@
                 </cc-option>
             </selected>
         </cocreate-select>
-     
- 
-         <pre>
+
+        <pre>
              <h1>Paste in your browser console</h1>
         
         /** Example of array object from  db -- render2 is an example of render_id**/
@@ -42,6 +47,5 @@
         <!--<script src="../dist/CoCreate-render-key.js"></script>-->
         <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
         <!-- <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script> -->
-
     </body>
 </html>
