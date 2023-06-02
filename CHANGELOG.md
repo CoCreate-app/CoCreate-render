@@ -1,3 +1,11 @@
+## [1.24.14](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.13...v1.24.14) (2023-06-02)
+
+
+### Bug Fixes
+
+* format demo html ([7814bca](https://github.com/CoCreate-app/CoCreate-render/commit/7814bca546918868f95ef28590ec9fdb2c414094))
+* Update dependencies versions for [@cocreate](https://github.com/cocreate) libraries ([5fe97de](https://github.com/CoCreate-app/CoCreate-render/commit/5fe97de0da3874f74e4fb57bb74778eb9c73f8a3))
+
 ## [1.24.13](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.12...v1.24.13) (2023-05-21)
 
 
