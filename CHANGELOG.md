@@ -1,3 +1,10 @@
+## [1.24.16](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.15...v1.24.16) (2023-06-04)
+
+
+### Bug Fixes
+
+* [@v3](https://github.com/v3) ([f10bc7d](https://github.com/CoCreate-app/CoCreate-render/commit/f10bc7d94bd8e72fdf0ed93986ee23524da57b00))
+
 ## [1.24.15](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.14...v1.24.15) (2023-06-04)
 
 
