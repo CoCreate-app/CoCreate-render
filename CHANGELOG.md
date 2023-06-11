@@ -1,3 +1,10 @@
+## [1.24.24](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.23...v1.24.24) (2023-06-11)
+
+
+### Bug Fixes
+
+* postintall error ([c66851c](https://github.com/CoCreate-app/CoCreate-render/commit/c66851c884c06d70ebe81198a3d3d170544e7442))
+
 ## [1.24.23](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.22...v1.24.23) (2023-06-11)
 
 
