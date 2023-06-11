@@ -1,3 +1,10 @@
+## [1.24.23](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.22...v1.24.23) (2023-06-11)
+
+
+### Bug Fixes
+
+* @cocreate/cli moved to dependencies ([699be1d](https://github.com/CoCreate-app/CoCreate-render/commit/699be1dba0e183cc21d753101942f4b85d235b79))
+
 ## [1.24.22](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.21...v1.24.22) (2023-06-11)
 
 
