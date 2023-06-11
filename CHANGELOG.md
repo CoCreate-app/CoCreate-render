@@ -1,3 +1,10 @@
+## [1.24.26](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.25...v1.24.26) (2023-06-11)
+
+
+### Bug Fixes
+
+* testing workflow ([8ea310d](https://github.com/CoCreate-app/CoCreate-render/commit/8ea310db0da19248281ee92bd16a4eb88c77fbc0))
+
 ## [1.24.25](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.24...v1.24.25) (2023-06-11)
 
 
