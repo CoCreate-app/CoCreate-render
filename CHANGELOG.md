@@ -1,3 +1,10 @@
+## [1.24.31](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.30...v1.24.31) (2023-06-11)
+
+
+### Bug Fixes
+
+* Update dependencies versions for [@cocreate](https://github.com/cocreate) libraries ([ed92aca](https://github.com/CoCreate-app/CoCreate-render/commit/ed92aca2e8691009891d67c673cf56ad016ea7c3))
+
 ## [1.24.30](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.29...v1.24.30) (2023-06-11)
 
 
