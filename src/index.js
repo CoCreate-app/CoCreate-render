@@ -455,8 +455,8 @@ function renderKey(element, params) {
 
 action.init({
     name: "renderKey",
-    callback: (btn, params) => {
-        renderKey(btn, params);
+    callback: (data) => {
+        renderKey(data.element, data.params);
     }
 });
 
