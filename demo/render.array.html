@@ -18,30 +18,11 @@
     </style>
 
     <body>
-        <filter
-            template_id="domains"
-            filter-name="_id"
-            filter-value="5ff747727005da1c272740ab"></filter>
-        <cc-options
-            fetch-collection="organizations"
-            fetch-name="domains"
-            template_id="domains"
-            class="overflow:auto">
-            <cc-option
-                class="template display:flex"
-                template_id="domains"
-                value="{{domains}}">
-                <h4>{{domains}}</h4>
-            </cc-option>
-        </cc-options>
+        <div template="abc1" render="document">
+            <h3>{{document[0]._id}}</h3>
 
-        <div template="abc1">
-            <div
-                class="template"
-                render-array="data[0].current"
-                render-key="current_org"
-                value="{{current_org.name}}">
-                <h3>{{current_org.name}}</h3>
+            <div render="document.current">
+                <h3>{{document.current.name}}</h3>
             </div>
         </div>
 
@@ -53,11 +34,18 @@
                 selector: '[template=abc1]',
                 data: {
                     collection : 'dededede',
-                    data: [{
-                         _id : '123kijfhgfkel45',
-                         current_org: ['test1', 'test2', 'test31', 'test3'],
-                         current: [{name: 'test1w'}, {name: 'test2'}, {name: 'test31'}, {name: 'test3'}]
-                     }]
+                    document: [
+                        {
+                            _id : '123',
+                            current_org: ['test1', 'test2'],
+                            current: [{name: 'test1w'}, {name: 'test2'}, {name: 'test31'}, {name: 'test3'}]
+                        },
+                        {
+                            _id : '321',
+                            current_org: ['test2', 'test3'],
+                            current: [{name: 'test1w'}, {name: 'test2'}, {name: 'test31'}, {name: 'test3'}]
+                        }
+                     ]
                 }
                 
             })

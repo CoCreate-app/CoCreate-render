@@ -5,7 +5,6 @@ import uuid from '@cocreate/uuid';
 import { queryDocumentSelector, getValueFromObject, dotNotationToObject } from '@cocreate/utils';
 import '@cocreate/element-prototype';
 import './index.css';
-// import api from '@cocreate/api';
 
 const CoCreateRender = {
 
@@ -98,7 +97,6 @@ const CoCreateRender = {
 
     render: function (template, data) {
         const self = this;
-        let type = '';
         let arrayData = data;
 
         let exclude = template.getAttribute('render-exclude') || ''
@@ -108,50 +106,42 @@ const CoCreateRender = {
                 exclude = [exclude]
         }
 
-        let isRenderObject = template.hasAttribute('render-object');
-        if (isRenderObject) {
-            const renderObject = template.getAttribute('render-object');
-            type = renderObject || ''
+        let isRenderObject
+        let dataKey = template.getAttribute('render') || ""
+        if (dataKey) {
+            arrayData = getValueFromObject(data, dataKey);
+            if (!Array.isArray(arrayData)) {
+                if (typeof arrayData === 'object') {
+                    isRenderObject = true
+                } else {
+                    console.log(dataKey, 'value must be an objec or an array')
+                }
+            }
         }
 
-        const isRenderArray = template.hasAttribute('render-array');
-        if (isRenderArray) {
-            var renderArray = template.getAttribute('render-array');
-            if (renderArray)
-                arrayData = data[renderArray];
-            type = renderArray || '';
-        }
-
-        if (!isRenderArray && !isRenderObject) {
-            if (!Array.isArray(arrayData) && typeof arrayData == 'object')
-                isRenderObject = true
-        }
-
-        let renderKey = template.getAttribute('render-key') || type;
+        let renderKey = template.getAttribute('render-key') || dataKey;
 
         if (!template.renderedKeys)
             template.renderedKeys = new Map()
 
-        if (isRenderObject && type) {
-            let Data = getValueFromObject(arrayData, type);
-            let array = self.renderObject(Data, renderKey, exclude)
+        if (isRenderObject && dataKey) {
+            let array = self.renderObject(arrayData, renderKey, exclude)
             for (let item of array) {
                 if (!template.renderedKeys.has(item[renderKey].key)) {
                     template.renderedKeys.set(item[renderKey].key, '')
                     let cloneEl = this.cloneEl(template);
                     cloneEl.setAttribute('renderedKey', item[renderKey].key)
-                    self.setValue([cloneEl], item, renderArray, renderKey);
+                    self.setValue([cloneEl], item, dataKey, renderKey);
                     template.insertAdjacentElement('beforebegin', cloneEl);
                 }
             }
         } else {
-
             if (!Array.isArray(arrayData))
-                arrayData = getValueFromObject(data, type);
+                arrayData = getValueFromObject(data, dataKey);
 
             if (!arrayData) {
                 let cloneEl = this.cloneEl(template);
-                self.setValue([cloneEl], data, renderArray, renderKey);
+                self.setValue([cloneEl], data, dataKey, renderKey);
                 template.insertAdjacentElement('beforebegin', cloneEl);
             }
 
@@ -165,7 +155,7 @@ const CoCreateRender = {
 
                         let cloneEl = this.cloneEl(template);
                         let object = self.__createObject(item, renderKey);
-                        self.setValue([cloneEl], object, renderArray, renderKey);
+                        self.setValue([cloneEl], object, dataKey, renderKey);
                         template.insertAdjacentElement('beforebegin', cloneEl);
                     }
                 });
@@ -194,6 +184,16 @@ const CoCreateRender = {
 
     cloneEl: function (template) {
         let cloneEl = template.cloneNode(true);
+
+        if (template.CoCreate)
+            cloneEl.CoCreate = template.CoCreate
+        else
+            cloneEl.CoCreate = {}
+
+        if (cloneEl.CoCreate.render)
+            cloneEl.CoCreate.render.template = template
+        else
+            cloneEl.CoCreate.render = { template }
 
         let templateId = cloneEl.getAttribute('template_id');
         if (!templateId)
