@@ -332,7 +332,7 @@ const CoCreateRender = {
                 }
 
                 if ((el.tagName == 'TEMPLATE' || el.hasAttribute('template') || el.classList.contains('template')) && !el.hasAttribute('template_id')) {
-                    if (el.getAttribute('render-object') || el.getAttribute('render-array'))
+                    if (el.getAttribute('render'))
                         that.render(el, data);
                 }
 

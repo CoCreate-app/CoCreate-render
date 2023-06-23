@@ -204,7 +204,7 @@
 	    &lt;div class=&quot;template card {{render2.collection}} card margin:10px firstname&quot; 
 	        value=&quot;{{render2.data._id}}&quot; 
 	        template_id=&quot;abc1&quot; 
-	        render-array=&quot;render2.data&quot;&gt;
+	        render=&quot;render2.data&quot;&gt;
 	        &lt;div class=&quot;card-body padding:15px&quot; collection=&quot;{{render2.collection}}&quot;&gt;
 	            &lt;h3 class=&quot;{{render2.data.firstname}} blue&quot; value=&quot;{{render2.data.lastname}} - {{render2.data.firstname}}&quot;&gt;--&lt;/h3&gt;
 	            &lt;h3 value=&quot;{{ render2.data.lastname }}&quot; value=&quot;{{lastname}}&quot;&gt;&lt;/h3&gt;
@@ -214,7 +214,7 @@
 	            &lt;h3 data-attribute=&quot;{{render2.data.personal_info.email}}&quot; name=&quot;email&quot; value=&quot;{{render2.data.personal_info.email}}&quot;&gt;&lt;/h3&gt;
 	            
 	            &lt;div class=&quot;template card &quot; 
-	                render-array=&quot;render2.data.testing_array&quot;&gt;
+	                render=&quot;render2.data.testing_array&quot;&gt;
 	                
 	                &lt;h3 data-attribute=&quot;{{render2.data.testing_array.email}}&quot; name=&quot;email&quot; class=&quot;{{render2.data.testing_array.email}}&quot; value=&quot;{{render2.data.testing_array.email}}&quot;&gt;&lt;/h3&gt;
 	                &lt;h3 value=&quot;{{render2.collection}}&quot;&gt;&lt;/h3&gt;
@@ -222,7 +222,7 @@
 	                &lt;h3 value=&quot;{{render2.data.personal_info.email}}&quot;&gt;&lt;/h3&gt;
 	            &lt;/div&gt;
 	            &lt;div class=&quot;template card &quot; 
-	                render-array=&quot;render2.data.string_array&quot; render-key=&quot;string_&quot;&gt;
+	                render=&quot;render2.data.string_array&quot; render-key=&quot;string_&quot;&gt;
 	                
 	                &lt;h3 name=&quot;test&quot; 
 	                    data-attribute=&quot;{{string_.--}}&quot; 
@@ -298,7 +298,7 @@
                         <li
                             class="padding:15px_0px border-bottom:1px_solid_lightgrey">
                             <h4>
-                                <span>render-array</span>
+                                <span>render</span>
                                 <span class="cocreate-badge warning"
                                     >optional</span
                                 ><span class="cocreate-badge danger"
@@ -317,14 +317,11 @@
                                 <span class="cocreate-badge warning"
                                     >optional</span
                                 ><span class="cocreate-badge"
-                                    >Default: render-array's value</span
+                                    >Default: render's value</span
                                 >
                             </h4>
-                            <p>
-                                If render-array defined, this attribute can
-                                define
-                            </p>
-                            <p>Default value is value of render-array</p>
+                            <p>If render defined, this attribute can define</p>
+                            <p>Default value is value of render</p>
                         </li>
                     </ul>
 
@@ -446,7 +443,7 @@
                     <p>
                         To render the array data, Render need to define
                         <code class="language-js">class="template"</code>.
-                        <code class="language-js">render-array</code>
+                        <code class="language-js">render</code>
                     </p>
 
                     <h2

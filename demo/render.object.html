@@ -20,12 +20,12 @@
         <div template="abc1">
             <!-- <div>{{data}}</div>
             <h1> {{document.collection}} {{document._id}}</h1> -->
-            <div class="template" render-object="" render-key="one">
+            <div class="template" render="" render-key="one">
                 <h5>{{one.key}}: {{one.value}}</h5>
             </div>
             <div
                 class="template"
-                render-array="data[0].current_org"
+                render="data[0].current_org"
                 render-key="current_org"
                 value="{{current_org}}">
                 <h3>{{current_org}}</h3>

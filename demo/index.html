@@ -17,7 +17,7 @@
                 class="template card {{render2.collection}} card margin:10px firstname"
                 value="{{render2.data._id}}"
                 template_id="abc1"
-                render-array="render2.data">
+                render="render2.data">
                 <div
                     class="card-body padding:15px"
                     collection="{{render2.collection}}">
@@ -39,7 +39,7 @@
 
                     <div
                         class="template card"
-                        render-array="render2.data.testing_array">
+                        render="render2.data.testing_array">
                         testing-array template
                         <h3
                             data-attribute="{{render2.data.testing_array.email}}"
@@ -53,7 +53,7 @@
                     </div>
                     <div
                         class="template card"
-                        render-array="render2.data.string_array"
+                        render="render2.data.string_array"
                         render-key="string">
                         string - template
                         <h3
