@@ -23,12 +23,16 @@ const CoCreateRender = {
 
                 if (parentTemplate) {
                     do {
-                        if (parentTemplate.renderedData)
-                            value = getValueFromObject(parentTemplate.renderedData, result[1].trim());
+                        if (parentTemplate.CoCreate
+                            && parentTemplate.CoCreate.render
+                            && parentTemplate.CoCreate.render.data)
+                            value = getValueFromObject(parentTemplate.CoCreate.render.data, result[1].trim());
+
                         if (!value && parentTemplate.parentElement)
-                            parentTemplate = parentTemplate.parentElement.closest('[templateid]')
+                            parentTemplate = parentTemplate.parentElement
                         else
                             parentTemplate = ""
+
                     } while (!value && parentTemplate)
                 }
             }
@@ -121,14 +125,19 @@ const CoCreateRender = {
 
         let renderKey = template.getAttribute('render-key') || dataKey;
 
-        if (!template.renderedKeys)
-            template.renderedKeys = new Map()
+        if (!template.CoCreate)
+            template.CoCreate = { render: { keys: new Map() } }
+        else if (!template.CoCreate.render)
+            template.CoCreate.render = { keys: new Map() }
+        else if (!template.CoCreate.render.keys)
+            template.CoCreate.render.keys = new Map()
 
+        const templateRenderKeys = template.CoCreate.render.keys
         if (isRenderObject && dataKey) {
             let array = self.renderObject(arrayData, renderKey, exclude)
             for (let item of array) {
-                if (!template.renderedKeys.has(item[renderKey].key)) {
-                    template.renderedKeys.set(item[renderKey].key, '')
+                if (!templateRenderKeys.has(item[renderKey].key)) {
+                    templateRenderKeys.set(item[renderKey].key, '')
                     let cloneEl = this.cloneEl(template);
                     cloneEl.setAttribute('renderedKey', item[renderKey].key)
                     self.setValue([cloneEl], item, dataKey, renderKey);
@@ -150,8 +159,8 @@ const CoCreateRender = {
 
             if (Array.isArray(arrayData)) {
                 arrayData.forEach((item) => {
-                    if (!template.renderedKeys.has(item)) {
-                        template.renderedKeys.set(item, '')
+                    if (!templateRenderKeys.has(item)) {
+                        templateRenderKeys.set(item, '')
 
                         let cloneEl = this.cloneEl(template);
                         let object = self.__createObject(item, renderKey);
@@ -232,19 +241,27 @@ const CoCreateRender = {
         const that = this;
         Array.from(els).forEach(el => {
             let updateData;
-
+            let renderedValue, renderMap
+            if (el.CoCreate && el.CoCreate.render) {
+                renderMap = el.CoCreate.render.renderMap
+                renderedValue = el.CoCreate.render.renderedValue
+            }
             if (el.nodeType == 1) {
                 if (el.hasAttribute('render-clone')) {
-                    if (!el.renderedData)
-                        el.renderedData = { ...data }
-                    else if (Object.keys(el.renderedData)[0] == Object.keys(data)[0]) {
-                        el.renderedData = { ...data }
-                    }
+                    el.CoCreate.render.data = { ...data }
+
+                    // if (!el.CoCreate.render)
+                    //     el.CoCreate.render = { data }
+                    // else if (!el.CoCreate.render.data)
+                    //     el.CoCreate.render.data = {...data}
+                    // else if (Object.keys(el.CoCreate.render.data == Object.keys(data)[0])) {
+                    //     el.CoCreate.render.data = { ...data }
+                    // }
 
                 }
 
-                if (el.renderMap && !isRenderKey) {
-                    let placeholder = el.renderMap.get(el)
+                if (renderMap && !isRenderKey) {
+                    let placeholder = renderMap.get(el)
                     if (placeholder) {
                         renderKey = placeholder.renderKey
                         renderArray = placeholder.renderArray
@@ -262,7 +279,7 @@ const CoCreateRender = {
 
                         let textContent = placeholder.placeholder
                         let text = that.__replaceValue(updateData, textContent, renderKey, el);
-                        if (text && text != el.renderedValue)
+                        if (text && text != renderedValue)
                             el.innerHTML = placeholder.placeholder
                     }
                 }
@@ -271,8 +288,13 @@ const CoCreateRender = {
                     let attr_name = attr.name.toLowerCase();
                     let attrValue = attr.value;
                     let placeholder
-                    if (attr.renderMap)
-                        placeholder = attr.renderMap.get(attr)
+                    if (!attr.CoCreate)
+                        attr.CoCreate = { render: {} }
+                    else if (!attr.CoCreate.render)
+                        attr.CoCreate.render = {}
+
+                    if (attr.CoCreate.render.renderMap)
+                        placeholder = attr.CoCreate.render.renderMap.get(attr)
                     else
                         that.renderMap(attr, attr.value, renderArray, renderKey)
 
@@ -342,8 +364,8 @@ const CoCreateRender = {
                 let valueType = el.parentElement.getAttribute('value-type')
 
                 let textContent, placeholder, text;
-                if (el.renderMap)
-                    placeholder = el.renderMap.get(el)
+                if (renderMap)
+                    placeholder = renderMap.get(el)
                 if (placeholder && !isRenderKey) {
                     let updateData = data;
                     textContent = placeholder.placeholder
@@ -360,25 +382,37 @@ const CoCreateRender = {
 
                 if (!placeholder && !text) {
                     textContent = el.textContent;
-                    if (!el.renderMap)
+                    if (!renderMap)
                         that.renderMap(el, textContent, renderArray, renderKey)
                     text = that.__replaceValue(data, textContent, renderKey, el);
                 }
 
                 if (text || text == "") {
-                    if (text != el.renderedValue) {
-                        el.renderedValue = text
+                    if (text != renderedValue) {
+                        if (el.CoCreate && el.CoCreate.render)
+                            el.CoCreate.render.renderedValue = text
+
                         if (valueType == 'text' || valueType == 'string') {
-                            el.renderedValue = text
                             el.textContent = text;
                         } else {
                             const newNode = document.createElement('div');
                             newNode.innerHTML = text;
                             let parentElement = el.parentElement
-                            parentElement.renderedValue = text
-                            if (!parentElement.renderMap) {
+
+                            let parentRenderMap;
+                            if (!parentElement.CoCreate)
+                                parentElement.CoCreate = { render: {} }
+                            else if (!parentElement.CoCreate.render)
+                                parentElement.CoCreate.render = {}
+                            else {
+                                parentRenderMap = parentElement.CoCreate.render.renderMap
+                            }
+
+                            parentElement.CoCreate.render.renderedValue = text
+
+                            if (!parentRenderMap) {
                                 that.renderMap(parentElement, textContent, renderArray, renderKey)
-                            } else if (!parentElement['renderMap'].has(parentElement))
+                            } else if (!parentRenderMap.has(parentElement))
                                 that.renderMap(parentElement, textContent, renderArray, renderKey)
                             el.replaceWith(...newNode.childNodes)
 
@@ -393,11 +427,16 @@ const CoCreateRender = {
     },
 
     renderMap: function (node, placeholder, renderArray, renderKey) {
-        if (!node.renderMap) {
-            node['renderMap'] = new Map();
-        }
+        if (!node.CoCreate)
+            node.CoCreate = { render: {} }
+        else if (!node.CoCreate.render)
+            node.CoCreate.render = {}
+
+        if (!node.CoCreate.render.renderMap)
+            node.CoCreate.render['renderMap'] = new Map();
+
         if (placeholder && renderKey)
-            node['renderMap'].set(node, { placeholder, renderArray, renderKey })
+            node.CoCreate.render['renderMap'].set(node, { placeholder, renderArray, renderKey })
     },
 
     data: function (Data) {
@@ -405,7 +444,9 @@ const CoCreateRender = {
             let template = queryDocumentSelector(Data.selector);
             if (!template) return;
             if (template.tagName == 'TEMPLATE' || template.hasAttribute('template') || template.classList.contains('template')) {
-                template.renderedKeys = undefined
+                if (template.CoCreate && template.CoCreate.render)
+                    template.CoCreate.render.keys = undefined
+
                 this.render(template, Data.data);
             }
             else
@@ -478,7 +519,7 @@ observer.init({
                 el = el.parentElement
                 if (el) {
                     if (el.hasAttribute('render-clone'))
-                        data = el.renderedData
+                        data = el.CoCreate.render.data
                     if (data) {
                         renderedData.set(data, '')
                     }
