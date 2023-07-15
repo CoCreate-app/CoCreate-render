@@ -24,10 +24,14 @@ function init(element) {
             sources.set(element[i], { element: element[i], selector })
             element[i].setValue = (data) => {
                 // TODO: something to dertimine if its from crud. crudTpye, action??
-                let index
-                if (data.filter && data.filter.index)
+                let index, update, remove
+                if (data.filter && data.filter.index) {
                     index = data.filter.index
-                render({ source: element[i], data, index })
+                    update = data.filter.update
+                    remove = data.filter.remove
+                }
+
+                render({ source: element[i], data, index, update, remove })
             }
             element[i].getValue = () => sources.get(element[i]).data
         }
@@ -94,13 +98,13 @@ function renderTemplate(template, data, key, index, dotNotation) {
 
             let Data = { [renderKey]: { key: keys[i], value, type } }
 
-            if (!template.keys.has(Data[renderKey].key)) {
-                template.keys.set(Data[renderKey].key, Data)
-                let clone = cloneTemplate(template);
-                clone.setAttribute('renderedKey', Data[renderKey].key)
-                renderValues(clone, Data, keys[i], renderKey);
-                insertElement(template, clone, index);
-            }
+            // if (!template.keys.has(Data[renderKey].key)) {
+            //     template.keys.set(Data[renderKey].key, Data)
+            let clone = cloneTemplate(template);
+            clone.setAttribute('renderedKey', Data[renderKey].key)
+            renderValues(clone, Data, keys[i], renderKey);
+            insertElement(template, clone, index);
+            // }
 
         }
     } else {
@@ -120,16 +124,15 @@ function renderTemplate(template, data, key, index, dotNotation) {
                 renderData = [renderData]
 
             renderData.forEach((item) => {
-                if (!template.keys.has(item)) {
-                    template.keys.set(item, '')
-
-                    let clone = cloneTemplate(template);
-                    let object = { [renderKey]: item }
-                    if (renderKey.includes('.'))
-                        object = dotNotationToObject(object);
-                    renderValues(clone, object, key, renderKey);
-                    insertElement(template, clone, index);
-                }
+                // if (!template.keys.has(item)) {
+                //     template.keys.set(item, '')
+                let clone = cloneTemplate(template);
+                let object = { [renderKey]: item }
+                if (renderKey.includes('.'))
+                    object = dotNotationToObject(object);
+                renderValues(clone, object, key, renderKey);
+                insertElement(template, clone, index);
+                // }
             });
         }
     }
@@ -164,7 +167,7 @@ function cloneTemplate(template) {
         container.remove()
     }
 
-    renderedNodes.set(clone, { template })
+    renderedNodes.set(clone, { template, element: clone })
     return clone;
 }
 
@@ -194,13 +197,8 @@ function insertElement(template, element, index) {
 
 function renderValues(node, data, key, renderKey) {
     if (!data) return;
-    let isRenderKey
-    // if (data.renderKey)
-    //     isRenderKey = true
 
-    let updateData, renderedValue, placeholder;
     let renderedNode = renderedNodes.get(node)
-
     if (!renderedNode)
         renderedNode = { key, renderKey }
 
@@ -222,6 +220,13 @@ function renderValues(node, data, key, renderKey) {
                     renderedNode.template.renderKeys.set(renderKey, key)
                 renderedNode.dotNotation = key
 
+                // if (key == 'status')
+                //     console.log('status')
+                // if (key == 'document.created.on')
+                //     console.log('document.created.on')
+                // if (key == 'document.created.by')
+                //     console.log('document.created.by')
+
                 if (key.includes('.')) {
                     let keys = key.split('.')
                     for (i = 0; i < keys.length; i++) {
@@ -234,36 +239,27 @@ function renderValues(node, data, key, renderKey) {
                 eid = data[renderKey][eid]
                 if (eid) {
                     let oldEid = renderedNode.eid
-                    if (oldEid !== eid) {
-                        renderedNode.template.clones.delete(oldEid)
+                    let temp = renderedNode.template
+                    if (!temp) {
+                        console.log('temp could not be found')
+                    } else if (!temp.clones) {
+                        if (temp.template)
+                            temp = temp.template
+                        else
+                            console.log(temp)
+
+                        if (oldEid && oldEid !== eid)
+                            temp.clones.delete(oldEid)
+
+                        temp.clones.set(eid, node)
                     }
 
                     renderedNode.eid = eid
-                    renderedNode.template.clones.set(eid, node)
 
                     node.setAttribute('eid', eid)
-                    break
+                    break;
                 }
             }
-        }
-
-        if (placeholder && !isRenderKey) {
-            if (key && Array.isArray(data[key]))
-                updateData = data[key][0]
-            else if (data[key])
-                updateData = data[key]
-
-            if (renderKey) {
-                if (updateData)
-                    updateData = { [renderKey]: updateData }
-                else
-                    updateData = { [renderKey]: data }
-            }
-
-            let textContent = placeholder
-            let text = renderValue(node, updateData, textContent, renderKey, renderedNode);
-            if (text && text != renderedValue)
-                node.innerHTML = placeholder
         }
 
         Array.from(node.attributes).forEach(attr => {
@@ -273,18 +269,13 @@ function renderValues(node, data, key, renderKey) {
             let renderedAttribute = renderedNodes.get(attr)
             if (!renderedAttribute) {
                 renderedAttribute = { placeholder: { name, value }, key, renderKey }
-                name = renderValue(attr, data, name, renderKey, renderedAttribute);
-                value = renderValue(attr, data, value, renderKey, renderedAttribute);
-            } else if (!isRenderKey && renderedAttribute.placeholder) {
-                let temp = renderedAttribute.placeholder
-                if (updateData) {
-                    name = renderValue(attr, updateData, temp.name, renderKey, renderedAttribute);
-                    value = renderValue(attr, updateData, temp.value, renderKey, renderedAttribute);
-                }
-            } else {
-                name = renderValue(attr, data, name, renderKey, renderedAttribute);
-                value = renderValue(attr, data, value, renderKey, renderedAttribute);
             }
+
+            let namePlaceholder = renderedAttribute.placeholder.name || name;
+            let valuePlaceholder = renderedAttribute.placeholder.value || value;
+
+            name = renderValue(attr, data, namePlaceholder, renderKey, renderedAttribute);
+            value = renderValue(attr, data, valuePlaceholder, renderKey, renderedAttribute);
 
             if (name === undefined && name === null) {
                 renderedNodes.delete(attr)
@@ -316,7 +307,7 @@ function renderValues(node, data, key, renderKey) {
             renderTemplate(node, data);
         } else if (node.childNodes.length > 0) {
             Array.from(node.childNodes).forEach(childNode => {
-                renderValues(childNode, updateData || data, key, renderKey);
+                renderValues(childNode, data, key, renderKey);
             });
         }
 
@@ -324,26 +315,13 @@ function renderValues(node, data, key, renderKey) {
         let valueType = node.parentElement.getAttribute('value-type')
 
         let textContent, text;
-        if (placeholder && !isRenderKey) {
-            let updateData = data;
-            textContent = placeholder
-            if (key && Array.isArray(data[key]))
-                updateData = data[key][0]
-            else
-                updateData = data[key]
-            if (renderKey)
-                updateData = { [renderKey]: updateData }
-            text = renderValue(node, updateData, textContent, renderKey, renderedNode);
-        }
 
-        if (!placeholder && !text) {
-            textContent = node.textContent;
-            renderedNode.placeholder = textContent
-            text = renderValue(node, data, textContent, renderKey, renderedNode);
-        }
+        textContent = renderedNode.placeholder || node.textContent;
+        renderedNode.placeholder = textContent
+        text = renderValue(node, data, textContent, renderKey, renderedNode);
 
         if (text || text == "") {
-            if (text != renderedValue) {
+            if (text != renderedNode.text) {
                 renderedNode.text = text
 
                 if (valueType == 'text' || valueType == 'string') {
@@ -357,13 +335,13 @@ function renderValues(node, data, key, renderKey) {
                     if (!renderedParent) {
                         renderedParent = { placeholder: textContent, key, renderKey }
                     }
-                    renderedParent.renderedValue = text
+                    renderedParent.text = text
                     node.replaceWith(...newNode.childNodes)
                 }
 
                 if (node.childNodes.length > 0) {
                     Array.from(node.childNodes).forEach(childNode => {
-                        renderValues(childNode, updateData || data, key, renderKey);
+                        renderValues(childNode, data, key, renderKey);
                     });
                 }
             }
@@ -384,8 +362,6 @@ function renderValue(node, data, placeholder, renderKey, renderedNode) {
             match = output.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/);
 
             if (match) {
-                if (match[1] == 'document.created.on')
-                    console.log('aaaaaa')
 
                 let value = getRenderValue(node, data, match[1], renderKey)
 
@@ -419,13 +395,10 @@ function getRenderValue(node, data, key, renderKey) {
 
         if (parentTemplate) {
             do {
-                if (key == 'status')
-                    console.log('lllls')
-
                 let parentNode = renderedNodes.get(parentTemplate)
                 if (parentNode) {
                     if (parentNode.template) {
-                        let Data, parent = parentNode.parent || parentNode.template
+                        let Data, eid, parent = parentNode.parent || parentNode.template
                         do {
                             if (parent.source)
                                 Data = parent.source.data
@@ -434,45 +407,35 @@ function getRenderValue(node, data, key, renderKey) {
                             else if (parent.template)
                                 parent = parent.template
 
+                            if (!Data && parent && parent.eid)
+                                eid = parent.eid
+
+
                         } while (parent && !Data)
-                        if (key == 'status')
-                            console.log('lllls', Data)
 
-                        let dotNotation = parentNode.dotNotation
-                        let renderedData = getValueFromObject(Data, dotNotation);
-                        if (!renderedData) {
-                            value = getValueFromObject(Data, key);
-                        }
-                        if (renderedData) {
-                            if (Array.isArray(renderedData)) {
-                                const keysArray = Array.from(parentNode.template.clones.keys());
-                                const index = keysArray.indexOf(parentNode.eid);
-                                Data = { [parentNode.renderKey]: renderedData[index] }
-                            } else
-                                Data = { [parentNode.renderKey]: renderedData }
+                        value = getValueFromObject(Data, key);
+                        if (!value && key.includes('.')) {
+                            let renderedData = getValueFromObject(Data, key.split('.')[0]);
+                            if (renderedData) {
+                                let index
+                                if (!parent.clones.size)
+                                    index = 0
+                                else
+                                    index = Array.from(parent.clones.keys()).indexOf(eid);
 
-                            let nodeData = renderedNodes.get(node)
-                            if (nodeData.key && nodeData.renderKey) {
-                                Data = getValueFromObject(Data, nodeData.key);
-                                Data = { [nodeData.renderKey]: Data }
+                                Data = { [key.split('.')[0]]: renderedData[index] }
+                                value = getValueFromObject(Data, key);
+
                             }
 
-                            value = getValueFromObject(Data, key);
-                            if (value && renderKey && key.startsWidth(`${renderKey}.`))
-                                value = getValueFromObject({ [renderKey]: value }, key);
-
-                            if (!value) {
-                                value = getValueFromObject(parentNode.template.source.data, key);
-                            }
                         }
                     }
                 }
 
                 if (!value && parentTemplate.parentElement)
                     parentTemplate = parentTemplate.parentElement.closest('[render]')
-                else {
+                else
                     parentTemplate = undefined
-                }
 
             } while (!value && parentTemplate)
         }
