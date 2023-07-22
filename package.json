@@ -34,7 +34,7 @@
     "url": "git+https://github.com/CoCreate-app/CoCreate-render.git"
   },
   "author": "CoCreate LLC",
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/CoCreate-app/CoCreate-render/issues"
   },
