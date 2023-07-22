@@ -8,6 +8,7 @@ import './index.css';
 
 const sources = new Map()
 const renderedNodes = new Map()
+const deletedNodes = new Map()
 
 function init(element) {
     if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
@@ -22,38 +23,34 @@ function init(element) {
         let source = sources.get(element[i])
         if (!source || source && source.selector !== selector) {
             sources.set(element[i], { element: element[i], selector })
-            element[i].setValue = (data) => {
-                // TODO: something to dertimine if its from crud. crudTpye, action??
-                let index, update, remove
-                if (data.filter && data.filter.index) {
-                    index = data.filter.index
-                    update = data.filter.update
-                    remove = data.filter.remove
-                }
-
-                render({ source: element[i], data, index, update, remove })
-            }
+            element[i].setValue = (data) => render({ source: element[i], data })
             element[i].getValue = () => sources.get(element[i]).data
         }
     }
 }
 
-function renderTemplate(template, data, key, index, dotNotation) {
+function renderTemplate(template, data, key, index, keyPath) {
     if (!key)
         key = template.getAttribute('render')
 
-    if (!dotNotation)
-        dotNotation = key
-
     let templateData = renderedNodes.get(template)
     if (!templateData) {
-        templateData = { element: template, keys: new Map(), clones: new Map(), data, dotNotation, renderKeys: new Map() }
+        templateData = { element: template, clones: new Map(), data, renderKeys: new Map() }
         renderedNodes.set(template, templateData)
     }
 
     templateData.parent = template.parentElement.closest('[render]')
     if (templateData.parent)
         templateData.parent = renderedNodes.get(templateData.parent)
+
+    if (!templateData.keyPath) {
+        if (keyPath)
+            templateData.keyPath = keyPath
+        else if (templateData.parent && templateData.parent.keyPath)
+            templateData.keyPath = templateData.parent.keyPath
+        else if (key)
+            templateData.keyPath = key
+    }
 
     template = templateData
 
@@ -72,7 +69,7 @@ function renderTemplate(template, data, key, index, dotNotation) {
         template.data = dotNotationToObject(renderData, template.data)
     }
 
-    let renderKey = template.element.getAttribute('render-key') || key;
+    let renderAs = template.element.getAttribute('render-as') || key;
 
     if (key && !Array.isArray(renderData)) {
         let exclude = template.element.getAttribute('render-exclude') || ''
@@ -89,51 +86,48 @@ function renderTemplate(template, data, key, index, dotNotation) {
 
             let value = renderData[keys[i]]
             let type = 'string';
-            let keyPath = 'string';
 
             if (Array.isArray(value))
                 type = 'array'
             else if (typeof (value) == "object")
                 type = 'object'
 
-            let Data = { [renderKey]: { key: keys[i], value, type } }
+            let Data = { [renderAs]: { key: keys[i], value, type } }
 
-            // if (!template.keys.has(Data[renderKey].key)) {
-            //     template.keys.set(Data[renderKey].key, Data)
             let clone = cloneTemplate(template);
-            clone.setAttribute('renderedKey', Data[renderKey].key)
-            renderValues(clone, Data, keys[i], renderKey);
-            insertElement(template, clone, index);
-            // }
+            // TODO: clone.parentKey
+            clone.keyPath = template.keyPath + '.' + renderAs
+            clone.element.setAttribute('renderedKey', Data[renderAs].key)
+            renderValues(clone.element, Data, keys[i], renderAs);
+            insertElement(template, clone.element, index);
 
         }
     } else {
         if (!key) {
             key = 'data'
             renderData = getValueFromObject(renderData, key);
-            if (!renderKey)
-                renderKey = key
+            if (!renderAs)
+                renderAs = key
         }
 
         if (!renderData) {
             let clone = cloneTemplate(template);
-            renderValues(clone, data, key, renderKey);
-            insertElement(template, clone, index);
+            clone.keyPath = template.keyPath
+            renderValues(clone.element, data, key, renderAs);
+            insertElement(template, clone.element, index);
         } else {
             if (!Array.isArray(renderData))
                 renderData = [renderData]
 
-            renderData.forEach((item) => {
-                // if (!template.keys.has(item)) {
-                //     template.keys.set(item, '')
+            for (let i = 0; i < renderData.length; i++) {
                 let clone = cloneTemplate(template);
-                let object = { [renderKey]: item }
-                if (renderKey.includes('.'))
+                clone.keyPath = template.keyPath + `[${i}]`
+                let object = { [renderAs]: renderData[i] }
+                if (renderAs.includes('.'))
                     object = dotNotationToObject(object);
-                renderValues(clone, object, key, renderKey);
-                insertElement(template, clone, index);
-                // }
-            });
+                renderValues(clone.element, object, key, renderAs);
+                insertElement(template, clone.element, index);
+            }
         }
     }
 }
@@ -153,9 +147,9 @@ function cloneTemplate(template) {
 
     clone.setAttribute('render-clone', '');
 
-    let renderKey = clone.getAttribute('render-key')
-    if (renderKey) {
-        clone = clone.outerHTML.replace(/\$auto/g, renderKey);
+    let renderAs = clone.getAttribute('render-as')
+    if (renderAs) {
+        clone = clone.outerHTML.replace(/\$auto/g, renderAs);
     } else {
         clone = clone.outerHTML;
     }
@@ -166,99 +160,93 @@ function cloneTemplate(template) {
         clone = container.firstChild
         container.remove()
     }
-
-    renderedNodes.set(clone, { template, element: clone })
-    return clone;
+    let renderedNode = { template, element: clone }
+    renderedNodes.set(clone, renderedNode)
+    return renderedNode;
 }
 
-function insertElement(template, element, index) {
+function insertElement(template, element, index, currentIndex) {
+    let eid = element.getAttribute('eid')
+    if (!eid)
+        console.log('attribute eid not found')
+
     if (index !== null && index >= 0) {
         const clones = Array.from(template.clones);
 
-        // Insert a new item at a specific index in the array
-        let eid = element.getAttribute('eid')
-        if (eid && !template.clones.has(eid)) {
-            const newEntry = [eid, element];
-            clones.splice(index, 0, newEntry);
+        let item
+        if (currentIndex) {
+            item = clones.splice(currentIndex, 1)[0];
+        } else {
+            item = [eid, element];
         }
 
-        if (clones[index])
-            clones[index].insertAdjacentElement('beforebegin', element);
-        else if (clones[index - 1])
-            clones[index - 1].insertAdjacentElement('afterend', element);
+        clones.splice(index, 0, item);
+        if (clones[index + 1] && clones[index][1] !== element)
+            clones[index][1].insertAdjacentElement('beforebegin', element);
+        else if (clones[index] && clones[index][1] !== element)
+            clones[index][1].insertAdjacentElement('afterend', element);
         else
             template.element.insertAdjacentElement('beforebegin', element);
-
         template.clones = new Map(clones);
     } else {
+        template.clones.set(eid, element)
         template.element.insertAdjacentElement('beforebegin', element);
     }
 }
 
-function renderValues(node, data, key, renderKey) {
+function renderValues(node, data, key, renderAs, keyPath, parent) {
     if (!data) return;
 
     let renderedNode = renderedNodes.get(node)
     if (!renderedNode)
-        renderedNode = { key, renderKey }
+        renderedNode = { key, renderAs }
 
     if (!renderedNode.key)
         renderedNode.key = key
     else if (!key)
         key = renderedNode.key
 
-    if (!renderedNode.renderKey)
-        renderedNode.renderKey = renderKey
-    else if (!renderKey)
-        renderKey = renderedNode.renderKey
+    if (!renderedNode.renderAs)
+        renderedNode.renderAs = renderAs
+    else if (!renderAs)
+        renderAs = renderedNode.renderAs
 
+    if (keyPath)
+        renderedNode.keyPath = keyPath
+    else if (renderedNode.keyPath)
+        keyPath = renderedNode.keyPath
+
+    if (parent)
+        renderedNode.parent = parent
 
     if (node.nodeType == 1) {
         if (node.hasAttribute('render-clone')) {
-            if (renderedNode.template) {
-                if (renderedNode.template.renderKeys)
-                    renderedNode.template.renderKeys.set(renderKey, key)
-                renderedNode.dotNotation = key
-
-                // if (key == 'status')
-                //     console.log('status')
-                // if (key == 'document.created.on')
-                //     console.log('document.created.on')
-                // if (key == 'document.created.by')
-                //     console.log('document.created.by')
-
-                if (key.includes('.')) {
-                    let keys = key.split('.')
-                    for (i = 0; i < keys.length; i++) {
-                        renderedNode.dotNotation += renderedNode.template.renderKeys.get(keys[i]) || keys[i]
-                    }
-                }
-            }
+            parent = renderedNode
 
             for (let eid of ['_id', 'name', 'key']) {
-                eid = data[renderKey][eid]
-                if (eid) {
-                    let oldEid = renderedNode.eid
-                    let temp = renderedNode.template
-                    if (!temp) {
-                        console.log('temp could not be found')
-                    } else if (!temp.clones) {
-                        if (temp.template)
-                            temp = temp.template
-                        else
-                            console.log(temp)
+                eid = data[renderAs][eid]
+                if (!eid) continue
 
-                        if (oldEid && oldEid !== eid)
-                            temp.clones.delete(oldEid)
+                let oldEid = renderedNode.eid
+                let temp = renderedNode.template
+                if (!temp) {
+                    console.log('temp could not be found')
+                } else if (!temp.clones) {
+                    if (temp.template)
+                        temp = temp.template
+                    else
+                        console.log(temp)
 
-                        temp.clones.set(eid, node)
-                    }
+                    if (oldEid && oldEid !== eid)
+                        temp.clones.delete(oldEid)
 
-                    renderedNode.eid = eid
-
-                    node.setAttribute('eid', eid)
-                    break;
+                    temp.clones.set(eid, node)
                 }
+
+                renderedNode.eid = eid
+
+                node.setAttribute('eid', eid)
+                break;
             }
         }
 
@@ -268,14 +256,14 @@ function renderValues(node, data, key, renderKey) {
 
             let renderedAttribute = renderedNodes.get(attr)
             if (!renderedAttribute) {
-                renderedAttribute = { placeholder: { name, value }, key, renderKey }
+                renderedAttribute = { placeholder: { name, value }, key, renderAs, parent: renderedNode }
             }
 
             let namePlaceholder = renderedAttribute.placeholder.name || name;
             let valuePlaceholder = renderedAttribute.placeholder.value || value;
 
-            name = renderValue(attr, data, namePlaceholder, renderKey, renderedAttribute);
-            value = renderValue(attr, data, valuePlaceholder, renderKey, renderedAttribute);
+            name = renderValue(attr, data, namePlaceholder, renderAs, renderedAttribute);
+            value = renderValue(attr, data, valuePlaceholder, renderAs, renderedAttribute);
 
             if (name === undefined && name === null) {
                 renderedNodes.delete(attr)
@@ -307,7 +295,7 @@ function renderValues(node, data, key, renderKey) {
             renderTemplate(node, data);
         } else if (node.childNodes.length > 0) {
             Array.from(node.childNodes).forEach(childNode => {
-                renderValues(childNode, data, key, renderKey);
+                renderValues(childNode, data, key, renderAs, keyPath, parent);
             });
         }
 
@@ -316,15 +304,20 @@ function renderValues(node, data, key, renderKey) {
 
         let textContent, text;
 
+        if (!renderedNode.placeholder && node.textContent.match(/{{(.*?)}}/))
+            renderedNode.placeholder = node.textContent
+
+        if (!renderedNode.placeholder)
+            return
         textContent = renderedNode.placeholder || node.textContent;
-        renderedNode.placeholder = textContent
-        text = renderValue(node, data, textContent, renderKey, renderedNode);
+
+        text = renderValue(node, data, textContent, renderAs, renderedNode);
 
         if (text || text == "") {
             if (text != renderedNode.text) {
                 renderedNode.text = text
 
-                if (valueType == 'text' || valueType == 'string') {
+                if (valueType == 'text' || valueType == 'string' || valueType != "html") {
                     node.textContent = text;
                 } else {
                     const newNode = document.createElement('div');
@@ -333,15 +326,20 @@ function renderValues(node, data, key, renderKey) {
 
                     let renderedParent = renderedNodes.get(parentElement)
                     if (!renderedParent) {
-                        renderedParent = { placeholder: textContent, key, renderKey }
+                        renderedParent = { placeholder: textContent, key, renderAs }
                     }
                     renderedParent.text = text
+                    for (let newChild of newNode.childNodes) {
+                        renderedNode.element = newChild
+                        renderedNodes.set(newChild, renderedNode)
+                    }
+                    renderedNodes.delete(node)
                     node.replaceWith(...newNode.childNodes)
                 }
 
                 if (node.childNodes.length > 0) {
                     Array.from(node.childNodes).forEach(childNode => {
-                        renderValues(childNode, data, key, renderKey);
+                        renderValues(childNode, data, key, renderAs, keyPath, parent);
                     });
                 }
             }
@@ -349,7 +347,7 @@ function renderValues(node, data, key, renderKey) {
     }
 }
 
-function renderValue(node, data, placeholder, renderKey, renderedNode) {
+function renderValue(node, data, placeholder, renderAs, renderedNode) {
     let output = placeholder;
 
     if (placeholder.match(/{{(.*?)}}/)) {
@@ -362,16 +360,18 @@ function renderValue(node, data, placeholder, renderKey, renderedNode) {
             match = output.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/);
 
             if (match) {
+                if (match[0] === '{{modified.keyPath}}')
+                    console.log('{{modified.keyPath}}')
 
-                let value = getRenderValue(node, data, match[1], renderKey)
+                let value = getRenderValue(node, data, match[1], renderAs)
 
                 if (value || value === "") {
                     if (typeof value === "object")
                         value = JSON.stringify(value, null, 2)
 
                     output = output.replace(match[0], value);
-                } else if (renderKey) {
-                    if (match[0].startsWith(`{{${renderKey}.`)) {
+                } else if (renderAs) {
+                    if (match[0].startsWith(`{{${renderAs}.`)) {
                         output = output.replace(match[0], "");
                     } else {
                         match = null
@@ -386,59 +386,69 @@ function renderValue(node, data, placeholder, renderKey, renderedNode) {
     return output;
 }
 
-function getRenderValue(node, data, key, renderKey) {
+function getRenderValue(node, data, key, renderAs) {
     let value = getValueFromObject(data, key);
+
     if (!value && value !== '' && node) {
-        let parentTemplate
-        if (node.parentElement)
-            parentTemplate = node.parentElement.closest('[render]')
 
-        if (parentTemplate) {
-            do {
-                let parentNode = renderedNodes.get(parentTemplate)
-                if (parentNode) {
-                    if (parentNode.template) {
-                        let Data, eid, parent = parentNode.parent || parentNode.template
-                        do {
-                            if (parent.source)
-                                Data = parent.source.data
-                            else if (parent.parent)
-                                parent = parent.parent
-                            else if (parent.template)
-                                parent = parent.template
+        let parentTemplate = node
+        do {
+            let parentNode = renderedNodes.get(parentTemplate)
+            if (parentNode) {
 
-                            if (!Data && parent && parent.eid)
-                                eid = parent.eid
+                if (!value && (parentNode.parent || parentNode.template)) {
+                    let Data, eid, parent = parentNode.parent || parentNode.template
+                    do {
+                        if (key.includes('keyPath'))
+                            value = parentNode.keyPath || parent.keyPath
+                        // else if (key.includes('parentKey'))
+                        //     value = parentNode.parentKey || parent.parentKey
+                        else if (parent.source)
+                            Data = parent.source.data
+                        else if (parent.parent)
+                            parent = parent.parent
+                        else if (parent.template)
+                            parent = parent.template
+                        else
+                            parent = undefined
 
 
-                        } while (parent && !Data)
+                        if (!Data && parent && parent.eid)
+                            eid = parent.eid
 
+
+                    } while (!value && parent && !Data)
+
+                    if (!value && Data)
                         value = getValueFromObject(Data, key);
-                        if (!value && key.includes('.')) {
-                            let renderedData = getValueFromObject(Data, key.split('.')[0]);
-                            if (renderedData) {
-                                let index
-                                if (!parent.clones.size)
-                                    index = 0
-                                else
-                                    index = Array.from(parent.clones.keys()).indexOf(eid);
 
+                    if (!value && key.includes('.')) {
+                        let renderedData = getValueFromObject(Data, key.split('.')[0]);
+                        if (renderedData) {
+                            let index
+                            if (!parent.clones.size || parent.clones.size === 1)
+                                index = 0
+                            else if (eid)
+                                index = Array.from(parent.clones.keys()).indexOf(eid);
+                            else
+                                console.log('eid not found')
+
+                            if (index >= 0)
                                 Data = { [key.split('.')[0]]: renderedData[index] }
-                                value = getValueFromObject(Data, key);
 
-                            }
-
+                            value = getValueFromObject(Data, key);
                         }
+
                     }
                 }
+            }
 
-                if (!value && parentTemplate.parentElement)
-                    parentTemplate = parentTemplate.parentElement.closest('[render]')
-                else
-                    parentTemplate = undefined
+            if (!value && parentTemplate.parentElement)
+                parentTemplate = parentTemplate.parentElement.closest('[render]')
+            else
+                parentTemplate = undefined
 
-            } while (!value && parentTemplate)
-        }
+        } while (!value && parentTemplate)
     }
     return value
 }
@@ -453,7 +463,7 @@ function getRenderValue(node, data, key, renderKey) {
 //     render({ source, selector, element, data, key, index, update, remove })
 // }
 
-function render({ source, selector, element, data, key, index, update, remove }) {
+function render({ source, selector, element, data, key, index, currentIndex, update, remove }) {
     if (!element) {
         if (!selector && source)
             selector = source.getAttribute('render-selector')
@@ -477,29 +487,62 @@ function render({ source, selector, element, data, key, index, update, remove })
     } else if (data)
         source = { data }
 
+    if (data.filter) {
+        index = index || data.filter.index
+        update = update || data.filter.update
+        remove = remove || data.filter.remove
+    }
 
     if (!(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
 
     for (let i = 0; i < element.length; i++) {
-        if (source) {
-            let renderedNode = renderedNodes.get(element[i])
-            if (!renderedNode)
-                renderedNodes.set(element[i], { element: element[i], source, clones: new Map(), keys: new Map(), renderKeys: new Map() })
-            else if (renderedNode.source)
-                renderedNode.source = source
-        }
-
         if (!key)
             key = element[i].getAttribute('render')
 
+        let renderedNode = renderedNodes.get(element[i])
+        if (source) {
+            if (!renderedNode) {
+                renderedNode = { element: element[i], source, clones: new Map(), renderAss: new Map() }
+                renderedNodes.set(element[i], renderedNode)
+            }
+        }
+
         if (remove) {
-            modifyClones(element[i], data, key, index, 'delete')
-        } else if (update) {
-            modifyClones(element[i], data, key, index, 'update')
+            if (renderedNode.source) {
+                if (key)
+                    renderedNode.source.data[key].splice(index, 1)
+                else {
+
+                }
+            }
+
+            let clone = Array.from(renderedNode.clones)[index]
+            if (!clone) return
+
+            renderedNode.clones.delete(clone[0])
+            renderedNodes.delete(clone[1])
+            clone[1].remove()
         } else if (key) {
-            // TODO: if $auto here every subsequent clone will have same value. 
-            //       not replacing here will apply unique value to each clone
+            if (update) {
+                let clone
+
+                if (!currentIndex)
+                    currentIndex = data.filter.currentIndex
+
+                if (currentIndex >= 0)
+                    clone = Array.from(renderedNode.clones)[currentIndex]
+                else
+                    clone = Array.from(renderedNode.clones)[index]
+
+                if (!clone) return
+
+                renderValues(clone[1], data);
+                if (currentIndex >= 0)
+                    insertElement(renderedNode, clone[1], index, currentIndex)
+            }
+
+            // TODO: if $auto here every subsequent clone will have same value, not replacing here will apply unique value to each clone
             if (key === '$auto')
                 key = key.replace(/\$auto/g, uuid.generate(6));
 
@@ -509,60 +552,6 @@ function render({ source, selector, element, data, key, index, update, remove })
         } else
             renderValues(element[i], data);
 
-    }
-
-
-}
-
-function modifyClones(template, data, key, index, action) {
-    template = renderedNodes.get(template)
-    if (!template)
-        return
-    if (index) {
-        modifyClone({ template, data, eid, index, action })
-    } else {
-        let type = data.type
-        if (!type || !data[type])
-            return
-
-        let name = "name"
-        if (type = 'document')
-            name = '_id'
-
-        if (Array.isArray(data[type])) {
-            for (let i = 0; i < data[type].length; i++) {
-                eid = data[type][i][name]
-                modifyClone({ template, eid, action })
-            }
-        } else {
-            if (typeof data[type] === "object") {
-                eid = data[type][name]
-            } else
-                eid = data[type]
-
-            modifyClone({ template, data, eid, action })
-        }
-    }
-}
-
-function modifyClone({ template, data, eid, index, action }) {
-    let clone = template.clones.get(eid)
-
-    if (clone) {
-        if (action === 'remove') {
-            clone.remove()
-            template.clones.delete(eid)
-            renderedNodes.delete(clone)
-        } else if (action === 'update') {
-            renderValues(clone, data);
-
-            // TODO: compare clone index with new index if same only renderValues
-            if (index >= 0)
-                insertElement(template, element, index)
-        }
-
-    } else if (action === 'update' && index >= 0) {
-        renderTemplate(template.element, data, key, index);
     }
 
 }
@@ -612,15 +601,59 @@ Observer.init({
 })
 
 Observer.init({
+    name: 'render',
+    observe: ['addedNodes'],
+    target: '[render-clone]',
+    callback: function (mutation) {
+        let deletedNode = deletedNodes.get(mutation.target)
+        if (deletedNode) {
+            clearTimeout(deletedNode.delayTimer);
+            deletedNodes.delete(mutation.target)
+        }
+
+        // let renderedNode = mutation.target.renderedNode
+        // if (renderedNode) return
+        // delete mutation.target.renderedNode
+
+        // let nextElement = mutation.target.nextElementSibling
+        // if (!nextElement) return
+
+        // let nextRenderedNode = renderedNodes.get(nextElement)
+        // if (!nextRenderedNode) return
+
+        // let clones
+        // if (nextRenderedNode.template)
+        //     clones = nextRenderedNode.template.clones
+        // else if (nextRenderedNode.clones)
+        //     clones = nextRenderedNode.clones
+
+        // const cloneValueArray = Array.from(clones.values())
+        // let index = cloneValueArray.indexOf(nextElement);
+
+        // const cloneArray = Array.from(clones)
+
+        // cloneArray.splice(index, 0, [renderedNode.eid, mutation.target]);
+        // clones = new Map(cloneArray);
+
+    }
+})
+
+Observer.init({
     name: 'renderNodesRemoved',
     observe: ['removedNodes'],
     target: '[render-clone]',
     callback: function (mutation) {
         let renderedNode = renderedNodes.get(mutation.target)
-        if (renderedNode) {
+        if (!renderedNode) return
+
+        mutation.target.renderedNode = renderedNode
+        let delayTimer = setTimeout(function () {
+            deletedNodes.delete(mutation.target)
             renderedNode.template.clones.delete(renderedNode.eid)
             renderedNodes.delete(mutation.target)
-        }
+        }, 1000);
+
+        deletedNodes.set(mutation.target, { renderedNode, delayTimer })
     }
 })
 
@@ -629,98 +662,16 @@ Observer.init({
     observe: ['addedNodes'],
     target: '[render]',
     callback: function (mutation) {
-        let element = mutation.target
-        if (element.hasAttribute('render-clone'))
+        if (mutation.target.hasAttribute('render-clone'))
             return
+        let parentElement = mutation.target.parentElement.closest(['render'])
+        if (!parentElement) return
 
-        // render({
-        //     element
-        // });
+        let renderedNode = renderedNodes.get(parentElement)
+        let data = renderedNode.source.data
 
-        // let key = element.getAttribute('render')
-        // if (key) {
-        //     if (key.includes('parent')) {
+        render({ element: mutation.target, data });
 
-        //     }
-        //     let parentElement = element.parentElement.closest(['render'])
-        //     if (parentElement) {
-
-        //         let data = ''
-        //     }
-        // }
-
-        // needs to find dertimine if there is a parent render or a source
-        // TODO: get parent from renderedNode = renderedNodes.get(el)
-        // renderNode.parent.key
-        // renderNode.parent.renderKey
-        // renderNode.dotNotation
-        // let parentElement = element.parentElement.closest(['render'])
-        // let parentElement = element.parentElement
-        let parentElement
-        if (parentElement) {
-
-
-            // let parentKeys = [];
-            // let renderedData = new Map();
-            // do {
-            //     let data;
-            //     el = el.parentElement
-            //     if (el) {
-            //         let renderedNode = renderedNodes.get(el)
-            //         if (renderedNode)
-            //             data = renderedNode.data
-
-            //         if (data)
-            //             renderedData.set(data, '')
-
-            //         let parentKey = el.getAttribute('parent-key')
-            //         if (parentKey && parentKey != null) {
-            //             if (/^\d+$/.test(parentKey))
-            //                 parentKey = `[${parentKey}]`
-            //             parentKeys.push(parentKey)
-            //         }
-            //     }
-            // } while (el)
-
-            let renderKey = element.getAttribute('render-key')
-
-            let parentKey;
-            parentKey = parentElement.getAttribute('parentKey')
-            if (renderKey == '$auto' || parentKey || parentKeys) {
-                let template = element.outerHTML
-                if (renderKey) {
-                    template = template.replace(/\$auto/g, uuid.generate(6));
-                }
-                if (parentKeys.length > 0) {
-                    let string = ''
-                    if (parentKeys.length == 1) {
-                        string = parentKeys[0]
-                    }
-                    else
-                        string = parentKeys.reverse().join('.')
-                    string = string.replace(/.\[/g, '[');
-                    template = template.replace(/\$parents/g, string);
-                }
-                if (parentKey) {
-                    template = template.replace(/\$parent/g, parentKey);
-                }
-
-                parentElement.innerHTML = template
-
-            }
-
-            element = parentElement.firstElementChild
-            let obj = {}
-            let array = Array.from(renderedData.keys())
-            for (let data of array.reverse()) {
-                obj = { ...obj, ...data }
-            }
-
-            render({
-                element,
-                data: obj
-            });
-        }
     }
 });
 
