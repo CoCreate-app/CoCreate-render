@@ -2,31 +2,60 @@
 import Actions from '@cocreate/actions';
 import Observer from '@cocreate/observer';
 import uuid from '@cocreate/uuid';
-import { queryDocumentSelector, queryDocumentSelectorAll, getValueFromObject, dotNotationToObject } from '@cocreate/utils';
+import { queryDocumentSelector, queryDocumentSelectorAll, getValueFromObject, dotNotationToObject, ObjectId } from '@cocreate/utils';
 import '@cocreate/element-prototype';
 import './index.css';
 
 const sources = new Map()
 const renderedNodes = new Map()
 const deletedNodes = new Map()
+const elementSelector = '[render-selector], [render-closest], [render-parent], [render-next], [render-previous]'
 
 function init(element) {
     if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
     else if (!element)
-        element = document.querySelectorAll('[render-selector]')
+        element = document.querySelectorAll(elementSelector)
 
     for (let i = 0; i < element.length; i++) {
-        let selector = element[i].getAttribute('render-selector')
-        if (!selector) return
-
         let source = sources.get(element[i])
-        if (!source || source && source.selector !== selector) {
-            sources.set(element[i], { element: element[i], selector })
+        if (!source) {
+            sources.set(element[i], { element: element[i] })
             element[i].setValue = (data) => render({ source: element[i], data })
             element[i].getValue = () => sources.get(element[i]).data
         }
     }
+}
+
+function getElement(element, prefix = 'render') {
+    let elements = [];
+
+    let selectors = ['selector', 'closest', 'parent', 'next', 'previous']
+    for (let i = 0; i < selectors.length; i++) {
+        let name = prefix + '-' + selectors[i]
+        const selector = element.getAttribute(name);
+        if (selector) {
+            if (selectors[i] === 'selector')
+                elements = document.querySelectorAll(selector)
+            else if (selectors[i] === 'closest')
+                elements = element.closest(selector)
+            else if (selectors[i] === 'parent')
+                elements = element.parentElement.querySelectorAll(selector)
+            else if (selectors[i] === 'next')
+                elements = element.nextElementSibling.querySelectorAll(selector)
+            else if (selectors[i] === 'previous')
+                elements = element.previousElementSibling.querySelectorAll(selector)
+        } else if (selector === '') {
+            if (selectors[i] === 'parent')
+                elements = element.parentElement
+            else if (selectors[i] === 'next')
+                elements = element.nextElementSibling
+            else if (selectors[i] === 'previous')
+                elements = element.previousElementSibling
+        }
+    }
+
+    return elements
 }
 
 function renderTemplate(template, data, key, index, keyPath) {
@@ -35,7 +64,7 @@ function renderTemplate(template, data, key, index, keyPath) {
 
     let templateData = renderedNodes.get(template)
     if (!templateData) {
-        templateData = { element: template, clones: new Map(), data, renderKeys: new Map() }
+        templateData = { element: template, clones: new Map() }
         renderedNodes.set(template, templateData)
     }
 
@@ -63,13 +92,15 @@ function renderTemplate(template, data, key, index, keyPath) {
             element.remove()
             template.clones.delete(key)
         }
-        template.data = data
-    } else if (index) {
-        // updates data that has already been rendered
-        template.data = dotNotationToObject(renderData, template.data)
+        // template.data = renderData
     }
+    // else if (index) {
+    // updates data that has already been rendered
+    // template.data = dotNotationToObject(renderData, template.data)
+    // }
 
     let renderAs = template.element.getAttribute('render-as') || key;
+    template.renderAs = renderAs
 
     if (key && !Array.isArray(renderData)) {
         let exclude = template.element.getAttribute('render-exclude') || ''
@@ -95,9 +126,15 @@ function renderTemplate(template, data, key, index, keyPath) {
             let Data = { [renderAs]: { key: keys[i], value, type } }
 
             let clone = cloneTemplate(template);
-            // TODO: clone.parentKey
-            clone.keyPath = template.keyPath + '.' + renderAs
-            clone.element.setAttribute('renderedKey', Data[renderAs].key)
+            let renderedKey = key.split('.')
+            renderedKey = renderedKey[renderedKey.length - 1];
+            //renderedKey needs to remove the parent.renderAs/key
+
+            clone.key = keys[i]
+            clone.keyPath = template.keyPath + '.' + renderedKey
+            clone.parentKey = renderedKey
+            clone.renderKey = key
+            clone.element.setAttribute('renderedKey', keys[i])
             renderValues(clone.element, Data, keys[i], renderAs);
             insertElement(template, clone.element, index);
 
@@ -401,8 +438,14 @@ function getRenderValue(node, data, key, renderAs) {
                     do {
                         if (key.includes('keyPath'))
                             value = parentNode.keyPath || parent.keyPath
-                        // else if (key.includes('parentKey'))
-                        //     value = parentNode.parentKey || parent.parentKey
+                        else if (key.includes('parentKey')) {
+                            value = parentNode.parentKey || parent.parentKey || parent.parent.parentKey
+                        } else if (key.includes('renderAs')) {
+                            value = renderAs
+                        } else if (key === 'document_id' || key === '_id')
+                            value = ObjectId()
+                        else if (key === 'uuid')
+                            value = uuid.generate(6)
                         else if (parent.source)
                             Data = parent.source.data
                         else if (parent.parent)
@@ -411,7 +454,6 @@ function getRenderValue(node, data, key, renderAs) {
                             parent = parent.template
                         else
                             parent = undefined
-
 
                         if (!Data && parent && parent.eid)
                             eid = parent.eid
@@ -463,21 +505,21 @@ function getRenderValue(node, data, key, renderAs) {
 //     render({ source, selector, element, data, key, index, update, remove })
 // }
 
-function render({ source, selector, element, data, key, index, currentIndex, update, remove }) {
+function render({ source, element, data, key, index, currentIndex, update, remove }) {
     if (!element) {
-        if (!selector && source)
-            selector = source.getAttribute('render-selector')
-        if (selector)
-            element = queryDocumentSelectorAll(selector);
-        if (!element && source)
-            element = source.querySelector('template, [template], .template', '[render]')
+        if (source) {
+            element = getElement(source)
+            if (!element)
+                element = source.querySelector('template, [template], .template', '[render]')
+        }
+
         if (!element) return;
     }
 
     if (source) {
         let sourceData = sources.get(source)
         if (!sourceData) {
-            sourceData = { element: source, selector, data }
+            sourceData = { element: source, data }
             sources.set(source, sourceData)
         }
 
@@ -493,7 +535,7 @@ function render({ source, selector, element, data, key, index, currentIndex, upd
         remove = remove || data.filter.remove
     }
 
-    if (!(element instanceof HTMLCollection) && !Array.isArray(element))
+    if (!Array.isArray(element) && !(element instanceof HTMLCollection) && !(element instanceof NodeList))
         element = [element]
 
     for (let i = 0; i < element.length; i++) {
@@ -503,7 +545,7 @@ function render({ source, selector, element, data, key, index, currentIndex, upd
         let renderedNode = renderedNodes.get(element[i])
         if (source) {
             if (!renderedNode) {
-                renderedNode = { element: element[i], source, clones: new Map(), renderAss: new Map() }
+                renderedNode = { element: element[i], source, clones: new Map(), renderAs: new Map() }
                 renderedNodes.set(element[i], renderedNode)
             }
         }
@@ -594,7 +636,7 @@ Actions.init({
 Observer.init({
     name: 'render',
     observe: ['addedNodes'],
-    target: '[render-selector]',
+    target: elementSelector,
     callback: function (mutation) {
         init(mutation.target)
     }
@@ -605,15 +647,10 @@ Observer.init({
     observe: ['addedNodes'],
     target: '[render-clone]',
     callback: function (mutation) {
-        let deletedNode = deletedNodes.get(mutation.target)
-        if (deletedNode) {
-            clearTimeout(deletedNode.delayTimer);
-            deletedNodes.delete(mutation.target)
-        }
+        let renderedNode = renderedNodes.get(mutation.target)
+        if (!renderedNode) return
 
-        // let renderedNode = mutation.target.renderedNode
-        // if (renderedNode) return
-        // delete mutation.target.renderedNode
+        // render({ source, element, data, key, index, currentIndex, update, remove })
 
         // let nextElement = mutation.target.nextElementSibling
         // if (!nextElement) return
@@ -643,17 +680,11 @@ Observer.init({
     observe: ['removedNodes'],
     target: '[render-clone]',
     callback: function (mutation) {
+        if (mutation.target.parentElement) return
         let renderedNode = renderedNodes.get(mutation.target)
         if (!renderedNode) return
-
-        mutation.target.renderedNode = renderedNode
-        let delayTimer = setTimeout(function () {
-            deletedNodes.delete(mutation.target)
-            renderedNode.template.clones.delete(renderedNode.eid)
-            renderedNodes.delete(mutation.target)
-        }, 1000);
-
-        deletedNodes.set(mutation.target, { renderedNode, delayTimer })
+        renderedNode.template.clones.delete(renderedNode.eid)
+        renderedNodes.delete(mutation.target)
     }
 })
 
