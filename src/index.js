@@ -2,7 +2,7 @@
 import Actions from '@cocreate/actions';
 import Observer from '@cocreate/observer';
 import uuid from '@cocreate/uuid';
-import { queryDocumentSelector, queryDocumentSelectorAll, getValueFromObject, dotNotationToObject, ObjectId } from '@cocreate/utils';
+import { queryDocumentSelector, queryDocumentSelectorAll, getElements, getValueFromObject, dotNotationToObject, ObjectId } from '@cocreate/utils';
 import '@cocreate/element-prototype';
 import './index.css';
 
@@ -27,36 +27,6 @@ function init(element) {
     }
 }
 
-function getElement(element, prefix = 'render') {
-    let elements = [];
-
-    let selectors = ['selector', 'closest', 'parent', 'next', 'previous']
-    for (let i = 0; i < selectors.length; i++) {
-        let name = prefix + '-' + selectors[i]
-        const selector = element.getAttribute(name);
-        if (selector) {
-            if (selectors[i] === 'selector')
-                elements = document.querySelectorAll(selector)
-            else if (selectors[i] === 'closest')
-                elements = element.closest(selector)
-            else if (selectors[i] === 'parent')
-                elements = element.parentElement.querySelectorAll(selector)
-            else if (selectors[i] === 'next')
-                elements = element.nextElementSibling.querySelectorAll(selector)
-            else if (selectors[i] === 'previous')
-                elements = element.previousElementSibling.querySelectorAll(selector)
-        } else if (selector === '') {
-            if (selectors[i] === 'parent')
-                elements = element.parentElement
-            else if (selectors[i] === 'next')
-                elements = element.nextElementSibling
-            else if (selectors[i] === 'previous')
-                elements = element.previousElementSibling
-        }
-    }
-
-    return elements
-}
 
 function renderTemplate(template, data, key, index, keyPath) {
     if (!key)
@@ -508,7 +478,7 @@ function getRenderValue(node, data, key, renderAs) {
 function render({ source, element, data, key, index, currentIndex, update, remove }) {
     if (!element) {
         if (source) {
-            element = getElement(source)
+            element = getElements(source, 'render')
             if (!element)
                 element = source.querySelector('template, [template], .template', '[render]')
         }
@@ -645,52 +615,6 @@ Observer.init({
 Observer.init({
     name: 'render',
     observe: ['addedNodes'],
-    target: '[render-clone]',
-    callback: function (mutation) {
-        let renderedNode = renderedNodes.get(mutation.target)
-        if (!renderedNode) return
-
-        // render({ source, element, data, key, index, currentIndex, update, remove })
-
-        // let nextElement = mutation.target.nextElementSibling
-        // if (!nextElement) return
-
-        // let nextRenderedNode = renderedNodes.get(nextElement)
-        // if (!nextRenderedNode) return
-
-        // let clones
-        // if (nextRenderedNode.template)
-        //     clones = nextRenderedNode.template.clones
-        // else if (nextRenderedNode.clones)
-        //     clones = nextRenderedNode.clones
-
-        // const cloneValueArray = Array.from(clones.values())
-        // let index = cloneValueArray.indexOf(nextElement);
-
-        // const cloneArray = Array.from(clones)
-
-        // cloneArray.splice(index, 0, [renderedNode.eid, mutation.target]);
-        // clones = new Map(cloneArray);
-
-    }
-})
-
-Observer.init({
-    name: 'renderNodesRemoved',
-    observe: ['removedNodes'],
-    target: '[render-clone]',
-    callback: function (mutation) {
-        if (mutation.target.parentElement) return
-        let renderedNode = renderedNodes.get(mutation.target)
-        if (!renderedNode) return
-        renderedNode.template.clones.delete(renderedNode.eid)
-        renderedNodes.delete(mutation.target)
-    }
-})
-
-Observer.init({
-    name: 'render',
-    observe: ['addedNodes'],
     target: '[render]',
     callback: function (mutation) {
         if (mutation.target.hasAttribute('render-clone'))
@@ -705,6 +629,52 @@ Observer.init({
 
     }
 });
+
+// Observer.init({
+//     name: 'render',
+//     observe: ['addedNodes'],
+//     target: '[render-clone]',
+//     callback: function (mutation) {
+//         let renderedNode = renderedNodes.get(mutation.target)
+//         if (!renderedNode) return
+
+// render({ source, element, data, key, index, currentIndex, update, remove })
+
+// let nextElement = mutation.target.nextElementSibling
+// if (!nextElement) return
+
+// let nextRenderedNode = renderedNodes.get(nextElement)
+// if (!nextRenderedNode) return
+
+// let clones
+// if (nextRenderedNode.template)
+//     clones = nextRenderedNode.template.clones
+// else if (nextRenderedNode.clones)
+//     clones = nextRenderedNode.clones
+
+// const cloneValueArray = Array.from(clones.values())
+// let index = cloneValueArray.indexOf(nextElement);
+
+// const cloneArray = Array.from(clones)
+
+// cloneArray.splice(index, 0, [renderedNode.eid, mutation.target]);
+// clones = new Map(cloneArray);
+
+//     }
+// })
+
+Observer.init({
+    name: 'renderNodesRemoved',
+    observe: ['removedNodes'],
+    target: '[render-clone]',
+    callback: function (mutation) {
+        if (mutation.target.parentElement) return
+        let renderedNode = renderedNodes.get(mutation.target)
+        if (!renderedNode) return
+        renderedNode.template.clones.delete(renderedNode.eid)
+        renderedNodes.delete(mutation.target)
+    }
+})
 
 init()
 
