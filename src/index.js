@@ -2,13 +2,12 @@
 import Actions from '@cocreate/actions';
 import Observer from '@cocreate/observer';
 import uuid from '@cocreate/uuid';
-import { queryDocumentSelector, queryDocumentSelectorAll, getElements, getValueFromObject, dotNotationToObject, ObjectId } from '@cocreate/utils';
+import { queryElements, getValueFromObject, dotNotationToObject, ObjectId } from '@cocreate/utils';
 import '@cocreate/element-prototype';
 import './index.css';
 
 const sources = new Map()
 const renderedNodes = new Map()
-const deletedNodes = new Map()
 const elementSelector = '[render-selector], [render-closest], [render-parent], [render-next], [render-previous]'
 
 function init(element) {
@@ -478,7 +477,7 @@ function getRenderValue(node, data, key, renderAs) {
 function render({ source, element, data, key, index, currentIndex, update, remove }) {
     if (!element) {
         if (source) {
-            element = getElements(source, 'render')
+            element = queryElements(source, 'render')
             if (!element)
                 element = source.querySelector('template, [template], .template', '[render]')
         }
