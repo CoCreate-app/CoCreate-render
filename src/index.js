@@ -566,17 +566,6 @@ function getRenderValue(node, data, key, renderAs) {
     return value
 }
 
-// function getData({ element, selector, template, data, key, index }) {
-//     console.log('render.getData returns json data rendered')
-// }
-
-// function createElement(data) {
-//     // check all render elements to see if data pertains to them 
-//     // check filters to see if its index is with in the current renderd data length
-//     render({ source, selector, element, data, key, index, update, remove })
-// }
-
-
 function renderKey(element, params) {
     // TODO: custom render-keys 
     const form = element.closest("form") || document;
