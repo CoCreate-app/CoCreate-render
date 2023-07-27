@@ -26,6 +26,108 @@ function init(element) {
     }
 }
 
+function render({ source, element, data, key, index, currentIndex, update, remove }) {
+    if (!element) {
+        if (source) {
+            element = queryElements({ element: source, prefix: 'render' })
+            if (!element && source.children.length > 0) {
+                for (const child of source.children) {
+                    if (child.matches('template, [template], .template, [render]')) {
+                        element = child;
+                        break; // Found the desired element, no need to continue the loop
+                    }
+                }
+            }
+
+            if (!element) {
+                element = source.querySelector('template, [template], .template, [render]');
+            }
+        }
+
+        if (!element) return;
+    }
+
+    if (source) {
+        let sourceData = sources.get(source)
+        if (!sourceData) {
+            sourceData = { element: source, data }
+            sources.set(source, sourceData)
+        }
+
+        source = sourceData
+        if (!source.data)
+            source.data = data
+    } else if (data)
+        source = { data }
+
+    if (data.filter) {
+        index = index || data.filter.index
+        update = update || data.filter.update
+        remove = remove || data.filter.remove
+    }
+
+    if (!Array.isArray(element) && !(element instanceof HTMLCollection) && !(element instanceof NodeList))
+        element = [element]
+
+    for (let i = 0; i < element.length; i++) {
+        if (!key)
+            key = element[i].getAttribute('render')
+
+        let renderedNode = renderedNodes.get(element[i])
+        if (source) {
+            if (!renderedNode) {
+                renderedNode = { element: element[i], source, clones: new Map(), renderAs: new Map() }
+                renderedNodes.set(element[i], renderedNode)
+            }
+        }
+
+        if (remove) {
+            if (renderedNode.source) {
+                if (key)
+                    renderedNode.source.data[key].splice(index, 1)
+                else {
+
+                }
+            }
+
+            let clone = Array.from(renderedNode.clones)[index]
+            if (!clone) return
+
+            renderedNode.clones.delete(clone[0])
+            renderedNodes.delete(clone[1])
+            clone[1].remove()
+        } else if (key) {
+            if (update) {
+                let clone
+
+                if (!currentIndex)
+                    currentIndex = data.filter.currentIndex
+
+                if (currentIndex >= 0)
+                    clone = Array.from(renderedNode.clones)[currentIndex]
+                else
+                    clone = Array.from(renderedNode.clones)[index]
+
+                if (!clone) return
+
+                renderValues(clone[1], data);
+                if (currentIndex >= 0)
+                    insertElement(renderedNode, clone[1], index, currentIndex)
+            }
+
+            // TODO: if $auto here every subsequent clone will have same value, not replacing here will apply unique value to each clone
+            if (key === '$auto')
+                key = key.replace(/\$auto/g, uuid.generate(6));
+
+            element[i].setAttribute('render', key);
+
+            renderTemplate(element[i], data, key, index);
+        } else
+            renderValues(element[i], data);
+
+    }
+
+}
 
 function renderTemplate(template, data, key, index, keyPath) {
     if (!key)
@@ -474,98 +576,6 @@ function getRenderValue(node, data, key, renderAs) {
 //     render({ source, selector, element, data, key, index, update, remove })
 // }
 
-function render({ source, element, data, key, index, currentIndex, update, remove }) {
-    if (!element) {
-        if (source) {
-            element = queryElements(source, 'render')
-            if (!element)
-                element = source.querySelector('template, [template], .template', '[render]')
-        }
-
-        if (!element) return;
-    }
-
-    if (source) {
-        let sourceData = sources.get(source)
-        if (!sourceData) {
-            sourceData = { element: source, data }
-            sources.set(source, sourceData)
-        }
-
-        source = sourceData
-        if (!source.data)
-            source.data = data
-    } else if (data)
-        source = { data }
-
-    if (data.filter) {
-        index = index || data.filter.index
-        update = update || data.filter.update
-        remove = remove || data.filter.remove
-    }
-
-    if (!Array.isArray(element) && !(element instanceof HTMLCollection) && !(element instanceof NodeList))
-        element = [element]
-
-    for (let i = 0; i < element.length; i++) {
-        if (!key)
-            key = element[i].getAttribute('render')
-
-        let renderedNode = renderedNodes.get(element[i])
-        if (source) {
-            if (!renderedNode) {
-                renderedNode = { element: element[i], source, clones: new Map(), renderAs: new Map() }
-                renderedNodes.set(element[i], renderedNode)
-            }
-        }
-
-        if (remove) {
-            if (renderedNode.source) {
-                if (key)
-                    renderedNode.source.data[key].splice(index, 1)
-                else {
-
-                }
-            }
-
-            let clone = Array.from(renderedNode.clones)[index]
-            if (!clone) return
-
-            renderedNode.clones.delete(clone[0])
-            renderedNodes.delete(clone[1])
-            clone[1].remove()
-        } else if (key) {
-            if (update) {
-                let clone
-
-                if (!currentIndex)
-                    currentIndex = data.filter.currentIndex
-
-                if (currentIndex >= 0)
-                    clone = Array.from(renderedNode.clones)[currentIndex]
-                else
-                    clone = Array.from(renderedNode.clones)[index]
-
-                if (!clone) return
-
-                renderValues(clone[1], data);
-                if (currentIndex >= 0)
-                    insertElement(renderedNode, clone[1], index, currentIndex)
-            }
-
-            // TODO: if $auto here every subsequent clone will have same value, not replacing here will apply unique value to each clone
-            if (key === '$auto')
-                key = key.replace(/\$auto/g, uuid.generate(6));
-
-            element[i].setAttribute('render', key);
-
-            renderTemplate(element[i], data, key, index);
-        } else
-            renderValues(element[i], data);
-
-    }
-
-}
 
 function renderKey(element, params) {
     // TODO: custom render-keys 
