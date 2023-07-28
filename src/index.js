@@ -96,7 +96,7 @@ function render({ source, element, data, key, index, currentIndex, update, remov
             renderedNode.clones.delete(clone[0])
             renderedNodes.delete(clone[1])
             clone[1].remove()
-        } else if (key) {
+        } else if (key || Array.isArray(data)) {
             if (update) {
                 let clone
 
@@ -119,7 +119,8 @@ function render({ source, element, data, key, index, currentIndex, update, remov
             if (key === '$auto')
                 key = key.replace(/\$auto/g, uuid.generate(6));
 
-            element[i].setAttribute('render', key);
+            if (key)
+                element[i].setAttribute('render', key);
 
             renderTemplate(element[i], data, key, index);
         } else
@@ -154,7 +155,12 @@ function renderTemplate(template, data, key, index, keyPath) {
 
     template = templateData
 
-    let renderData = getRenderValue(template.element, data, key)
+    let renderData
+    if (key)
+        renderData = getRenderValue(template.element, data, key)
+    else if (Array.isArray(data))
+        renderData = data
+
     if (!renderData) return
 
     if (index === 0) {
@@ -211,7 +217,7 @@ function renderTemplate(template, data, key, index, keyPath) {
 
         }
     } else {
-        if (!key) {
+        if (!key && !Array.isArray(renderData)) {
             key = 'data'
             renderData = getValueFromObject(renderData, key);
             if (!renderAs)
@@ -229,10 +235,16 @@ function renderTemplate(template, data, key, index, keyPath) {
 
             for (let i = 0; i < renderData.length; i++) {
                 let clone = cloneTemplate(template);
-                clone.keyPath = template.keyPath + `[${i}]`
-                let object = { [renderAs]: renderData[i] }
-                if (renderAs.includes('.'))
-                    object = dotNotationToObject(object);
+                clone.keyPath = template.keyPath || '' + `[${i}]`
+
+                let object
+                if (renderAs) {
+                    object = { [renderAs]: renderData[i] }
+                    if (renderAs.includes('.'))
+                        object = dotNotationToObject(object);
+                } else
+                    object = renderData[i]
+
                 renderValues(clone.element, object, key, renderAs);
                 insertElement(template, clone.element, index);
             }
@@ -332,7 +344,11 @@ function renderValues(node, data, key, renderAs, keyPath, parent) {
             parent = renderedNode
 
             for (let eid of ['_id', 'name', 'key']) {
-                eid = data[renderAs][eid]
+                if (renderAs)
+                    eid = data[renderAs][eid]
+                else
+                    eid = data[eid]
+
                 if (!eid) continue
 
                 let oldEid = renderedNode.eid
