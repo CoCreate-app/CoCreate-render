@@ -20,7 +20,7 @@ function init(element) {
         let source = sources.get(element[i])
         if (!source) {
             sources.set(element[i], { element: element[i] })
-            element[i].setValue = (data) => render({ source: element[i], data })
+            element[i].renderValue = (data) => render({ source: element[i], data })
             element[i].getValue = () => sources.get(element[i]).data
         }
     }
@@ -625,6 +625,18 @@ Observer.init({
         init(mutation.target)
     }
 })
+
+Observer.init({
+    name: 'fileRender',
+    observe: ['attributes'],
+    attributeName: ['render-selector', 'render-closest', 'render-parent', 'render-next', 'render-previous'],
+    callback: function (mutation) {
+        render({
+            element: mutation.target, data: mutation.target.getValue()
+        });
+    }
+});
+
 
 Observer.init({
     name: 'render',
