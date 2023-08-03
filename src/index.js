@@ -529,7 +529,7 @@ function getRenderValue(node, data, key, renderAs) {
                             value = parentNode.parentKey || parent.parentKey || parent.parent.parentKey
                         } else if (key.includes('renderAs')) {
                             value = renderAs
-                        } else if (key === 'document_id' || key === '_id')
+                        } else if (key === 'object' || key === '_id')
                             value = ObjectId()
                         else if (key === 'uuid')
                             value = uuid.generate(6)

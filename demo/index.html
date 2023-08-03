@@ -14,13 +14,11 @@
     <body>
         <div template="abc1">
             <div
-                class="template card {{render2.collection}} card margin:10px firstname"
+                class="template card {{render2.array}} card margin:10px firstname"
                 value="{{render2.data._id}}"
                 template
                 render="render2.data">
-                <div
-                    class="card-body padding:15px"
-                    collection="{{render2.collection}}">
+                <div class="card-body padding:15px" array="{{render2.array}}">
                     <h3
                         class="{{render2.data.firstname}} blue"
                         value="{{render2.data.lastname}} - {{render2.data.firstname}}">
@@ -29,7 +27,7 @@
                     <h3
                         value="{{ render2.data.lastname }}"
                         test="{{lastname}}"></h3>
-                    <input value="{{ render2.collection }}" />
+                    <input value="{{ render2.array }}" />
                     <h3 class="email" value="{{render2.data.email}}">--</h3>
                     <textarea value="{{render2.data.lastname}}"></textarea>
                     <h3
@@ -46,7 +44,7 @@
                             name="email"
                             class="{{render2.data.testing_array.email}}"
                             value="{{render2.data.testing_array.email}}"></h3>
-                        <h3 value="{{render2.collection}}"></h3>
+                        <h3 value="{{render2.array}}"></h3>
 
                         <h3 value="{{render2.data.personal_info.email}}"></h3>
                         <div>*******************************************</div>
@@ -74,7 +72,7 @@
             selector: '[template=abc1]',
             data: {
                  render2: {
-                    collection : 'dededede',
+                    array : 'dededede',
                     data: [{
                          _id : '123kijfhgfkel45',
                          firstname : 'Jin',

@@ -19,8 +19,8 @@
 
     <body>
         <div template render>
-            <h3>{{collection}}</h3>
-            <h3>{{document._id}}</h3>
+            <h3>{{array}}</h3>
+            <h3>{{object._id}}</h3>
         </div>
 
         <pre>
@@ -30,7 +30,7 @@
             CoCreate.render.data({
                 selector: '[template=abc1]',
                 data: {
-                    collection: 'dededede',
+                    array: 'dededede',
                     document: {
                          _id : '123kijfhgfkel45',
                          current_org: ['test1', 'test2', 'test31', 'test3'],

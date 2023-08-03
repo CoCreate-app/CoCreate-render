@@ -19,8 +19,8 @@
     <body>
         <cocreate-select name="current_org">
             <selected template>
-                <cc-option class="template" value="{{document.current_org}}">
-                    <h3>{{document.current_org}}</h3>
+                <cc-option class="template" value="{{object.current_org}}">
+                    <h3>{{object.current_org}}</h3>
                 </cc-option>
             </selected>
         </cocreate-select>
@@ -32,7 +32,7 @@
         CoCreate.render.data({
             selector: '[template=abc1]',
             data: {
-                collection : 'dededede',
+                array : 'dededede',
                 data: [{
                      _id : '123kijfhgfkel45',
                      current_org: 'test1'
