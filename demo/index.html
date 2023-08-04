@@ -32,7 +32,7 @@
                     <textarea value="{{render2.data.lastname}}"></textarea>
                     <h3
                         data-attribute="{{render2.data.personal_info.email}}"
-                        name="email"
+                        key="email"
                         value="{{render2.data.personal_info.email}}"></h3>
 
                     <div
@@ -41,7 +41,7 @@
                         testing-array template
                         <h3
                             data-attribute="{{render2.data.testing_array.email}}"
-                            name="email"
+                            key="email"
                             class="{{render2.data.testing_array.email}}"
                             value="{{render2.data.testing_array.email}}"></h3>
                         <h3 value="{{render2.array}}"></h3>
@@ -55,7 +55,7 @@
                         render-as="string">
                         string - template
                         <h3
-                            name="test"
+                            key="test"
                             data-attribute="{{string}}"
                             class="{{string}}"
                             value="{{string}}"></h3>
