@@ -26,7 +26,7 @@ function init(element) {
     }
 }
 
-function render({ source, element, data, key, index, currentIndex, update, remove }) {
+async function render({ source, element, data, key, index, currentIndex, update, remove }) {
     if (!element) {
         if (source) {
             element = queryElements({ element: source, prefix: 'render' })
@@ -110,7 +110,7 @@ function render({ source, element, data, key, index, currentIndex, update, remov
 
                 if (!clone) return
 
-                renderValues(clone[1], data);
+                await renderValues(clone[1], data);
                 if (currentIndex >= 0)
                     insertElement(renderedNode, clone[1], index, currentIndex)
             }
@@ -124,13 +124,13 @@ function render({ source, element, data, key, index, currentIndex, update, remov
 
             renderTemplate(element[i], data, key, index);
         } else
-            renderValues(element[i], data);
+            await renderValues(element[i], data);
 
     }
 
 }
 
-function renderTemplate(template, data, key, index, keyPath) {
+async function renderTemplate(template, data, key, index, keyPath) {
     if (!key)
         key = template.getAttribute('render')
 
@@ -212,7 +212,7 @@ function renderTemplate(template, data, key, index, keyPath) {
             clone.parentKey = renderedKey
             clone.renderKey = key
             clone.element.setAttribute('renderedKey', keys[i])
-            renderValues(clone.element, Data, keys[i], renderAs);
+            await renderValues(clone.element, Data, keys[i], renderAs);
             insertElement(template, clone.element, index);
 
         }
@@ -227,7 +227,7 @@ function renderTemplate(template, data, key, index, keyPath) {
         if (!renderData) {
             let clone = cloneTemplate(template);
             clone.keyPath = template.keyPath
-            renderValues(clone.element, data, key, renderAs);
+            await renderValues(clone.element, data, key, renderAs);
             insertElement(template, clone.element, index);
         } else {
             if (!Array.isArray(renderData))
@@ -245,7 +245,7 @@ function renderTemplate(template, data, key, index, keyPath) {
                 } else
                     object = renderData[i]
 
-                renderValues(clone.element, object, key, renderAs);
+                await renderValues(clone.element, object, key, renderAs);
                 insertElement(template, clone.element, index);
             }
         }
@@ -314,7 +314,7 @@ function insertElement(template, element, index, currentIndex) {
     }
 }
 
-function renderValues(node, data, key, renderAs, keyPath, parent) {
+async function renderValues(node, data, key, renderAs, keyPath, parent) {
     if (!data) return;
 
     let renderedNode = renderedNodes.get(node)
@@ -374,7 +374,8 @@ function renderValues(node, data, key, renderAs, keyPath, parent) {
             }
         }
 
-        Array.from(node.attributes).forEach(attr => {
+        // Array.from(node.attributes).forEach(attr => {
+        for (let attr of node.attributes) {
             let name = attr.name;
             let value = attr.value;
 
@@ -386,16 +387,16 @@ function renderValues(node, data, key, renderAs, keyPath, parent) {
             let namePlaceholder = renderedAttribute.placeholder.name || name;
             let valuePlaceholder = renderedAttribute.placeholder.value || value;
 
-            name = renderValue(attr, data, namePlaceholder, renderAs, renderedAttribute);
-            value = renderValue(attr, data, valuePlaceholder, renderAs, renderedAttribute);
+            name = await renderValue(attr, data, namePlaceholder, renderAs, renderedAttribute);
+            value = await renderValue(attr, data, valuePlaceholder, renderAs, renderedAttribute);
 
             if (name === undefined && name === null) {
                 renderedNodes.delete(attr)
                 node.removeAttribute(attr.name);
             } else if ((value || value === "") && (name !== attr.name || value !== attr.value))
                 node.setAttribute(name, value);
-
-        });
+        }
+        // });
 
         if (CoCreate.pass) {
             if (node.hasAttribute('[pass_id]'))
@@ -418,10 +419,13 @@ function renderValues(node, data, key, renderAs, keyPath, parent) {
         if (node.getAttribute('render') && !node.hasAttribute('render-clone')) {
             renderTemplate(node, data);
         } else if (node.childNodes.length > 0) {
-            Array.from(node.childNodes).forEach(childNode => {
-                renderValues(childNode, data, key, renderAs, keyPath, parent);
-            });
+            // Array.from(node.childNodes).forEach(childNode => {
+            for (let childNode of node.childNodes) {
+                await renderValues(childNode, data, key, renderAs, keyPath, parent);
+            }
+            // });
         }
+
 
     } else if (node.nodeType == 3) {
         let valueType = node.parentElement.getAttribute('value-type')
@@ -435,7 +439,7 @@ function renderValues(node, data, key, renderAs, keyPath, parent) {
             return
         textContent = renderedNode.placeholder || node.textContent;
 
-        text = renderValue(node, data, textContent, renderAs, renderedNode);
+        text = await renderValue(node, data, textContent, renderAs, renderedNode);
 
         if (text || text == "") {
             if (text != renderedNode.text) {
@@ -462,16 +466,18 @@ function renderValues(node, data, key, renderAs, keyPath, parent) {
                 }
 
                 if (node.childNodes.length > 0) {
-                    Array.from(node.childNodes).forEach(childNode => {
-                        renderValues(childNode, data, key, renderAs, keyPath, parent);
-                    });
+                    // Array.from(node.childNodes).forEach(childNode => {
+                    for (let childNode of node.childNodes) {
+                        await renderValues(childNode, data, key, renderAs, keyPath, parent);
+                    }
+                    // });
                 }
             }
         }
     }
 }
 
-function renderValue(node, data, placeholder, renderAs, renderedNode) {
+async function renderValue(node, data, placeholder, renderAs, renderedNode) {
     let output = placeholder;
 
     if (placeholder.match(/{{(.*?)}}/)) {
@@ -481,13 +487,21 @@ function renderValue(node, data, placeholder, renderAs, renderedNode) {
 
         let match
         do {
-            match = output.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/);
-
+            // match = output.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/); // works by getting inner matches first
+            // match = output.match(/{{([^}]*)}}/);
+            match = output.match(/{{(.*?)}}/);
             if (match) {
-                if (match[0] === '{{modified.keyPath}}')
-                    console.log('{{modified.keyPath}}')
-
-                let value = getRenderValue(node, data, match[1], renderAs)
+                let value
+                try {
+                    let Data = JSON.parse('{' + match[1].replace(/'/g, '"') + '}');
+                    if (Data.storage || Data.database || Data.array || Data.object || Data.index) {
+                        Data.method = 'read.object'
+                        value = await CoCreate.crud.send(Data)
+                        value = value.object[0][Data.key]
+                    }
+                } catch (error) {
+                    value = getRenderValue(node, data, match[1], renderAs)
+                }
 
                 if (value || value === "") {
                     if (typeof value === "object")
@@ -503,6 +517,7 @@ function renderValue(node, data, placeholder, renderAs, renderedNode) {
                 } else {
                     match = null
                 }
+
             }
 
         } while (match)
