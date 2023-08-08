@@ -43,7 +43,7 @@ function init(element) {
         if (!source) {
             sources.set(element[i], { element: element[i] })
             element[i].renderValue = (data) => render({ source: element[i], data })
-            element[i].getValue = () => sources.get(element[i]).data
+            element[i].getData = () => sources.get(element[i]).data
         }
     }
 }
