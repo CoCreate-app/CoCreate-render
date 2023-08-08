@@ -19,7 +19,7 @@
 
     <body>
         <div template>
-            <h3>{{document[0]._id}}</h3>
+            <h3>{{object[0]._id}}</h3>
 
             <div render="object.current">
                 <h3>{{object.current.name}}</h3>
@@ -34,7 +34,7 @@
                 selector: '[template=abc1]',
                 data: {
                     array : 'dededede',
-                    document: [
+                    object: [
                         {
                             _id : '123',
                             current_org: ['test1', 'test2'],
