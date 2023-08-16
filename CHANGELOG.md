@@ -1,3 +1,33 @@
+# [1.25.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.32...v1.25.0) (2023-08-16)
+
+
+### Bug Fixes
+
+* crud attributes renamed ([c27a2ad](https://github.com/CoCreate-app/CoCreate-render/commit/c27a2ad28d8298ef232735da244ad1d5d9abb726))
+* Refactor render keys ([358733b](https://github.com/CoCreate-app/CoCreate-render/commit/358733b52efc62e613c661783eb5b8889bf37a2f))
+* Refactor rendering logic and handling of undefined key ([430eefb](https://github.com/CoCreate-app/CoCreate-render/commit/430eefbfab9ee09ad5accc57f360da044a54e213))
+* Remove commented-out code and unused function in src/index.js ([4171181](https://github.com/CoCreate-app/CoCreate-render/commit/417118188948c1e94ab09377d38e461012c0956c))
+* render-array and render-object attributes renamed to render ([6a406e8](https://github.com/CoCreate-app/CoCreate-render/commit/6a406e8fa514efce96e15ca8e982bae9012b61d0))
+* replace -target -selector ([f4f59e1](https://github.com/CoCreate-app/CoCreate-render/commit/f4f59e1ee6e352dbbbaff26bf20581481914c90a))
+* updated actions callback data object ([0f9a3fb](https://github.com/CoCreate-app/CoCreate-render/commit/0f9a3fbfe0fa7358d41451ef6474d3c46fb6cf32))
+* webpack.config and package.json make use of mode=production instead of process.env ([ec0d708](https://github.com/CoCreate-app/CoCreate-render/commit/ec0d708daf77652ccc88c476eebd0fef33675365))
+
+
+### Features
+
+* Add async/await to render function ([986359d](https://github.com/CoCreate-app/CoCreate-render/commit/986359d44bdfebba8780030d765da5804cd27c6b))
+* Add keyPath variable to the renderedNode objects, Add support for deleted nodes in render loop ([996b239](https://github.com/CoCreate-app/CoCreate-render/commit/996b2393b309f8fdb12a3407fccc03ca0c8e1ce6))
+* Add renderValue function to elements that have render selectors. ([be6a32c](https://github.com/CoCreate-app/CoCreate-render/commit/be6a32cb6ee32435cfc515627f441f928c15a2bd))
+* Add support for rendering elements using different selectors ([1dc9b4d](https://github.com/CoCreate-app/CoCreate-render/commit/1dc9b4d52753b11285586c3a54beabc18bd23229))
+* Added `.getData` in `init` function ([f3b256a](https://github.com/CoCreate-app/CoCreate-render/commit/f3b256a31f6ed22b3b7277d46cb972847330b41f))
+* Code changes for rendering and updating elements ([f3ea184](https://github.com/CoCreate-app/CoCreate-render/commit/f3ea184e15a77705e343d65143941fef3d9f8144))
+* data stored in top element and generated using render-key etc rather then storing each rendered data in each element ([93c1d3d](https://github.com/CoCreate-app/CoCreate-render/commit/93c1d3d85bacaff5ef9838b003cffe4d4016bac5))
+* name attribute and variable renamed to key ([a96b9ee](https://github.com/CoCreate-app/CoCreate-render/commit/a96b9ee94b5feda0513090c9ccb88e61122f3176))
+* Remove unused import and refactor function call to queryElements in src/index.js ([dd657d2](https://github.com/CoCreate-app/CoCreate-render/commit/dd657d27f9b987f6ab1615315d42a8fb13fa68f7))
+* removed render-object and render-array attributes, instead define attribute render and set the dotnotation key of the value you would like to render . ([e68075a](https://github.com/CoCreate-app/CoCreate-render/commit/e68075a9da3b553a39a14d049f10c09cd2238635))
+* renamed CRUD attributes and params ([eb85257](https://github.com/CoCreate-app/CoCreate-render/commit/eb85257f44f147e81d85f9e5f943c3b2b02123cf))
+* update template_id to render-selector attribute. update filter attributes to filter selector-attributes ([607edee](https://github.com/CoCreate-app/CoCreate-render/commit/607edee4eafa14fabfb8205c2e7fef952c12a987))
+
 ## [1.24.32](https://github.com/CoCreate-app/CoCreate-render/compare/v1.24.31...v1.24.32) (2023-06-14)
 
 
