@@ -1,3 +1,12 @@
+## [1.26.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.26.0...v1.26.1) (2023-08-21)
+
+
+### Bug Fixes
+
+* /dist/CoCreate.js updated to https://CoCreate.app/dist/CoCreate.js ([c754949](https://github.com/CoCreate-app/CoCreate-render/commit/c75494979a7abbbcdb64cb997171155529f919ec))
+* replace cdn with /dist ([05088ab](https://github.com/CoCreate-app/CoCreate-render/commit/05088ab6f7d60a871e0e794939b34e35386ac6f5))
+* update file uploader ([0ededa2](https://github.com/CoCreate-app/CoCreate-render/commit/0ededa248ac571b27a124317cb0e37bda21ff347))
+
 # [1.26.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.25.0...v1.26.0) (2023-08-17)
 
 
