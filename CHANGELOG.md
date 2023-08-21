@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.26.1...v1.27.0) (2023-08-21)
+
+
+### Features
+
+* Update cocreate dependencies for the latest features and bug fixes ([1552ec3](https://github.com/CoCreate-app/CoCreate-render/commit/1552ec33dcd77044da409553b13c2dadac6df6c8))
+
 ## [1.26.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.26.0...v1.26.1) (2023-08-21)
 
 
