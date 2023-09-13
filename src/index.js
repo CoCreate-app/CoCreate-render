@@ -82,10 +82,10 @@ async function render({ source, element, data, key, index, currentIndex, update,
     } else if (data)
         source = { data }
 
-    if (data.filter) {
-        index = index || data.filter.index
-        update = update || data.filter.update
-        remove = remove || data.filter.remove
+    if (data.$filter) {
+        index = index || data.$filter.index
+        update = update || data.$filter.update
+        remove = remove || data.$filter.remove
     }
 
     if (!Array.isArray(element) && !(element instanceof HTMLCollection) && !(element instanceof NodeList))
@@ -123,7 +123,7 @@ async function render({ source, element, data, key, index, currentIndex, update,
                 let clone
 
                 if (!currentIndex)
-                    currentIndex = data.filter.currentIndex
+                    currentIndex = data.$filter.currentIndex
 
                 if (currentIndex >= 0)
                     clone = Array.from(renderedNode.clones)[currentIndex]
