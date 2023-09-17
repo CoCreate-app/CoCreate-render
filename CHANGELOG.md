@@ -1,3 +1,10 @@
+## [1.27.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.27.1...v1.27.2) (2023-09-17)
+
+
+### Bug Fixes
+
+* object.$filter ([821411e](https://github.com/CoCreate-app/CoCreate-render/commit/821411e1f2b8ecaf2d0cdd109f528a0e27af5b50))
+
 ## [1.27.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.27.0...v1.27.1) (2023-08-21)
 
 
