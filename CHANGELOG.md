@@ -1,3 +1,11 @@
+## [1.27.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.27.2...v1.27.3) (2023-09-18)
+
+
+### Bug Fixes
+
+*  Add path and pathname ([35126d8](https://github.com/CoCreate-app/CoCreate-render/commit/35126d8e58839ea5f7abb04a6cbea74f237fb142))
+* Update dCoCreate dpendencies to latest versions ([2090195](https://github.com/CoCreate-app/CoCreate-render/commit/209019594e4f608d413278bb07145873e43dd9eb))
+
 ## [1.27.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.27.1...v1.27.2) (2023-09-17)
 
 
