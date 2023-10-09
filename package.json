@@ -62,6 +62,6 @@
     "@cocreate/api": "^1.15.0",
     "@cocreate/element-prototype": "^1.11.2",
     "@cocreate/observer": "^1.11.2",
-    "@cocreate/utils": "^1.24.2"
+    "@cocreate/utils": "^1.25.0"
   }
 }
