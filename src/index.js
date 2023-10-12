@@ -297,7 +297,7 @@ function cloneTemplate(template) {
     }
 
     if (typeof clone === 'string') {
-        let container = document.createElement('div');
+        let container = document.createElement('tbody');
         container.innerHTML = clone;
         clone = container.firstChild
         container.remove()
