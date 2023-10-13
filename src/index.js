@@ -88,6 +88,13 @@ async function render({ source, element, data, key, index, currentIndex, update,
         remove = remove || data.$filter.remove
     }
 
+    let type = data.type
+    if (!type && data.method) {
+        type = data.method.split('.')[1]
+    } else if (type == 'key')
+        type = 'object'
+
+
     if (!Array.isArray(element) && !(element instanceof HTMLCollection) && !(element instanceof NodeList))
         element = [element]
 
@@ -103,6 +110,7 @@ async function render({ source, element, data, key, index, currentIndex, update,
             }
         }
 
+        // TODO: for loop data[type]?
         if (remove) {
             if (renderedNode.source) {
                 if (key)
@@ -112,39 +120,48 @@ async function render({ source, element, data, key, index, currentIndex, update,
                 }
             }
 
-            let clone = Array.from(renderedNode.clones)[index]
+            let cloneKey
+            if (type === 'object') {
+                cloneKey = data[type][0]._id;
+            } else {
+                cloneKey = data[type][0].name;
+            }
+
+            let clone = renderedNode.clones.get(cloneKey)
             if (!clone) return
 
-            renderedNode.clones.delete(clone[0])
-            renderedNodes.delete(clone[1])
-            clone[1].remove()
+            renderedNode.clones.delete(cloneKey)
+            renderedNodes.delete(clone)
+            clone.remove()
         } else if (key || Array.isArray(data)) {
             if (update) {
                 let clone
+                if (type === 'object') {
+                    clone = renderedNode.clones.get(data[type][0]._id);
+                } else {
+                    clone = renderedNode.clones.get(data[type][0].name);
+                }
 
                 if (!currentIndex)
                     currentIndex = data.$filter.currentIndex
 
-                if (currentIndex >= 0)
-                    clone = Array.from(renderedNode.clones)[currentIndex]
-                else
-                    clone = Array.from(renderedNode.clones)[index]
-
                 if (!clone) return
+                for (let j = 0; j < data[type].length; j++) {
+                    await renderValues(clone, { object: data[type][j] });
+                    if (currentIndex >= 0)
+                        insertElement(renderedNode, clone, index, currentIndex)
+                }
+            } else {
 
-                await renderValues(clone[1], data);
-                if (currentIndex >= 0)
-                    insertElement(renderedNode, clone[1], index, currentIndex)
+                // TODO: if $auto here every subsequent clone will have same value, not replacing here will apply unique value to each clone
+                if (key === '$auto')
+                    key = key.replace(/\$auto/g, uuid.generate(6));
+
+                if (key)
+                    element[i].setAttribute('render', key);
+
+                renderTemplate(element[i], data, key, index);
             }
-
-            // TODO: if $auto here every subsequent clone will have same value, not replacing here will apply unique value to each clone
-            if (key === '$auto')
-                key = key.replace(/\$auto/g, uuid.generate(6));
-
-            if (key)
-                element[i].setAttribute('render', key);
-
-            renderTemplate(element[i], data, key, index);
         } else
             await renderValues(element[i], data);
 
