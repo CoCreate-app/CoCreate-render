@@ -1,3 +1,12 @@
+## [1.28.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.28.3...v1.28.4) (2023-10-14)
+
+
+### Bug Fixes
+
+* bump dependencies ([ac79266](https://github.com/CoCreate-app/CoCreate-render/commit/ac79266c1f0934c2e9321536626074e1d4090070))
+* improved finding clones to update and delete ([9bafc8b](https://github.com/CoCreate-app/CoCreate-render/commit/9bafc8b56fc20a03da8963a5888164ceb5fe28fc))
+* use tbody as new element to prevent lost of tr and td elements ([88ca483](https://github.com/CoCreate-app/CoCreate-render/commit/88ca483c30e5c66c54fc70a8064d90fa8bdadff9))
+
 ## [1.28.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.28.2...v1.28.3) (2023-10-09)
 
 
