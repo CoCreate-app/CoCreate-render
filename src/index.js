@@ -110,16 +110,7 @@ async function render({ source, element, data, key, index, currentIndex, update,
             }
         }
 
-        // TODO: for loop data[type]?
         if (remove) {
-            if (renderedNode.source) {
-                if (key)
-                    renderedNode.source.data[key].splice(index, 1)
-                else {
-
-                }
-            }
-
             let cloneKey
             if (type === 'object') {
                 cloneKey = data[type][0]._id;
