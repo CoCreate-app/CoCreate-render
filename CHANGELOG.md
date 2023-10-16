@@ -1,3 +1,11 @@
+## [1.28.5](https://github.com/CoCreate-app/CoCreate-render/compare/v1.28.4...v1.28.5) (2023-10-16)
+
+
+### Bug Fixes
+
+* render delete nodes ([1921e57](https://github.com/CoCreate-app/CoCreate-render/commit/1921e572051d62aa53513f5379538f3df3c76d93))
+* update and delete for loop data.type ([cc5e4b5](https://github.com/CoCreate-app/CoCreate-render/commit/cc5e4b5ef33814de59159204f6af8648b6fdfbca))
+
 ## [1.28.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.28.3...v1.28.4) (2023-10-14)
 
 
