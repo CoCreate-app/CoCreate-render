@@ -100,7 +100,7 @@ async function render({ source, element, data, key, index, currentIndex, update,
 
     for (let i = 0; i < element.length; i++) {
         if (!key)
-            key = element[i].getAttribute('render')
+            key = element[i].getAttribute('render') || type
 
         let renderedNode = renderedNodes.get(element[i])
         if (source) {
@@ -111,33 +111,36 @@ async function render({ source, element, data, key, index, currentIndex, update,
         }
 
         if (remove) {
-            let cloneKey
-            if (type === 'object') {
-                cloneKey = data[type][0]._id;
-            } else {
-                cloneKey = data[type][0].name;
-            }
-
-            let clone = renderedNode.clones.get(cloneKey)
-            if (!clone) return
-
-            renderedNode.clones.delete(cloneKey)
-            renderedNodes.delete(clone)
-            clone.remove()
-        } else if (key || Array.isArray(data)) {
-            if (update) {
-                let clone
+            for (let j = 0; j < data[type].length; j++) {
+                let cloneKey
                 if (type === 'object') {
-                    clone = renderedNode.clones.get(data[type][0]._id);
+                    cloneKey = data[type][j]._id;
                 } else {
-                    clone = renderedNode.clones.get(data[type][0].name);
+                    cloneKey = data[type][j].name;
                 }
 
-                if (!currentIndex)
-                    currentIndex = data.$filter.currentIndex
-
+                let clone = renderedNode.clones.get(cloneKey)
                 if (!clone) return
+
+                renderedNode.clones.delete(cloneKey)
+                renderedNodes.delete(clone)
+                clone.remove()
+            }
+        } else if (key || Array.isArray(data)) {
+            if (update) {
                 for (let j = 0; j < data[type].length; j++) {
+                    let clone
+                    if (type === 'object') {
+                        clone = renderedNode.clones.get(data[type][j]._id);
+                    } else {
+                        clone = renderedNode.clones.get(data[type][j].name);
+                    }
+
+                    if (!currentIndex)
+                        currentIndex = data.$filter.currentIndex
+
+                    if (!clone) return
+
                     await renderValues(clone, { object: data[type][j] });
                     if (currentIndex >= 0)
                         insertElement(renderedNode, clone, index, currentIndex)
@@ -161,8 +164,8 @@ async function render({ source, element, data, key, index, currentIndex, update,
 }
 
 async function renderTemplate(template, data, key, index, keyPath) {
-    if (!key)
-        key = template.getAttribute('render')
+    // if (!key)
+    //     key = template.getAttribute('render')
 
     let templateData = renderedNodes.get(template)
     if (!templateData) {
