@@ -630,7 +630,7 @@ function getRenderValue(node, data, key, renderAs) {
     return value
 }
 
-function renderKey(element, params) {
+async function renderKey(element, params) {
     // TODO: custom render-keys 
     const form = element.closest("form") || document;
     if (!params)
@@ -642,7 +642,7 @@ function renderKey(element, params) {
     for (let el of elements) {
         let attribute = el.getAttribute(params)
         if (attribute)
-            data[attribute] = el.getValue()
+            data[attribute] = await el.getValue()
     }
     data = dotNotationToObject(data)
     let renderData = { data: { [params]: data } }
@@ -678,9 +678,9 @@ Observer.init({
     name: 'fileRender',
     observe: ['attributes'],
     attributeName: ['render-selector', 'render-closest', 'render-parent', 'render-next', 'render-previous'],
-    callback: function (mutation) {
+    callback: async function (mutation) {
         render({
-            element: mutation.target, data: mutation.target.getValue()
+            element: mutation.target, data: await mutation.target.getValue()
         });
     }
 });
