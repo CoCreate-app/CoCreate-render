@@ -752,4 +752,4 @@ Observer.init({
 
 init()
 
-export default { render, sources, renderedNodes }
+export { render, sources, renderedNodes }
