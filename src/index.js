@@ -196,7 +196,8 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
     if (!renderData) return
 
-    if (index === 0) {
+    let isInsert = data.$filter && (data.$filter.create || data.$filter.update)
+    if (!isInsert && index === 0) {
         for (const [key, element] of template.clones) {
             renderedNodes.delete(element)
             element.remove()
