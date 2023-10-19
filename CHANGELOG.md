@@ -1,3 +1,11 @@
+## [1.28.7](https://github.com/CoCreate-app/CoCreate-render/compare/v1.28.6...v1.28.7) (2023-10-19)
+
+
+### Bug Fixes
+
+* clears render element if index = 0 and crate and update not true ([90e4946](https://github.com/CoCreate-app/CoCreate-render/commit/90e4946cf579e5030d51c2e180f61b5a03ebbc33))
+* declartion of render functions using object spread ([b3e3977](https://github.com/CoCreate-app/CoCreate-render/commit/b3e397747e18cc6fe52c0838b465adcaafaea416))
+
 ## [1.28.6](https://github.com/CoCreate-app/CoCreate-render/compare/v1.28.5...v1.28.6) (2023-10-17)
 
 
