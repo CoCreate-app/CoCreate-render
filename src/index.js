@@ -48,7 +48,7 @@ function init(element) {
     }
 }
 
-async function render({ source, element, data, key, index, currentIndex, update, remove }) {
+async function render({ source, element, selector, data, key, index, currentIndex, update, remove }) {
     if (!element) {
         if (source) {
             element = queryElements({ element: source, prefix: 'render' })
@@ -64,7 +64,8 @@ async function render({ source, element, data, key, index, currentIndex, update,
             if (!element) {
                 element = source.querySelector('template, [template], .template, [render]');
             }
-        }
+        } else if (selector)
+            element = queryElements({ selector })
 
         if (!element) return;
     }
