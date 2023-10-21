@@ -195,7 +195,15 @@ async function renderTemplate(template, data, key, index, keyPath) {
     else if (Array.isArray(data))
         renderData = data
 
-    if (!renderData) return
+    if (!renderData && data)
+        if (Array.isArray(data))
+            renderData = data
+        else
+            renderData = [data]
+
+    else if (!renderData)
+        return
+
 
     let isInsert = data.$filter && (data.$filter.create || data.$filter.update)
     if (!isInsert && index === 0) {
@@ -527,6 +535,8 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode) {
             match = output.match(/{{(.*?)}}/);
             if (match) {
                 let value
+                if (match[1].includes('status'))
+                    console.log('test')
                 try {
                     let Data = JSON.parse('{' + match[1].replace(/'/g, '"') + '}');
                     if (Data.storage || Data.database || Data.array || Data.object || Data.index) {
@@ -580,7 +590,7 @@ function getRenderValue(node, data, key, renderAs) {
                         } else if (key.includes('renderAs')) {
                             value = renderAs
                         } else if (key === 'object' || key === '_id')
-                            value = ObjectId()
+                            value = ObjectId().toString()
                         else if (key === 'uuid')
                             value = uuid.generate(6)
                         else if (parent.source)
@@ -754,4 +764,4 @@ Observer.init({
 
 init()
 
-export { render, sources, renderedNodes }
+export default { render, sources, renderedNodes }
