@@ -1,3 +1,15 @@
+# [1.29.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.28.7...v1.29.0) (2023-10-22)
+
+
+### Bug Fixes
+
+*  selector handling ([7eb4a25](https://github.com/CoCreate-app/CoCreate-render/commit/7eb4a253068be29c9094afa9f9bf548b3b7f666d))
+
+
+### Features
+
+* ObjectId() returns an object containg the parts iof the _id along with a toString() function ([7f35dd1](https://github.com/CoCreate-app/CoCreate-render/commit/7f35dd14649ff02ec89f61ca8c3e36d5ba37c226))
+
 ## [1.28.7](https://github.com/CoCreate-app/CoCreate-render/compare/v1.28.6...v1.28.7) (2023-10-19)
 
 
