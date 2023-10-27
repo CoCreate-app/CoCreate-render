@@ -535,8 +535,6 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode) {
             match = output.match(/{{(.*?)}}/);
             if (match) {
                 let value
-                if (match[1].includes('status'))
-                    console.log('test')
                 try {
                     let Data = JSON.parse('{' + match[1].replace(/'/g, '"') + '}');
                     if (Data.storage || Data.database || Data.array || Data.object || Data.index) {
