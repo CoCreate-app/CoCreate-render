@@ -91,7 +91,7 @@ async function render({ source, element, selector, data, key, index, currentInde
 
     let type = data.type
     if (!type && data.method) {
-        type = data.method.split('.')[1]
+        type = data.method.split('.')[0]
     } else if (type == 'key')
         type = 'object'
 
@@ -538,7 +538,7 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode) {
                 try {
                     let Data = JSON.parse('{' + match[1].replace(/'/g, '"') + '}');
                     if (Data.storage || Data.database || Data.array || Data.object || Data.index) {
-                        Data.method = 'read.object'
+                        Data.method = 'object.read'
                         value = await CoCreate.crud.send(Data)
                         value = value.object[0][Data.key]
                     }
