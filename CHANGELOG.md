@@ -1,3 +1,18 @@
+# [1.30.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.29.1...v1.30.0) (2023-11-03)
+
+
+### Bug Fixes
+
+* favicon.ico path ([e919043](https://github.com/CoCreate-app/CoCreate-render/commit/e919043165602bbd961c7a27ce2896bb1d474ebc))
+* removed testing console.log ([ec4140b](https://github.com/CoCreate-app/CoCreate-render/commit/ec4140b82977c65cb2f1d321568b3a12706574a8))
+* update dependencies to the lates versions ([0c6702a](https://github.com/CoCreate-app/CoCreate-render/commit/0c6702ac846fe0c00aabc89fe241b8eb5787de94))
+* update method to use object.update etc ([cfd4a65](https://github.com/CoCreate-app/CoCreate-render/commit/cfd4a657c4b13c31755d79d90b623ce249dd25a8))
+
+
+### Features
+
+* render supports key and render attribute ([c5b7317](https://github.com/CoCreate-app/CoCreate-render/commit/c5b73172474c8cdfbd1af1deafe10b8552851745))
+
 ## [1.29.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.29.0...v1.29.1) (2023-10-25)
 
 
