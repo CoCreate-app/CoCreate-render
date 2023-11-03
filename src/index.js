@@ -71,6 +71,9 @@ async function render({ source, element, selector, data, key, index, currentInde
     }
 
     if (source) {
+        if (!key)
+            key = source.getAttribute('render') || source.getAttribute('key')
+
         let sourceData = sources.get(source)
         if (!sourceData) {
             sourceData = { element: source, data }
@@ -80,6 +83,7 @@ async function render({ source, element, selector, data, key, index, currentInde
         source = sourceData
         if (!source.data)
             source.data = data
+
     } else if (data)
         source = { data }
 
@@ -100,8 +104,7 @@ async function render({ source, element, selector, data, key, index, currentInde
         element = [element]
 
     for (let i = 0; i < element.length; i++) {
-        if (!key)
-            key = element[i].getAttribute('render') || type
+        key = element[i].getAttribute('render') || key || type
 
         let renderedNode = renderedNodes.get(element[i])
         if (source) {
@@ -530,9 +533,9 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode) {
 
         let match
         do {
-            // match = output.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/); // works by getting inner matches first
+            match = output.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/); // works by getting inner matches first
             // match = output.match(/{{([^}]*)}}/);
-            match = output.match(/{{(.*?)}}/);
+            // match = output.match(/{{(.*?)}}/);
             if (match) {
                 let value
                 try {
