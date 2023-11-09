@@ -1,3 +1,11 @@
+## [1.30.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.30.0...v1.30.1) (2023-11-09)
+
+
+### Bug Fixes
+
+* meta name typo ([7d9fc78](https://github.com/CoCreate-app/CoCreate-render/commit/7d9fc781eeaf8f516bcb5a4b450fb4950d32bfca))
+* update host ([677600f](https://github.com/CoCreate-app/CoCreate-render/commit/677600f0e6d42c29ad3c2fcec6854348a41ff79a))
+
 # [1.30.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.29.1...v1.30.0) (2023-11-03)
 
 
