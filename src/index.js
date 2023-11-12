@@ -42,7 +42,7 @@ function init(element) {
         let source = sources.get(element[i])
         if (!source) {
             sources.set(element[i], { element: element[i] })
-            element[i].renderValue = (data) => render({ source: element[i], data })
+            element[i].renderValue = async (data) => await render({ source: element[i], data })
             element[i].getData = () => sources.get(element[i]).data
         }
     }
@@ -158,7 +158,7 @@ async function render({ source, element, selector, data, key, index, currentInde
                 if (key)
                     element[i].setAttribute('render', key);
 
-                renderTemplate(element[i], data, key, index);
+                await renderTemplate(element[i], data, key, index);
             }
         } else
             await renderValues(element[i], data);
@@ -337,6 +337,8 @@ function insertElement(template, element, index, currentIndex) {
         console.log('attribute eid not found')
 
     if (index !== null && index >= 0) {
+        if (!template.clones)
+            template = template.template
         const clones = Array.from(template.clones);
 
         let item
