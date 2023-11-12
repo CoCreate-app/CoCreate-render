@@ -88,7 +88,7 @@ async function render({ source, element, selector, data, key, index, currentInde
         source = { data }
 
     if (data.$filter) {
-        index = index || data.$filter.index
+        index = index || data.$filter.startingIndex
         update = update || data.$filter.update
         remove = remove || data.$filter.remove
     }
