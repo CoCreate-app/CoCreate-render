@@ -93,12 +93,9 @@ async function render({ source, element, selector, data, key, index, currentInde
         remove = remove || data.$filter.remove
     }
 
-    let type = data.type
-    if (!type && data.method) {
-        type = data.method.split('.')[0]
-    } else if (type == 'key')
+    let type = data.type || data.method.split('.')[0]
+    if (type == 'key')
         type = 'object'
-
 
     if (!Array.isArray(element) && !(element instanceof HTMLCollection) && !(element instanceof NodeList))
         element = [element]
@@ -209,7 +206,7 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
 
     let isInsert = data.$filter && (data.$filter.create || data.$filter.update)
-    if (!isInsert && index === 0) {
+    if (!isInsert && !index || data.$filter.overwrite) {
         for (const [key, element] of template.clones) {
             renderedNodes.delete(element)
             element.remove()
