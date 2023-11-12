@@ -1,3 +1,16 @@
+# [1.31.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.30.1...v1.31.0) (2023-11-12)
+
+
+### Bug Fixes
+
+* await renderTemplate ([7680350](https://github.com/CoCreate-app/CoCreate-render/commit/7680350b4fb1c25aaf23e04c80ea3be419c4080e))
+* bump dependencies for latest features ([342de1f](https://github.com/CoCreate-app/CoCreate-render/commit/342de1feb27739de85626f90bc94d0c627ef4cfa))
+
+
+### Features
+
+* support startingIndex ([bc3332a](https://github.com/CoCreate-app/CoCreate-render/commit/bc3332ad8ffad1a22d030c72a670356c3ac14e29))
+
 ## [1.30.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.30.0...v1.30.1) (2023-11-09)
 
 
