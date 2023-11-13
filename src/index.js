@@ -107,7 +107,7 @@ async function render({ source, element, selector, data, key, index, currentInde
         element = [element]
 
     for (let i = 0; i < element.length; i++) {
-        key = element[i].getAttribute('render') || key || type
+        key = element[i].getAttribute('render') || key
 
         let renderedNode = renderedNodes.get(element[i])
         if (source) {
@@ -118,12 +118,12 @@ async function render({ source, element, selector, data, key, index, currentInde
         }
 
         if (remove) {
-            for (let j = 0; j < data[type].length; j++) {
+            for (let j = 0; j < data[key].length; j++) {
                 let cloneKey
-                if (type === 'object') {
-                    cloneKey = data[type][j]._id;
+                if (key === 'object') {
+                    cloneKey = data[key][j]._id;
                 } else {
-                    cloneKey = data[type][j].name;
+                    cloneKey = data[key][j].name;
                 }
 
                 let clone = renderedNode.clones.get(cloneKey)
@@ -135,12 +135,12 @@ async function render({ source, element, selector, data, key, index, currentInde
             }
         } else if (key || Array.isArray(data)) {
             if (update) {
-                for (let j = 0; j < data[type].length; j++) {
+                for (let j = 0; j < data[key].length; j++) {
                     let clone
-                    if (type === 'object') {
-                        clone = renderedNode.clones.get(data[type][j]._id);
+                    if (key === 'object') {
+                        clone = renderedNode.clones.get(data[key][j]._id);
                     } else {
-                        clone = renderedNode.clones.get(data[type][j].name);
+                        clone = renderedNode.clones.get(data[key][j].name);
                     }
 
                     if (!currentIndex)
@@ -148,7 +148,7 @@ async function render({ source, element, selector, data, key, index, currentInde
 
                     if (!clone) return
 
-                    await renderValues(clone, { object: data[type][j] });
+                    await renderValues(clone, { object: data[key][j] });
                     if (currentIndex >= 0)
                         insertElement(renderedNode, clone, index, currentIndex)
                 }
