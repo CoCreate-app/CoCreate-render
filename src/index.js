@@ -71,9 +71,19 @@ async function render({ source, element, selector, data, key, index, currentInde
     }
 
     if (source) {
-        if (!key)
+        if (!key) {
             key = source.getAttribute('render') || source.getAttribute('key')
+            if (!key) {
+                key = data.type
+                if (key == 'key')
+                    key = 'object'
+                else if (!key && data.method)
+                    key = data.method.split('.')[0]
+                else if (!key)
+                    return
 
+            }
+        }
         let sourceData = sources.get(source)
         if (!sourceData) {
             sourceData = { element: source, data }
@@ -92,10 +102,6 @@ async function render({ source, element, selector, data, key, index, currentInde
         update = update || data.$filter.update
         remove = remove || data.$filter.remove
     }
-
-    let type = data.type || data.method.split('.')[0]
-    if (type == 'key')
-        type = 'object'
 
     if (!Array.isArray(element) && !(element instanceof HTMLCollection) && !(element instanceof NodeList))
         element = [element]
@@ -147,7 +153,6 @@ async function render({ source, element, selector, data, key, index, currentInde
                         insertElement(renderedNode, clone, index, currentIndex)
                 }
             } else {
-
                 // TODO: if $auto here every subsequent clone will have same value, not replacing here will apply unique value to each clone
                 if (key === '$auto')
                     key = key.replace(/\$auto/g, uuid.generate(6));
@@ -297,6 +302,7 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
 function cloneTemplate(template) {
     let clone = template.element.cloneNode(true);
+    let cloneTagName = clone.tagName
 
     if (clone.tagName == 'TEMPLATE') {
         clone = template.element.content.firstElementChild
@@ -313,12 +319,16 @@ function cloneTemplate(template) {
     let renderAs = clone.getAttribute('render-as')
     if (renderAs) {
         clone = clone.outerHTML.replace(/\$auto/g, renderAs);
-    } else {
-        clone = clone.outerHTML;
     }
 
     if (typeof clone === 'string') {
-        let container = document.createElement('tbody');
+        // TODO: Some elements are only allowed a specific element, need to find these elements and confirm proper rendering.
+        let container
+        if (cloneTagName === 'TR')
+            container = document.createElement('tbody');
+        else
+            container = document.createElement('div');
+
         container.innerHTML = clone;
         clone = container.firstChild
         container.remove()
