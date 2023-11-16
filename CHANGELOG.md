@@ -1,3 +1,16 @@
+# [1.32.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.31.0...v1.32.0) (2023-11-16)
+
+
+### Bug Fixes
+
+* bug rendering forms ([abc62d4](https://github.com/CoCreate-app/CoCreate-render/commit/abc62d45c5e7cbb418e88c11fb39ee9e94b1728b))
+* type replace with key ([7575216](https://github.com/CoCreate-app/CoCreate-render/commit/7575216927168b7157a7d2fb820415eb4309ccbf))
+
+
+### Features
+
+* filter.overwite boolean to force re render ([273c71a](https://github.com/CoCreate-app/CoCreate-render/commit/273c71ad7b82a343c2b9d87ca17997584e778612))
+
 # [1.31.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.30.1...v1.31.0) (2023-11-12)
 
 
