@@ -652,9 +652,12 @@ function getRenderValue(node, data, key, renderAs) {
     return value
 }
 
-async function renderKey(element, params) {
+async function renderKey(action) {
     // TODO: custom render-keys 
-    const form = element.closest("form") || document;
+    let element = action.element
+    let form = action.form || document
+    let params = action.params
+
     if (!params)
         params = 'render-key'
 
@@ -683,7 +686,7 @@ async function renderKey(element, params) {
 Actions.init({
     name: "renderKey",
     callback: (action) => {
-        renderKey(action.element, action.params);
+        renderKey(action);
     }
 });
 
