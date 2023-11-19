@@ -1,3 +1,15 @@
+# [1.33.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.32.0...v1.33.0) (2023-11-19)
+
+
+### Bug Fixes
+
+* use action.form and action.params ([90f9428](https://github.com/CoCreate-app/CoCreate-render/commit/90f9428a5c87473d51aec4111b15a0f194f46cb1))
+
+
+### Features
+
+* update dependecies for th latest features and bug fixes ([733e8cf](https://github.com/CoCreate-app/CoCreate-render/commit/733e8cfa7b601c2c5b494fb132588a67f6d6f433))
+
 # [1.32.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.31.0...v1.32.0) (2023-11-16)
 
 
