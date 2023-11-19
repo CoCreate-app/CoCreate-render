@@ -534,51 +534,73 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
 
 async function renderValue(node, data, placeholder, renderAs, renderedNode) {
     let output = placeholder;
-
-    if (placeholder.match(/{{(.*?)}}/)) {
-        if (renderedNode) {
-            renderedNodes.set(node, renderedNode)
-        }
-
-        let match
-        do {
-            match = output.match(/{{([A-Za-z0-9_.,\[\]\- ]*)}}/); // works by getting inner matches first
-            // match = output.match(/{{([^}]*)}}/);
-            // match = output.match(/{{(.*?)}}/);
-            if (match) {
-                let value
-                try {
-                    let Data = JSON.parse('{' + match[1].replace(/'/g, '"') + '}');
-                    if (Data.storage || Data.database || Data.array || Data.object || Data.index) {
-                        Data.method = 'object.read'
-                        value = await CoCreate.crud.send(Data)
-                        value = value.object[0][Data.key]
+    let regex = /\{([^{}]+)\}/
+    let match;
+    do {
+        match = output.match(regex);
+        if (match) {
+            let value;
+            try {
+                if (match[1].startsWith('[') && match[1].endsWith(']')) {  // {[]} - Dot-notation
+                    match[1] = match[1].slice(1, -1);
+                    value = getRenderValue(node, data, match[1], renderAs);
+                } else if (match[1].startsWith('(') && match[1].endsWith(')')) { // {()} - CSS Selector and JSON Structure
+                    match[1] = match[1].slice(1, -1);
+                    // TODO: utils.queryElements(match[1])
+                    // element.getValue()
+                } else if (output.includes('{(' + match[0] + ')}')) { // {()} - JSON Structure
+                    match[0] = '{(' + match[0] + ')}'
+                    try {
+                        let Data = JSON.parse('{' + match[1].replace(/'/g, '"') + '}');
+                        if (Data.storage || Data.database || Data.array || Data.object || Data.index) {
+                            Data.method = 'object.read'
+                            value = await CoCreate.crud.send(Data)
+                            value = value.object[0][Data.key]
+                        }
+                    } catch (error) {
+                        value = getRenderValue(node, data, match[1], renderAs)
                     }
-                } catch (error) {
-                    value = getRenderValue(node, data, match[1], renderAs)
-                }
-
-                if (value || value === "") {
-                    if (typeof value === "object")
-                        value = JSON.stringify(value, null, 2)
-
-                    output = output.replace(match[0], value);
-                } else if (renderAs) {
-                    if (match[0].startsWith(`{{${renderAs}.`)) {
-                        output = output.replace(match[0], "");
-                    } else {
-                        match = null
+                } else if (output.includes('{{' + match[1] + '}}')) {  // {{}} - Dot-notation && JSON Structure
+                    match[0] = '{{' + match[1] + '}}'
+                    try {
+                        let Data = JSON.parse('{' + match[1].replace(/'/g, '"') + '}');
+                        if (Data.storage || Data.database || Data.array || Data.object || Data.index) {
+                            Data.method = 'object.read'
+                            value = await CoCreate.crud.send(Data)
+                            value = value.object[0][Data.key]
+                        }
+                    } catch (error) {
+                        value = getRenderValue(node, data, match[1], renderAs)
                     }
                 } else {
-                    match = null
+                    // Otherwise, retun original ouptut
+                    return output
                 }
 
+            } catch (error) {
+                console.error(error)
             }
 
-        } while (match)
-    }
+            if (value || value === "") {
+                if (typeof value === "object") {
+                    value = JSON.stringify(value, null, 2);
+                }
+                output = output.replace(match[0], value);
+            } else if (renderAs) {
+                if (match[0].startsWith(`{{${renderAs}.`)) {
+                    output = output.replace(match[0], "");
+                } else {
+                    match = null;
+                }
+            } else {
+                match = null;
+            }
+        }
+    } while (match);
+
     return output;
 }
+
 
 function getRenderValue(node, data, key, renderAs) {
     let value = getValueFromObject(data, key);
@@ -777,4 +799,4 @@ Observer.init({
 
 init()
 
-export default { render, sources, renderedNodes }
+export default { render, renderValue, sources, renderedNodes }
