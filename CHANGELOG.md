@@ -1,3 +1,10 @@
+# [1.34.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.33.0...v1.34.0) (2023-11-22)
+
+
+### Features
+
+* improved placeholder support ([165c450](https://github.com/CoCreate-app/CoCreate-render/commit/165c450b833c317ce5b55f9d2fc9d9de16d68f69))
+
 # [1.33.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.32.0...v1.33.0) (2023-11-19)
 
 
