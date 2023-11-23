@@ -32,6 +32,23 @@ const sources = new Map()
 const renderedNodes = new Map()
 const elementSelector = '[render-selector], [render-closest], [render-parent], [render-next], [render-previous]'
 
+
+/**
+ * Initializes elements based on specified rendering attributes. If a specific element is provided, it initializes that element.
+ * If no element is provided, it queries and initializes all elements matching the defined selector criteria for rendering attributes.
+ *
+ * Supported rendering attributes:
+ * - render-selector: [Describe what this attribute does]
+ * - render-closest: [Describe what this attribute does]
+ * - render-parent: [Describe what this attribute does]
+ * - render-next: [Describe what this attribute does]
+ * - render-previous: [Describe what this attribute does]
+ *
+ * @param {(Element|Element[]|HTMLCollection|null)} [element] - Optional. A single element, an array of elements, an HTMLCollection, or null.
+ *     - If an HTMLCollection or an array of elements is provided, each element in the collection/array is initialized.
+ *     - If a single element is provided, only that element is initialized.
+ *     - If null or omitted, the function queries and initializes all elements matching the 'elementSelector'.
+ */
 function init(element) {
     if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
@@ -48,6 +65,21 @@ function init(element) {
     }
 }
 
+/**
+ * Asynchronously renders content based on the provided parameters. This function handles the rendering logic for elements
+ * based on data sources, selectors, and other options.
+ *
+ * @param {Object} options - An object containing the parameters for rendering.
+ * @param {Object} options.source - The data source used for rendering.
+ * @param {Element} options.element - The DOM element where content will be rendered.
+ * @param {string} options.selector - CSS selector to specify target elements for rendering.
+ * @param {Object} options.data - Data to be used in rendering.
+ * @param {string} [options.key] - Optional key to reference specific parts of the data.
+ * @param {number} [options.index] - Optional index, typically used when rendering lists or arrays.
+ * @param {number} [options.currentIndex] - The current index in a list or array rendering process.
+ * @param {boolean} [options.update] - Flag to indicate if the rendering should update existing content.
+ * @param {boolean} [options.remove] - Flag to indicate if the rendering should remove elements instead of updating or appending.
+ */
 async function render({ source, element, selector, data, key, index, currentIndex, update, remove }) {
     if (!element) {
         if (source) {
