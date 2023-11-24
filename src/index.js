@@ -485,9 +485,9 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
         }
         // });
 
-        if (CoCreate.pass) {
-            if (node.hasAttribute('[pass_id]'))
-                CoCreate.pass.initElement(node)
+        if (CoCreate.state) {
+            if (node.hasAttribute('[state_id]'))
+                CoCreate.state.initElement(node)
         }
 
         if (node.tagName === 'SCRIPT' && node.src) {
