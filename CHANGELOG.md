@@ -1,3 +1,15 @@
+# [1.36.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.35.0...v1.36.0) (2023-11-25)
+
+
+### Bug Fixes
+
+* update licensing details ([07ae1a1](https://github.com/CoCreate-app/CoCreate-render/commit/07ae1a1a18b0dfe938135991a0c2ed79cd50570b))
+
+
+### Features
+
+* upgrade dependencies for latest features and fixes ([3c1ef85](https://github.com/CoCreate-app/CoCreate-render/commit/3c1ef852a6179e0472d820b8424070bd6c2ae0e2))
+
 # [1.35.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.34.0...v1.35.0) (2023-11-25)
 
 
