@@ -772,11 +772,15 @@ Observer.init({
     callback: function (mutation) {
         if (mutation.target.hasAttribute('render-clone'))
             return
-        let parentElement = mutation.target.parentElement.closest(['render'])
+        let parentElement = mutation.target.parentElement.closest('[render]')
         if (!parentElement) return
-
+        return
         let renderedNode = renderedNodes.get(parentElement)
-        let data = renderedNode.source.data
+        let data
+        if (renderedNode.source)
+            data = renderedNode.source.data
+        if (renderedNode.template)
+            data = renderedNode.template.source.data
 
         render({ element: mutation.target, data });
 
