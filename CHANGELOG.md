@@ -1,3 +1,10 @@
+## [1.36.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.36.0...v1.36.1) (2023-12-15)
+
+
+### Bug Fixes
+
+* addedNode rendering ([6f2946a](https://github.com/CoCreate-app/CoCreate-render/commit/6f2946aab0fefa84d282a71ac81da5026b54f444))
+
 # [1.36.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.35.0...v1.36.0) (2023-11-25)
 
 
