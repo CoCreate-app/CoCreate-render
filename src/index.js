@@ -130,7 +130,7 @@ async function render({ source, element, selector, data, key, index, currentInde
         source = { data }
 
     if (data.$filter) {
-        index = index || data.$filter.startingIndex
+        index = index || data.$filter.startingIndex || data.$filter.index
         update = update || data.$filter.update
         remove = remove || data.$filter.remove
     }
@@ -476,11 +476,17 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
 
             name = await renderValue(attr, data, namePlaceholder, renderAs, renderedAttribute);
             value = await renderValue(attr, data, valuePlaceholder, renderAs, renderedAttribute);
-
-            if (name === undefined && name === null) {
+            if (namePlaceholder.includes('{{') && name) {
+                const attributes = name.match(/([^\s]+="[^"]*"|[^\s]+)/g) || [];
+                attributes.forEach(attr => {
+                    let [attributeName, attributeValue] = attr.split("=");
+                    attributeValue = attributeValue ? attributeValue.replace(/"/g, '') : '';
+                    node.setAttribute(attributeName, attributeValue);
+                });
+            } else if (name === undefined || name === null || name === '') {
                 renderedNodes.delete(attr)
                 node.removeAttribute(attr.name);
-            } else if ((value || value === "") && (name !== attr.name || value !== attr.value))
+            } else if (name && (value || value === "") && (name !== attr.name || value !== attr.value))
                 node.setAttribute(name, value);
         }
         // });
