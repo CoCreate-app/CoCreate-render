@@ -841,4 +841,4 @@ Observer.init({
 
 init()
 
-export default { render, renderValue, sources, renderedNodes }
+export { render, renderValue, sources, renderedNodes }
