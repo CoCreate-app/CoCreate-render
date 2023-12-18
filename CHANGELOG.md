@@ -1,3 +1,10 @@
+## [1.37.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.37.0...v1.37.1) (2023-12-18)
+
+
+### Bug Fixes
+
+* if no template.clone use template.template.clone ([ea678bf](https://github.com/CoCreate-app/CoCreate-render/commit/ea678bf3fa097349e431d7bf96f582a647d03a27))
+
 # [1.37.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.36.1...v1.37.0) (2023-12-18)
 
 
