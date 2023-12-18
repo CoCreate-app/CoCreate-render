@@ -1,3 +1,15 @@
+# [1.37.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.36.1...v1.37.0) (2023-12-18)
+
+
+### Bug Fixes
+
+* removed default ([01c1b1f](https://github.com/CoCreate-app/CoCreate-render/commit/01c1b1f8f5fa0159ae3399352e55a93e45b50678))
+
+
+### Features
+
+* attribute name rendering converts string to attributes ([30c6b25](https://github.com/CoCreate-app/CoCreate-render/commit/30c6b25b422cc9bbaa00c2f36ceafaaac302780d))
+
 ## [1.36.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.36.0...v1.36.1) (2023-12-15)
 
 
