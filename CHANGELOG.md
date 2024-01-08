@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.37.1...v1.38.0) (2024-01-08)
+
+
+### Features
+
+* bumped CoCreate dependencies to their latest versions ([2612826](https://github.com/CoCreate-app/CoCreate-render/commit/26128265e618a9aa0865cd76ae7506c86e5496b7))
+
 ## [1.37.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.37.0...v1.37.1) (2023-12-18)
 
 
