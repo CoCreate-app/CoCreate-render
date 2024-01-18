@@ -143,8 +143,8 @@ async function render({ source, element, selector, data, key, index, currentInde
 
         let renderedNode = renderedNodes.get(element[i])
         if (renderedNode && renderedNode.clones && renderedNode.source && renderedNode.source.element) {
-            let max = renderedNode.source.element.getAttribute('filter-max')
-            if (max && renderedNode.clones.size >= parseInt(max))
+            let limit = renderedNode.source.element.getAttribute('render-limit')
+            if (limit && renderedNode.clones.size >= parseInt(limit))
                 continue
         }
 
