@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.38.0...v1.39.0) (2024-01-18)
+
+
+### Features
+
+* filter-max to render a max amount ([6ada8e5](https://github.com/CoCreate-app/CoCreate-render/commit/6ada8e563a0860b721ca3d6cdd71d7f06d3e0e97))
+
 # [1.38.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.37.1...v1.38.0) (2024-01-08)
 
 
