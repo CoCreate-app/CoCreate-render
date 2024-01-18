@@ -142,6 +142,12 @@ async function render({ source, element, selector, data, key, index, currentInde
         key = element[i].getAttribute('render') || key
 
         let renderedNode = renderedNodes.get(element[i])
+        if (renderedNode && renderedNode.clones && renderedNode.source && renderedNode.source.element) {
+            let max = renderedNode.source.element.getAttribute('filter-max')
+            if (max && renderedNode.clones.size >= parseInt(max))
+                continue
+        }
+
         if (source) {
             if (!renderedNode) {
                 renderedNode = { element: element[i], source, clones: new Map(), renderAs: new Map() }
