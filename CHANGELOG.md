@@ -1,3 +1,10 @@
+# [1.40.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.39.0...v1.40.0) (2024-01-30)
+
+
+### Features
+
+* render-limit to limit the anmount of items rendered ([b8b4c0c](https://github.com/CoCreate-app/CoCreate-render/commit/b8b4c0cbbd982e844ac85be27fe029279a9f0bfe))
+
 # [1.39.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.38.0...v1.39.0) (2024-01-18)
 
 
