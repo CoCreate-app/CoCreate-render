@@ -380,8 +380,10 @@ function cloneTemplate(template) {
 
 function insertElement(template, element, index, currentIndex) {
     let eid = element.getAttribute('eid')
-    if (!eid)
-        console.log('attribute eid not found')
+    if (!eid) {
+        eid = uuid.generate(6)
+        element.setAttribute('eid', eid)
+    }
 
     if (index !== null && index >= 0) {
         if (!template.clones)
