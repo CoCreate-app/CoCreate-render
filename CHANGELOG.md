@@ -1,3 +1,10 @@
+## [1.40.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.40.1...v1.40.2) (2024-02-13)
+
+
+### Bug Fixes
+
+* set eid if not defined ([097d15d](https://github.com/CoCreate-app/CoCreate-render/commit/097d15d894c30a4f2d1f3986715549203c056058))
+
 ## [1.40.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.40.0...v1.40.1) (2024-02-05)
 
 
