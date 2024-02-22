@@ -171,7 +171,7 @@ async function render({ source, element, selector, data, key, index, currentInde
                 renderedNodes.delete(clone)
                 clone.remove()
             }
-        } else if (key || Array.isArray(data)) {
+        } else if (key && Array.isArray(data[key]) || Array.isArray(data)) {
             if (update) {
                 for (let j = 0; j < data[key].length; j++) {
                     let clone
@@ -757,6 +757,28 @@ Actions.init({
     name: "renderKey",
     callback: (action) => {
         renderKey(action);
+    }
+});
+
+Actions.init({
+    name: "render",
+    callback: async (action) => {
+        if (!action.form)
+            return
+
+        let elements
+        if (action.params)
+            elements = queryElements({ element: action.element, selector: action.params, type: 'selector' })
+        else
+            elements = queryElements({ element: action.element, prefix: 'render' })
+
+        let data = await action.form.getData()
+        for (let i = 0; i < elements.length; i++)
+            render({ source: elements[i], data: data[0] });
+
+        document.dispatchEvent(new CustomEvent('render', {
+            detail: {}
+        }));
     }
 });
 
