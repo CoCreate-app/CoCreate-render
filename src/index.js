@@ -200,8 +200,10 @@ async function render({ source, element, selector, data, key, index, currentInde
 
                 await renderTemplate(element[i], data, key, index);
             }
-        } else
-            await renderValues(element[i], data);
+        } else {
+            let renderAs = element[i].getAttribute('render-as') || key;
+            await renderValues(element[i], data, key, renderAs);
+        }
 
     }
 
@@ -583,6 +585,8 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
 async function renderValue(node, data, placeholder, renderAs, renderedNode) {
     let output = placeholder;
     let regex = /\{([^{}]+)\}/
+    let omitted = {}
+
     let match;
     do {
         match = output.match(regex);
@@ -633,18 +637,24 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode) {
                 if (typeof value === "object") {
                     value = JSON.stringify(value, null, 2);
                 }
-                output = output.replace(match[0], value);
+                output = output.replaceAll(match[0], value);
             } else if (renderAs) {
                 if (match[0].startsWith(`{{${renderAs}.`)) {
-                    output = output.replace(match[0], "");
+                    output = output.replaceAll(match[0], "");
                 } else {
-                    match = null;
+                    output = output.replaceAll(match[0], `<|${match[1]}|>`);
+                    omitted[`<|${match[1]}|>`] = match[0]
                 }
             } else {
+                // output = output.replace(match[0], `<|${match[1]}|>`);
                 match = null;
             }
         }
     } while (match);
+
+    for (let key of Object.keys(omitted)) {
+        output = output.replaceAll(key, omitted[key]);
+    }
 
     return output;
 }
