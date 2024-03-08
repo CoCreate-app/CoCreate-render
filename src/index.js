@@ -625,8 +625,7 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode) {
                         value = getRenderValue(node, data, match[1], renderAs)
                     }
                 } else {
-                    // Otherwise, retun original ouptut
-                    return output
+                    omitted[`<|${match[1]}|>`] = match[0]
                 }
 
             } catch (error) {
