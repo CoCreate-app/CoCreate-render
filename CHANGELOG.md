@@ -1,3 +1,12 @@
+## [1.40.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.40.2...v1.40.3) (2024-03-18)
+
+
+### Bug Fixes
+
+* handling of placeholder matching ([b80be78](https://github.com/CoCreate-app/CoCreate-render/commit/b80be78f2026c4a438115366e5dbc90faf323c2a))
+* if key and data[key] is an array ([4478c11](https://github.com/CoCreate-app/CoCreate-render/commit/4478c116507b490a334e1010a2037ee6c12531c4))
+* omit matches that do not match the if conditions ([b589020](https://github.com/CoCreate-app/CoCreate-render/commit/b5890205eeae38e5be1f4cdf4d48eed6da211afb))
+
 ## [1.40.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.40.1...v1.40.2) (2024-02-13)
 
 
