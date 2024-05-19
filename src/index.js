@@ -269,7 +269,14 @@ async function renderTemplate(template, data, key, index, keyPath) {
     let renderAs = template.element.getAttribute('render-as') || key;
     template.renderAs = renderAs
 
-    if (key && !Array.isArray(renderData)) {
+    let renderType
+    if (templateData.source && templateData.source.element)
+        renderType = templateData.source.element.getAttribute('render-type');
+
+    if (key && !Array.isArray(renderData) || renderType === "object") {
+        if (renderType && Array.isArray(renderData) && renderData.length === 1)
+            renderData = renderData[0]
+
         let exclude = template.element.getAttribute('render-exclude') || ''
         if (exclude) {
             exclude = exclude.replace(/ /g, '').split(",")
@@ -335,7 +342,10 @@ async function renderTemplate(template, data, key, index, keyPath) {
                 } else
                     object = renderData[i]
 
-                await renderValues(clone.element, object, key, renderAs);
+                let index
+                if (key !== 'data')
+                    index = i
+                await renderValues(clone.element, object, key, renderAs, null, null, index);
                 insertElement(template, clone.element, index);
             }
         }
@@ -413,7 +423,7 @@ function insertElement(template, element, index, currentIndex) {
     }
 }
 
-async function renderValues(node, data, key, renderAs, keyPath, parent) {
+async function renderValues(node, data, key, renderAs, keyPath, parent, index) {
     if (!data) return;
 
     let renderedNode = renderedNodes.get(node)
@@ -486,8 +496,8 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
             let namePlaceholder = renderedAttribute.placeholder.name || name;
             let valuePlaceholder = renderedAttribute.placeholder.value || value;
 
-            name = await renderValue(attr, data, namePlaceholder, renderAs, renderedAttribute);
-            value = await renderValue(attr, data, valuePlaceholder, renderAs, renderedAttribute);
+            name = await renderValue(attr, data, namePlaceholder, renderAs, renderedAttribute, index);
+            value = await renderValue(attr, data, valuePlaceholder, renderAs, renderedAttribute, index);
             if (namePlaceholder.includes('{{') && name) {
                 const attributes = name.match(/([^\s]+="[^"]*"|[^\s]+)/g) || [];
                 attributes.forEach(attr => {
@@ -526,7 +536,7 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
         } else if (node.childNodes.length > 0) {
             // Array.from(node.childNodes).forEach(childNode => {
             for (let childNode of node.childNodes) {
-                await renderValues(childNode, data, key, renderAs, keyPath, parent);
+                await renderValues(childNode, data, key, renderAs, keyPath, parent, index);
             }
             // });
         }
@@ -544,7 +554,7 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
             return
         textContent = renderedNode.placeholder || node.textContent;
 
-        text = await renderValue(node, data, textContent, renderAs, renderedNode);
+        text = await renderValue(node, data, textContent, renderAs, renderedNode, index);
 
         if (text || text == "") {
             if (text != renderedNode.text) {
@@ -573,7 +583,7 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
                 if (node.childNodes.length > 0) {
                     // Array.from(node.childNodes).forEach(childNode => {
                     for (let childNode of node.childNodes) {
-                        await renderValues(childNode, data, key, renderAs, keyPath, parent);
+                        await renderValues(childNode, data, key, renderAs, keyPath, parent, index);
                     }
                     // });
                 }
@@ -582,8 +592,9 @@ async function renderValues(node, data, key, renderAs, keyPath, parent) {
     }
 }
 
-async function renderValue(node, data, placeholder, renderAs, renderedNode) {
+async function renderValue(node, data, placeholder, renderAs, renderedNode, index) {
     let output = placeholder;
+
     let regex = /\{([^{}]+)\}/
     let omitted = {}
 
@@ -593,7 +604,10 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode) {
         if (match) {
             let value;
             try {
-                if (match[1].startsWith('[') && match[1].endsWith(']')) {  // {[]} - Dot-notation
+
+                if (match[1] === 'index' && index >= 0) {  // {[]} - Dot-notation
+                    value = index
+                } else if (match[1].startsWith('[') && match[1].endsWith(']')) {  // {[]} - Dot-notation
                     match[1] = match[1].slice(1, -1);
                     value = getRenderValue(node, data, match[1], renderAs);
                 } else if (match[1].startsWith('(') && match[1].endsWith(')')) { // {()} - CSS Selector and JSON Structure
@@ -632,7 +646,7 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode) {
                 console.error(error)
             }
 
-            if (value || value === "") {
+            if (value || value === "" || value >= 0) {
                 if (typeof value === "object") {
                     value = JSON.stringify(value, null, 2);
                 }
