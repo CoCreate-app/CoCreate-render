@@ -1,3 +1,10 @@
+# [1.41.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.40.4...v1.41.0) (2024-05-19)
+
+
+### Features
+
+* attribute render-type to define type of data being render ([4083e6f](https://github.com/CoCreate-app/CoCreate-render/commit/4083e6fa82728233b5d64e8071dc1315bd7c6056))
+
 ## [1.40.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.40.3...v1.40.4) (2024-04-29)
 
 
