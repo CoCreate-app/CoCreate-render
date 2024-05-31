@@ -674,6 +674,16 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode, inde
 
 
 function getRenderValue(node, data, key, renderAs) {
+    // TODO: handle operators directly from render placholders
+    let operator
+    if (key.startsWith('$')) {
+        let keys = key.split('.');
+        operator = keys.shift();
+        if (keys.length > 0) {
+            key = keys.join('.');
+        }
+    }
+
     let value = getValueFromObject(data, key);
 
     if (!value && value !== '' && node) {
@@ -742,6 +752,16 @@ function getRenderValue(node, data, key, renderAs) {
 
         } while (!value && parentTemplate)
     }
+
+    if (operator) {
+        if (value) {
+            console.log('return processed render value using operator', value)
+        } else {
+            console.log('return render operator', operator)
+
+        }
+    }
+
     return value
 }
 
