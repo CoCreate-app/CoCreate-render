@@ -675,6 +675,8 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode, inde
 
 function getRenderValue(node, data, key, renderAs) {
     // TODO: handle operators directly from render placholders
+    // <span>{{ $toLocaleDateString.object.created.on }}</span>
+
     let operator
     if (key.startsWith('$')) {
         let keys = key.split('.');
