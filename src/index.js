@@ -81,6 +81,7 @@ function init(element) {
  * @param {boolean} [options.remove] - Flag to indicate if the rendering should remove elements instead of updating or appending.
  */
 async function render({ source, element, selector, data, key, index, currentIndex, update, remove }) {
+    let Data = { ...data }
     if (!element) {
         if (source) {
             element = queryElements({ element: source, prefix: 'render' })
@@ -118,16 +119,16 @@ async function render({ source, element, selector, data, key, index, currentInde
         }
         let sourceData = sources.get(source)
         if (!sourceData) {
-            sourceData = { element: source, data }
+            sourceData = { element: source, Data }
             sources.set(source, sourceData)
         }
 
         source = sourceData
         if (!source.data)
-            source.data = data
+            source.data = Data
 
     } else if (data)
-        source = { data }
+        source = { Data }
 
     if (data.$filter) {
         index = index || data.$filter.startingIndex || data.$filter.index
