@@ -115,7 +115,8 @@ async function render({ source, element, selector, data, key, index, currentInde
                 else if (!key)
                     return
 
-            }
+            } else if (key == '{}')
+                key = 'object'
         }
         let sourceData = sources.get(source)
         if (!sourceData) {
@@ -260,6 +261,14 @@ async function renderTemplate(template, data, key, index, keyPath) {
             element.remove()
             template.clones.delete(key)
         }
+        // if (renderedNodes.size) {
+        //     for (let [element] of renderedNodes) {
+        //         element.remove()
+        //     }
+        //     renderedNodes.clear();
+        // }
+
+
         // template.data = renderData
     }
     // else if (index) {
