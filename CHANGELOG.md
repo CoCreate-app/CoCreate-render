@@ -1,3 +1,11 @@
+## [1.41.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.41.1...v1.41.2) (2024-06-19)
+
+
+### Bug Fixes
+
+* create new object from data to perserve its values ([a3496fc](https://github.com/CoCreate-app/CoCreate-render/commit/a3496fcb17e3488586ff8f6495c87feab7a38da8))
+* handle key='{}' object ([37cc2aa](https://github.com/CoCreate-app/CoCreate-render/commit/37cc2aa324d37d248593b84b0398bc5a4938c13e))
+
 ## [1.41.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.41.0...v1.41.1) (2024-06-12)
 
 
