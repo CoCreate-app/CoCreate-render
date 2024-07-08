@@ -615,8 +615,9 @@ async function renderValue(node, data, placeholder, renderAs, renderedNode, inde
             let value;
             try {
 
-                if (match[1] === 'index' && index >= 0) {  // {[]} - Dot-notation
+                if (match[1] === 'index' && index >= 0) {  // {{index}} - index
                     value = index
+                    match[0] = '{{' + match[1] + '}}'
                 } else if (match[1].startsWith('[') && match[1].endsWith(']')) {  // {[]} - Dot-notation
                     match[1] = match[1].slice(1, -1);
                     value = getRenderValue(node, data, match[1], renderAs);
