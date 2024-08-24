@@ -1,3 +1,10 @@
+## [1.41.5](https://github.com/CoCreate-app/CoCreate-render/compare/v1.41.4...v1.41.5) (2024-08-24)
+
+
+### Bug Fixes
+
+* handling of array index ([3a7cae6](https://github.com/CoCreate-app/CoCreate-render/commit/3a7cae6270af70497356cd88e0287ae4d1740d0f))
+
 ## [1.41.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.41.3...v1.41.4) (2024-06-23)
 
 
