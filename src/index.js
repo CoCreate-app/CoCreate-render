@@ -283,6 +283,13 @@ async function renderTemplate(template, data, key, index, keyPath) {
     if (templateData.source && templateData.source.element)
         renderType = templateData.source.element.getAttribute('render-type');
 
+    let renderReverse
+    if (templateData.source && templateData.source.element) {
+        renderReverse = templateData.source.element.getAttribute('render-reverse');
+        if (!renderReverse)
+            renderReverse = template.element.getAttribute('render-reverse');
+    }
+
     if (key && !Array.isArray(renderData) || renderType === "object") {
         if (renderType && Array.isArray(renderData) && renderData.length === 1)
             renderData = renderData[0]
@@ -356,7 +363,7 @@ async function renderTemplate(template, data, key, index, keyPath) {
                 if (key !== 'data')
                     index = i
                 await renderValues(clone.element, object, key, renderAs, null, null, index);
-                insertElement(template, clone.element, index);
+                insertElement(template, clone.element, index, '', data, renderReverse);
             }
         }
     }
@@ -400,7 +407,7 @@ function cloneTemplate(template) {
     return renderedNode;
 }
 
-function insertElement(template, element, index, currentIndex) {
+function insertElement(template, element, index, currentIndex, data, renderReverse) {
     let eid = element.getAttribute('eid')
     if (!eid) {
         eid = uuid.generate(6)
@@ -410,22 +417,54 @@ function insertElement(template, element, index, currentIndex) {
     if (index !== null && index >= 0) {
         if (!template.clones)
             template = template.template
-        const clones = Array.from(template.clones);
+        // const clones = Array.from(template.clones);
 
         let item
-        if (currentIndex) {
-            item = clones.splice(currentIndex, 1)[0];
-        } else {
+        if (!currentIndex && currentIndex !== 0) {
+            if (template.clones.has(eid))
+                return
             item = [eid, element];
         }
 
-        clones.splice(index, 0, item);
-        if (clones[index + 1] && clones[index][1] !== element)
-            clones[index][1].insertAdjacentElement('beforebegin', element);
-        else if (clones[index] && clones[index][1] !== element)
-            clones[index][1].insertAdjacentElement('afterend', element);
-        else
-            template.element.insertAdjacentElement('beforebegin', element);
+        const clones = Array.from(template.clones);
+
+        if (currentIndex || currentIndex === 0) {
+            item = clones.splice(currentIndex, 1)[0];
+        }
+
+        if (data.$filter && data.$filter.startingIndex)
+            index += data.$filter.startingIndex
+        clones.splice(index, 0, item);  // Insert item into clones at the specified index
+
+        if (renderReverse) {
+            // Chat-specific logic: reverse rendering but still inserting based on sorting
+
+            // If we're rendering in reverse order, we want to respect the insertion index
+            if (clones[index + 1] && clones[index + 1][1] !== element) {
+                // Insert before the next element (reverse order means newer items come before older ones)
+                clones[index + 1][1].insertAdjacentElement('afterend', element);
+            } else if (clones[index] && clones[index][1] !== element) {
+                // Insert after the current element if there's no next element
+                clones[index][1].insertAdjacentElement('beforeend', element);
+            } else {
+                // Fallback: insert before the template if clones are empty or undefined
+                template.element.insertAdjacentElement('afterend', element);
+            }
+
+        } else {
+            // Non-chat logic: handle ascending or descending order as usual
+            if (clones[index + 1] && clones[index + 1][1] !== element) {
+                // Insert before the next element
+                clones[index + 1][1].insertAdjacentElement('beforebegin', element);
+            } else if (clones[index] && clones[index][1] !== element) {
+                // Insert after the current element if there's no next element
+                clones[index][1].insertAdjacentElement('afterend', element);
+            } else {
+                // Fallback: insert before the template if clones are empty or undefined
+                template.element.insertAdjacentElement('beforebegin', element);
+            }
+        }
+
         template.clones = new Map(clones);
     } else {
         template.clones.set(eid, element)
