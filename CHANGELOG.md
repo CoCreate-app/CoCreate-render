@@ -1,3 +1,10 @@
+# [1.42.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.41.5...v1.42.0) (2024-09-21)
+
+
+### Features
+
+* render-reverse attribute to trigger reverse rendering for chats , etc ([f688f61](https://github.com/CoCreate-app/CoCreate-render/commit/f688f61ae4446a18356515c6d88d6bd8cc0be142))
+
 ## [1.41.5](https://github.com/CoCreate-app/CoCreate-render/compare/v1.41.4...v1.41.5) (2024-08-24)
 
 
