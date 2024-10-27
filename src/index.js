@@ -349,6 +349,11 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
             for (let i = 0; i < renderData.length; i++) {
                 let clone = cloneTemplate(template);
+
+                let test = clone.element.getAttribute('render-as')
+                if (test)
+                    renderAs = test
+
                 clone.keyPath = template.keyPath || '' + `[${i}]`
 
                 let object
@@ -386,7 +391,8 @@ function cloneTemplate(template) {
     clone.setAttribute('render-clone', '');
 
     let renderAs = clone.getAttribute('render-as')
-    if (renderAs) {
+    if (renderAs === '$auto') {
+        renderAs = uuid.generate(6)
         clone = clone.outerHTML.replace(/\$auto/g, renderAs);
     }
 
@@ -432,7 +438,7 @@ function insertElement(template, element, index, currentIndex, data, renderRever
             item = clones.splice(currentIndex, 1)[0];
         }
 
-        if (data.$filter && data.$filter.startingIndex)
+        if (data && data.$filter && data.$filter.startingIndex)
             index += data.$filter.startingIndex
         clones.splice(index, 0, item);  // Insert item into clones at the specified index
 
