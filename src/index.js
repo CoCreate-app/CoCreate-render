@@ -886,7 +886,7 @@ Actions.init({
 Observer.init({
     name: 'render',
     observe: ['addedNodes'],
-    target: elementSelector,
+    selector: elementSelector,
     callback: function (mutation) {
         init(mutation.target)
     }
@@ -907,7 +907,7 @@ Observer.init({
 Observer.init({
     name: 'render',
     observe: ['addedNodes'],
-    target: '[render]',
+    selector: '[render]',
     callback: function (mutation) {
         if (mutation.target.hasAttribute('render-clone'))
             return
@@ -929,7 +929,7 @@ Observer.init({
 // Observer.init({
 //     name: 'render',
 //     observe: ['addedNodes'],
-//     target: '[render-clone]',
+//   selector: '[render-clone]',
 //     callback: function (mutation) {
 //         let renderedNode = renderedNodes.get(mutation.target)
 //         if (!renderedNode) return
@@ -962,7 +962,7 @@ Observer.init({
 Observer.init({
     name: 'renderNodesRemoved',
     observe: ['removedNodes'],
-    target: '[render-clone]',
+    selector: '[render-clone]',
     callback: function (mutation) {
         if (mutation.target.parentElement) return
         let renderedNode = renderedNodes.get(mutation.target)
