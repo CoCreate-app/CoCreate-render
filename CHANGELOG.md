@@ -1,3 +1,11 @@
+## [1.42.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.42.0...v1.42.1) (2024-11-02)
+
+
+### Bug Fixes
+
+* handeling of render-as $auto ([017dd71](https://github.com/CoCreate-app/CoCreate-render/commit/017dd71b400ed202aacd425eb63d76fdb7f9a968))
+* observer taget has been renamed to selector ([adbd2c9](https://github.com/CoCreate-app/CoCreate-render/commit/adbd2c9768f439189da40ae1fcdaa333fff2f2da))
+
 # [1.42.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.41.5...v1.42.0) (2024-09-21)
 
 
