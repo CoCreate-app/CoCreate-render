@@ -1,3 +1,10 @@
+## [1.43.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.43.0...v1.43.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* parsing placeholders ([392bc9d](https://github.com/CoCreate-app/CoCreate-render/commit/392bc9d7a693f6bf46f88fdcbc649e0960a50815))
+
 # [1.43.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.42.1...v1.43.0) (2024-11-04)
 
 
