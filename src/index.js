@@ -1013,9 +1013,12 @@ Actions.init({
 				prefix: "render"
 			});
 
+		// TODO: data returned from form.getData() returns an array of objects each representing an storage, database and array in form. need a solution for handling what is the item to be rendered
 		let data = await action.form.getData();
+		let array = action.form.getAttribute("array");
+		if (array) data = data.find((obj) => obj.array === array);
 		for (let i = 0; i < elements.length; i++)
-			render({ source: elements[i], data: data[0] });
+			render({ source: elements[i], data });
 
 		document.dispatchEvent(
 			new CustomEvent("render", {
