@@ -306,19 +306,24 @@ async function renderTemplate(template, data, key, index, keyPath) {
 			renderReverse = template.element.getAttribute("render-reverse");
 	}
 
+	let exclude = template.element.getAttribute("render-exclude") || "";
+	if (exclude) {
+		exclude = exclude.replace(/ /g, "").split(",");
+	}
+	let reference = template.element.getAttribute("render-reference");
+
 	if ((key && !Array.isArray(renderData)) || renderType === "object") {
 		if (renderType && Array.isArray(renderData) && renderData.length === 1)
 			renderData = renderData[0];
 
-		let exclude = template.element.getAttribute("render-exclude") || "";
-		if (exclude) {
-			exclude = exclude.replace(/ /g, "").split(",");
-			if (!Array.isArray(exclude)) exclude = [exclude];
-		}
-
 		const keys = Object.keys(renderData);
 		for (let i = 0; i < keys.length; i++) {
 			if (exclude.includes(keys[i])) continue;
+			if (
+				reference === "false" &&
+				["$storage", "$database", "$array"].includes(key)
+			)
+				continue;
 
 			let value = renderData[keys[i]];
 			let type = "string";
@@ -364,12 +369,21 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
 				clone.keyPath = template.keyPath || "" + `[${i}]`;
 
-				let object;
+				let object = { ...renderData[i] };
+				for (let j = 0; j < exclude.length; j++)
+					delete object[exclude[j]];
+
+				if (reference === "false") {
+					delete object.$storage;
+					delete object.$database;
+					delete object.$array;
+				}
+
 				if (renderAs) {
-					object = { [renderAs]: renderData[i] };
+					object = { [renderAs]: object };
 					if (renderAs.includes("."))
 						object = dotNotationToObject(object);
-				} else object = renderData[i];
+				} else object = object;
 
 				let index;
 				if (key !== "data") index = i;
@@ -1018,7 +1032,7 @@ Actions.init({
 		let array = action.form.getAttribute("array");
 		if (array) data = data.find((obj) => obj.array === array);
 		for (let i = 0; i < elements.length; i++)
-			render({ source: elements[i], data });
+			await render({ source: elements[i], data });
 
 		document.dispatchEvent(
 			new CustomEvent("render", {
