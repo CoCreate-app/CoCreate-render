@@ -1,3 +1,15 @@
+# [1.45.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.44.0...v1.45.0) (2024-12-14)
+
+
+### Bug Fixes
+
+* temporarily handle form.getData when multiple arrays ([65cbd3c](https://github.com/CoCreate-app/CoCreate-render/commit/65cbd3ca419a3db5c87b648275cab8aca9c70d8e))
+
+
+### Features
+
+* improved handeling of refrence data and exclusion ([cd011c1](https://github.com/CoCreate-app/CoCreate-render/commit/cd011c1d770b2dc3e60d39f77d8c08a385cc0744))
+
 # [1.44.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.43.1...v1.44.0) (2024-12-14)
 
 
