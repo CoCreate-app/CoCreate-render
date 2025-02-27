@@ -995,7 +995,7 @@ async function renderKey(action) {
 	renderData.selector = renderSelector;
 	render(renderData);
 
-	document.dispatchEvent(
+	action.element.dispatchEvent(
 		new CustomEvent("renderKey", {
 			detail: { data }
 		})
@@ -1034,7 +1034,7 @@ Actions.init({
 		for (let i = 0; i < elements.length; i++)
 			await render({ source: elements[i], data });
 
-		document.dispatchEvent(
+		action.element.dispatchEvent(
 			new CustomEvent("render", {
 				detail: {}
 			})
