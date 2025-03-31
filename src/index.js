@@ -1044,7 +1044,7 @@ Actions.init({
 
 Observer.init({
 	name: "render",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector: elementSelector,
 	callback: function (mutation) {
 		init(mutation.target);
@@ -1053,8 +1053,8 @@ Observer.init({
 
 Observer.init({
 	name: "fileRender",
-	observe: ["attributes"],
-	attributeName: [
+	types: ["attributes"],
+	attributeFilter: [
 		"render-selector",
 		"render-closest",
 		"render-parent",
@@ -1071,7 +1071,7 @@ Observer.init({
 
 Observer.init({
 	name: "render",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector: "[render]",
 	callback: function (mutation) {
 		if (mutation.target.hasAttribute("render-clone")) return;
@@ -1089,7 +1089,7 @@ Observer.init({
 
 // Observer.init({
 //     name: 'render',
-//     observe: ['addedNodes'],
+//     types: ['addedNodes'],
 //   selector: '[render-clone]',
 //     callback: function (mutation) {
 //         let renderedNode = renderedNodes.get(mutation.target)
@@ -1122,7 +1122,7 @@ Observer.init({
 
 Observer.init({
 	name: "renderNodesRemoved",
-	observe: ["removedNodes"],
+	types: ["removedNodes"],
 	selector: "[render-clone]",
 	callback: function (mutation) {
 		if (mutation.target.parentElement) return;
