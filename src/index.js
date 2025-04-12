@@ -35,19 +35,14 @@ import "./index.css";
 
 const sources = new Map();
 const renderedNodes = new Map();
-const elementSelector =
-	"[render-selector], [render-closest], [render-parent], [render-next], [render-previous]";
+const elementSelector = "[render-query]";
 
 /**
  * Initializes elements based on specified rendering attributes. If a specific element is provided, it initializes that element.
  * If no element is provided, it queries and initializes all elements matching the defined selector criteria for rendering attributes.
  *
  * Supported rendering attributes:
- * - render-selector: [Describe what this attribute does]
- * - render-closest: [Describe what this attribute does]
- * - render-parent: [Describe what this attribute does]
- * - render-next: [Describe what this attribute does]
- * - render-previous: [Describe what this attribute does]
+ * - render-query: [Describe what this attribute does]
  *
  * @param {(Element|Element[]|HTMLCollection|null)} [element] - Optional. A single element, an array of elements, an HTMLCollection, or null.
  *     - If an HTMLCollection or an array of elements is provided, each element in the collection/array is initialized.
@@ -103,8 +98,9 @@ async function render({
 	let Data = { ...data };
 	if (!element) {
 		if (source) {
-			element = queryElements({ element: source, prefix: "render" });
-			if (!element && source.children.length > 0) {
+			if (source.hasAttribute("print-query")) {
+				element = queryElements({ element: source, prefix: "render" });
+			} else if (source.children.length > 0) {
 				for (const child of source.children) {
 					if (
 						child.matches(
@@ -124,7 +120,7 @@ async function render({
 			}
 		} else if (selector) element = queryElements({ selector });
 
-		if (!element) return;
+		if (!element || (Array.isArray(element) && !element.length)) return;
 	}
 
 	if (source) {
@@ -989,7 +985,7 @@ async function renderKey(action) {
 	data = dotNotationToObject(data);
 	let renderData = { data: { [params]: data } };
 
-	let renderSelector = element.getAttribute("render-selector");
+	let renderSelector = element.getAttribute("render-query");
 	if (!renderSelector) return;
 
 	renderData.selector = renderSelector;
@@ -1054,13 +1050,7 @@ Observer.init({
 Observer.init({
 	name: "fileRender",
 	types: ["attributes"],
-	attributeFilter: [
-		"render-selector",
-		"render-closest",
-		"render-parent",
-		"render-next",
-		"render-previous"
-	],
+	attributeFilter: ["render-query"],
 	callback: async function (mutation) {
 		render({
 			element: mutation.target,
