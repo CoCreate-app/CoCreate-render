@@ -98,7 +98,7 @@ async function render({
 	let Data = { ...data };
 	if (!element) {
 		if (source) {
-			if (source.hasAttribute("print-query")) {
+			if (source.hasAttribute("render-query")) {
 				element = queryElements({ element: source, prefix: "render" });
 			} else if (source.children.length > 0) {
 				for (const child of source.children) {
@@ -108,7 +108,7 @@ async function render({
 						)
 					) {
 						element = child;
-						break; // Found the desired element, no need to continue the loop
+						break; // Found the desired element, no need to continue the loop.
 					}
 				}
 			}
@@ -140,9 +140,12 @@ async function render({
 		}
 
 		source = sourceData;
-		if (!source.data) source.data = Data;
-	} else if (data) source = { Data };
-
+		if (!source.data) {
+			source.data = Data;
+		}
+	} else if (data) {
+		source = { Data };
+	}
 	if (data.$filter) {
 		index = index || data.$filter.startingIndex || data.$filter.index;
 		update = update || data.$filter.update;
@@ -183,6 +186,13 @@ async function render({
 			}
 		}
 
+		let clones = renderedNode.clones; // || renderedNode.template.clones
+		if (!clones) {
+			clones = renderedNode.template.clones;
+			console.log("renderedNode.template.clones", clones);
+		}
+
+		let clone;
 		if (remove) {
 			for (let j = 0; j < data[key].length; j++) {
 				let cloneKey;
@@ -192,21 +202,20 @@ async function render({
 					cloneKey = data[key][j].name;
 				}
 
-				let clone = renderedNode.clones.get(cloneKey);
+				clone = clones.get(cloneKey);
 				if (!clone) return;
 
-				renderedNode.clones.delete(cloneKey);
+				clones.delete(cloneKey);
 				renderedNodes.delete(clone);
 				clone.remove();
 			}
 		} else if ((key && Array.isArray(data[key])) || Array.isArray(data)) {
 			if (update) {
 				for (let j = 0; j < data[key].length; j++) {
-					let clone;
 					if (key === "object") {
-						clone = renderedNode.clones.get(data[key][j]._id);
+						clone = clones.get(data[key][j]._id);
 					} else {
-						clone = renderedNode.clones.get(data[key][j].name);
+						clone = clones.get(data[key][j].name);
 					}
 
 					if (!currentIndex) currentIndex = data.$filter.currentIndex;
@@ -437,6 +446,7 @@ function cloneTemplate(template) {
 		clone = container.firstChild;
 		container.remove();
 	}
+
 	let renderedNode = { template, element: clone };
 	renderedNodes.set(clone, renderedNode);
 	return renderedNode;
@@ -901,9 +911,9 @@ function getRenderValue(node, data, key, renderAs) {
 						eid,
 						parent = parentNode.parent || parentNode.template;
 					do {
-						if (key.includes("keyPath"))
+						if (key.includes("keyPath")) {
 							value = parentNode.keyPath || parent.keyPath;
-						else if (key.includes("parentKey")) {
+						} else if (key.includes("parentKey")) {
 							value =
 								parentNode.parentKey ||
 								parent.parentKey ||
@@ -912,17 +922,24 @@ function getRenderValue(node, data, key, renderAs) {
 							value = renderAs;
 						} else if (key === "object" || key === "_id")
 							value = ObjectId().toString();
-						else if (key === "uuid") value = uuid.generate(6);
-						else if (parent.source) Data = parent.source.data;
-						else if (parent.parent) parent = parent.parent;
-						else if (parent.template) parent = parent.template;
-						else parent = undefined;
+						else if (key === "uuid") {
+							value = uuid.generate(6);
+						} else if (parent.source) {
+							Data = parent.source.data;
+						} else if (parent.parent) {
+							parent = parent.parent;
+						} else if (parent.template) {
+							parent = parent.template;
+						} else {
+							parent = undefined;
+						}
 
 						if (!Data && parent && parent.eid) eid = parent.eid;
 					} while (!value && parent && !Data);
 
-					if (!value && Data) value = getValueFromObject(Data, key);
-
+					if (!value && Data) {
+						value = getValueFromObject(Data, key);
+					}
 					if (!value && key.includes(".")) {
 						let renderedData = getValueFromObject(
 							Data,
@@ -930,29 +947,34 @@ function getRenderValue(node, data, key, renderAs) {
 						);
 						if (renderedData) {
 							let index;
-							if (!parent.clones.size || parent.clones.size === 1)
+							if (
+								!parent.clones.size ||
+								parent.clones.size === 1
+							) {
 								index = 0;
-							else if (eid)
+							} else if (eid) {
 								index = Array.from(
 									parent.clones.keys()
 								).indexOf(eid);
-							else console.log("eid not found");
+							} else console.log("eid not found");
 
-							if (index >= 0)
+							if (index >= 0) {
 								Data = {
 									[key.split(".")[0]]: renderedData[index]
 								};
-
+							}
 							value = getValueFromObject(Data, key);
 						}
 					}
 				}
 			}
 
-			if (!value && parentTemplate.parentElement)
+			if (!value && parentTemplate.parentElement) {
 				parentTemplate =
 					parentTemplate.parentElement.closest("[render]");
-			else parentTemplate = undefined;
+			} else {
+				parentTemplate = undefined;
+			}
 		} while (!value && parentTemplate);
 	}
 
@@ -973,7 +995,9 @@ async function renderKey(action) {
 	let form = action.form || document;
 	let params = action.params;
 
-	if (!params) params = "render-key";
+	if (!params) {
+		params = "render-key";
+	}
 
 	let data = {};
 	let selector = `[${params}]`;
@@ -1070,8 +1094,12 @@ Observer.init({
 		return;
 		let renderedNode = renderedNodes.get(parentElement);
 		let data;
-		if (renderedNode.source) data = renderedNode.source.data;
-		if (renderedNode.template) data = renderedNode.template.source.data;
+		if (renderedNode.source) {
+			data = renderedNode.source.data;
+		}
+		if (renderedNode.template) {
+			data = renderedNode.template.source.data;
+		}
 
 		render({ element: mutation.target, data });
 	}
