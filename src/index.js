@@ -95,57 +95,65 @@ async function render({
 	update,
 	remove
 }) {
-	let Data = { ...data };
+	if (!data || (!source && !data)) {
+		return;
+	}
+
 	if (!element) {
-		if (source) {
-			if (source.hasAttribute("render-query")) {
-				element = queryElements({ element: source, prefix: "render" });
+		if (source instanceof HTMLElement) {
+			if (selector || (selector = source.getAttribute("render-query"))) {
+				element = queryElements({
+					element: source,
+					selector
+				});
 			} else if (source.children.length > 0) {
-				for (const child of source.children) {
-					if (
-						child.matches(
-							"template, [template], .template, [render]"
-						)
-					) {
-						element = child;
-						break; // Found the desired element, no need to continue the loop.
-					}
+				element = Array.from(source.children).find((child) =>
+					child.matches("template, [template], .template, [render]")
+				);
+				if (!element) {
+					element = source.querySelector(
+						"template, [template], .template, [render]"
+					);
 				}
 			}
+		} else if (selector) {
+			element = queryElements({
+				selector
+			});
+		}
 
-			if (!element) {
-				element = source.querySelector(
-					"template, [template], .template, [render]"
-				);
-			}
-		} else if (selector) element = queryElements({ selector });
-
-		if (!element || (Array.isArray(element) && !element.length)) return;
+		if (!element || (Array.isArray(element) && !element.length)) {
+			return;
+		}
 	}
 
-	if (source) {
+	if (!key) {
+		key =
+			source.getAttribute("render") ||
+			source.getAttribute("key") ||
+			data.type;
+		if (!key || key === "key") {
+			key = "object";
+		} else if (key === "{}" || (!key && data.method)) {
+			key = data.method ? data.method.split(".")[0] : undefined;
+		}
 		if (!key) {
-			key = source.getAttribute("render") || source.getAttribute("key");
-			if (!key) {
-				key = data.type;
-				if (key == "key") key = "object";
-				else if (!key && data.method) key = data.method.split(".")[0];
-				else if (!key) return;
-			} else if (key == "{}") key = "object";
+			return;
 		}
-		let sourceData = sources.get(source);
-		if (!sourceData) {
-			sourceData = { element: source, Data };
-			sources.set(source, sourceData);
-		}
-
-		source = sourceData;
-		if (!source.data) {
-			source.data = Data;
-		}
-	} else if (data) {
-		source = { Data };
 	}
+
+	let sourceData = sources.get(source);
+	if (!sourceData) {
+		sourceData = { element: source, data: { ...data } };
+		sources.set(source, sourceData);
+	} else if (sourceData.data) {
+		sourceData.data = { ...data };
+	} else {
+		// TODO: Most effiecientway to comapre too objects or array of objects
+		if (data === sourceData.data) return;
+		sourceData.data = { ...data };
+	}
+
 	if (data.$filter) {
 		index = index || data.$filter.startingIndex || data.$filter.index;
 		update = update || data.$filter.update;
@@ -156,42 +164,41 @@ async function render({
 		!Array.isArray(element) &&
 		!(element instanceof HTMLCollection) &&
 		!(element instanceof NodeList)
-	)
+	) {
 		element = [element];
+	}
 
 	for (let i = 0; i < element.length; i++) {
-		key = element[i].getAttribute("render") || key;
-
 		let renderedNode = renderedNodes.get(element[i]);
-		if (
-			renderedNode &&
-			renderedNode.clones &&
-			renderedNode.source &&
-			renderedNode.source.element
-		) {
-			let limit =
-				renderedNode.source.element.getAttribute("render-limit");
-			if (limit && renderedNode.clones.size >= parseInt(limit)) continue;
-		}
-
-		if (source) {
-			if (!renderedNode) {
-				renderedNode = {
-					element: element[i],
-					source,
-					clones: new Map(),
-					renderAs: new Map()
-				};
-				renderedNodes.set(element[i], renderedNode);
+		if (renderedNode) {
+			if (
+				renderedNode.clones &&
+				renderedNode.source &&
+				renderedNode.source.element
+			) {
+				let limit =
+					renderedNode.source.element.getAttribute("render-limit");
+				if (limit && renderedNode.clones.size >= parseInt(limit))
+					continue;
 			}
+		} else {
+			renderedNode = {
+				element: element[i],
+				source: sourceData,
+				clones: new Map()
+			};
+			renderedNodes.set(element[i], renderedNode);
 		}
 
-		let clones = renderedNode.clones; // || renderedNode.template.clones
+		let clones = renderedNode.clones; // || renderedNode.template.clones..
 		if (!clones) {
 			clones = renderedNode.template.clones;
 			console.log("renderedNode.template.clones", clones);
 		}
 
+		key = element[i].getAttribute("render") || key;
+		let renderType =
+			renderedNode.source.element.getAttribute("render-type");
 		let clone;
 		if (remove) {
 			for (let j = 0; j < data[key].length; j++) {
@@ -209,7 +216,10 @@ async function render({
 				renderedNodes.delete(clone);
 				clone.remove();
 			}
-		} else if ((key && Array.isArray(data[key])) || Array.isArray(data)) {
+		} else if (
+			(key && (Array.isArray(data[key]) || renderType)) ||
+			Array.isArray(data)
+		) {
 			if (update) {
 				for (let j = 0; j < data[key].length; j++) {
 					if (key === "object") {
@@ -253,48 +263,36 @@ async function renderTemplate(template, data, key, index, keyPath) {
 	}
 
 	templateData.parent = template.parentElement.closest("[render]");
-	if (templateData.parent)
+	if (templateData.parent) {
 		templateData.parent = renderedNodes.get(templateData.parent);
+	}
 
 	if (!templateData.keyPath) {
-		if (keyPath) templateData.keyPath = keyPath;
-		else if (templateData.parent && templateData.parent.keyPath)
+		if (keyPath) {
+			templateData.keyPath = keyPath;
+		} else if (templateData.parent && templateData.parent.keyPath) {
 			templateData.keyPath = templateData.parent.keyPath;
-		else if (key) templateData.keyPath = key;
+		} else if (key) {
+			templateData.keyPath = key;
+		}
 	}
 
 	template = templateData;
 
 	let renderData;
-	if (key) renderData = getRenderValue(template.element, data, key);
-	else if (Array.isArray(data)) renderData = data;
-
-	if (!renderData && data)
-		if (Array.isArray(data)) renderData = data;
-		else renderData = [data];
-	else if (!renderData) return;
-
-	let isInsert = data.$filter && (data.$filter.create || data.$filter.update);
-	if ((!isInsert && !index) || data.$filter.overwrite) {
-		if (!template.clones) template = template.template;
-		for (const [key, element] of template.clones) {
-			renderedNodes.delete(element);
-			element.remove();
-			template.clones.delete(key);
-		}
-		// if (renderedNodes.size) {
-		//     for (let [element] of renderedNodes) {
-		//         element.remove()
-		//     }
-		//     renderedNodes.clear();
-		// }
-
-		// template.data = renderData
+	if (key) {
+		renderData = getRenderValue(template.element, data, key);
+	} else if (Array.isArray(data)) {
+		renderData = data;
 	}
-	// else if (index) {
-	// updates data that has already been rendered
-	// template.data = dotNotationToObject(renderData, template.data)
-	// }
+
+	if (!renderData && data) {
+		if (Array.isArray(data)) {
+			renderData = data;
+		} else {
+			renderData = [data];
+		}
+	} else if (!renderData) return;
 
 	let renderAs = template.element.getAttribute("render-as") || key;
 	template.renderAs = renderAs;
@@ -317,18 +315,43 @@ async function renderTemplate(template, data, key, index, keyPath) {
 	}
 	let reference = template.element.getAttribute("render-reference");
 
+	let isInsert = data.$filter && (data.$filter.create || data.$filter.update);
+	if (renderType !== "object") {
+		if ((!isInsert && !index) || data.$filter.overwrite) {
+			if (!template.clones) template = template.template;
+			for (const [key, element] of template.clones) {
+				renderedNodes.delete(element);
+				element.remove();
+				template.clones.delete(key);
+			}
+		} //
+		// else if (index) {
+		// updates data that has already been rendered
+		// template.data = dotNotationToObject(renderData, template.data)
+		// }
+	}
+
 	if ((key && !Array.isArray(renderData)) || renderType === "object") {
 		if (renderType && Array.isArray(renderData) && renderData.length === 1)
 			renderData = renderData[0];
 
 		const keys = Object.keys(renderData);
 		for (let i = 0; i < keys.length; i++) {
-			if (exclude.includes(keys[i])) continue;
+			let clone = template.clones.get(keys[i]);
+			clone = renderedNodes.get(clone);
+
 			if (
-				reference === "false" &&
-				["$storage", "$database", "$array"].includes(key)
-			)
+				exclude.includes(keys[i]) ||
+				(reference === "false" &&
+					["$storage", "$database", "$array"].includes(key))
+			) {
+				if (clone) {
+					renderedNodes.delete(clone.element);
+					clone.element.remove();
+					template.clones.delete(keys[i]);
+				}
 				continue;
+			}
 
 			let value = renderData[keys[i]];
 			let type = "string";
@@ -338,7 +361,16 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
 			let Data = { [renderAs]: { key: keys[i], value, type } };
 
-			let clone = cloneTemplate(template);
+			if (!clone) {
+				clone = cloneTemplate(template);
+			} else {
+				if (clone.renderedValue === value) {
+					continue;
+				}
+			}
+			clone.renderedValue = value;
+			// let clone = cloneTemplate(template);
+
 			let renderedKey = key.split(".");
 			renderedKey = renderedKey[renderedKey.length - 1];
 			//renderedKey needs to remove the parent.renderAs/key
