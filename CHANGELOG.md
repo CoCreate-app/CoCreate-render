@@ -1,3 +1,15 @@
+## [1.45.2](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.1...v1.45.2) (2025-04-30)
+
+
+### Bug Fixes
+
+* added css-loader ([a81747d](https://github.com/CoCreate-app/CoCreate-render/commit/a81747da9d48547754c68c3cac3e9e256ba150e1))
+* render-query and handling of clones map ([465425e](https://github.com/CoCreate-app/CoCreate-render/commit/465425e5692f248815628c27c2b52e8061387eb6))
+* rendering object key ([94e5385](https://github.com/CoCreate-app/CoCreate-render/commit/94e5385d1b89c099456dcb1c609ea7ea32a56f35))
+* update query attributes ([270525c](https://github.com/CoCreate-app/CoCreate-render/commit/270525cdfd7a51d314d40576f80eb9907c54ab14))
+* updated cocreate modules versions ([bf661e4](https://github.com/CoCreate-app/CoCreate-render/commit/bf661e4d63ef2ee788192f5317f8fb6b812fc81d))
+* webpack.config and devdependencies ([b7ff116](https://github.com/CoCreate-app/CoCreate-render/commit/b7ff116ae6aba8d8b991a4d250aef360fcb30940))
+
 ## [1.45.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.0...v1.45.1) (2025-04-11)
 
 
