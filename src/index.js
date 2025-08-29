@@ -128,10 +128,14 @@ async function render({
 	}
 
 	if (!key) {
-		key =
-			source.getAttribute("render") ||
-			source.getAttribute("key") ||
-			data.type;
+		if (source instanceof HTMLElement) {
+			key =
+				source.getAttribute("render") ||
+				source.getAttribute("key") ||
+				data.type;
+		} else {
+			key = data.type;
+		}
 		if (!key || key === "key") {
 			key = "object";
 		} else if (key === "{}" || (!key && data.method)) {
@@ -197,8 +201,17 @@ async function render({
 		}
 
 		key = element[i].getAttribute("render") || key;
-		let renderType =
-			renderedNode.source.element.getAttribute("render-type");
+		let renderedSource = renderedNode.source;
+		if (!renderedSource) {
+			if (renderedNode.parent && renderedNode.parent.template) {
+				renderedSource = renderedNode.parent.template.source;
+			}
+		}
+		let renderType;
+		if (renderedSource && renderedSource.element) {
+			renderType = renderedSource.element.getAttribute("render-type");
+		}
+
 		let clone;
 		if (remove) {
 			for (let j = 0; j < data[key].length; j++) {
@@ -250,6 +263,11 @@ async function render({
 			await renderValues(element[i], data, key, renderAs);
 		}
 	}
+	// Dispatch input and change events after rendering is complete
+	if (source instanceof HTMLElement) {
+		source.dispatchEvent(new Event("input"));
+		source.dispatchEvent(new Event("change"));
+	}
 }
 
 async function renderTemplate(template, data, key, index, keyPath) {
@@ -262,7 +280,8 @@ async function renderTemplate(template, data, key, index, keyPath) {
 		renderedNodes.set(template, templateData);
 	}
 
-	templateData.parent = template.parentElement.closest("[render]");
+	templateData.parent =
+		template.parentElement.closest("[render]") || template.source;
 	if (templateData.parent) {
 		templateData.parent = renderedNodes.get(templateData.parent);
 	}
@@ -294,7 +313,10 @@ async function renderTemplate(template, data, key, index, keyPath) {
 		}
 	} else if (!renderData) return;
 
-	let renderAs = template.element.getAttribute("render-as") || key;
+	let renderAs =
+		template.element.getAttribute("render-as") ||
+		template.source.element.getAttribute("render-as") ||
+		key;
 	template.renderAs = renderAs;
 
 	let renderType;
@@ -406,7 +428,16 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
 				clone.keyPath = template.keyPath || "" + `[${i}]`;
 
-				let object = { ...renderData[i] };
+				let object;
+				if (
+					typeof renderData[i] === "object" &&
+					renderData[i] !== null
+				) {
+					object = { ...renderData[i] };
+				} else {
+					object = renderData[i];
+				}
+
 				for (let j = 0; j < exclude.length; j++)
 					delete object[exclude[j]];
 
@@ -1123,7 +1154,7 @@ Observer.init({
 		if (mutation.target.hasAttribute("render-clone")) return;
 		let parentElement = mutation.target.parentElement.closest("[render]");
 		if (!parentElement) return;
-		return;
+
 		let renderedNode = renderedNodes.get(parentElement);
 		let data;
 		if (renderedNode.source) {
