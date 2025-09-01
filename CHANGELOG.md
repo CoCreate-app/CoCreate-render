@@ -1,3 +1,10 @@
+## [1.45.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.3...v1.45.4) (2025-09-01)
+
+
+### Bug Fixes
+
+* enhance rendering logic and event dispatching for HTML elements ([0a07d0d](https://github.com/CoCreate-app/CoCreate-render/commit/0a07d0de0a6f8badd583326e0f506527368c2fb3))
+
 ## [1.45.3](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.2...v1.45.3) (2025-05-01)
 
 
