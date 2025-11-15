@@ -195,7 +195,7 @@ async function render({
 		}
 
 		let clones = renderedNode.clones; // || renderedNode.template.clones..
-		if (!clones) {
+		if (!clones && renderedNode.template) {
 			clones = renderedNode.template.clones;
 			console.log("renderedNode.template.clones", clones);
 		}
@@ -273,17 +273,25 @@ async function render({
 async function renderTemplate(template, data, key, index, keyPath) {
 	// if (!key)
 	//     key = template.getAttribute('render')
-
+	if (!(template instanceof HTMLElement)) {
+		console.log("template not an element but should be")
+	}
 	let templateData = renderedNodes.get(template);
 	if (!templateData) {
-		templateData = { element: template, clones: new Map() };
+		templateData = {element: template, clones: new Map() };
 		renderedNodes.set(template, templateData);
+	} 
+	
+	if (!templateData.parent && !templateData.source) {
+		let parentRender = template.parentElement.closest("[render]")
+		if (parentRender || template.source)
+			templateData.parent = renderedNodes.get(parentRender) || template.source
+		else
+			console.log("template parent missing is there no parent or is this an error? and source is", templateData.source)
 	}
 
-	templateData.parent =
-		template.parentElement.closest("[render]") || template.source;
-	if (templateData.parent) {
-		templateData.parent = renderedNodes.get(templateData.parent);
+	if(!templateData.source && templateData.parent && templateData.parent.source){
+		templateData.source = templateData.parent.source
 	}
 
 	if (!templateData.keyPath) {
@@ -296,28 +304,41 @@ async function renderTemplate(template, data, key, index, keyPath) {
 		}
 	}
 
-	template = templateData;
-
 	let renderData;
 	if (key) {
-		renderData = getRenderValue(template.element, data, key);
-	} else if (Array.isArray(data)) {
+		renderData = getRenderValue(templateData.element, data, key);
+	} 
+	
+	if (!renderData) {
 		renderData = data;
 	}
+	
+	// else if (Array.isArray(data)) {
+	// 	renderData = data;
+	// }
 
-	if (!renderData && data) {
-		if (Array.isArray(data)) {
-			renderData = data;
-		} else {
-			renderData = [data];
-		}
-	} else if (!renderData) return;
+	// if (!renderData && data) {
+	// 	if (Array.isArray(data)) {
+	// 		renderData = data;
+	// 	} else {
+	// 		renderData = [data];
+	// 	}
+	// } else return;
 
-	let renderAs =
-		template.element.getAttribute("render-as") ||
-		template.source.element.getAttribute("render-as") ||
-		key;
-	template.renderAs = renderAs;
+	templateData.renderData = renderData;
+	let el = templateData.element;
+	if (el.nodeType !== 1) {
+			el = templateData.parent.element;
+	}
+
+	let renderAs = templateData.renderAs
+	if (!templateData.renderAs) {
+		renderAs =
+			el.getAttribute("render-as") ||
+			el.getAttribute("render") ||
+			key;
+		templateData.renderAs = renderAs;
+	}
 
 	let renderType;
 	if (templateData.source && templateData.source.element)
@@ -328,28 +349,40 @@ async function renderTemplate(template, data, key, index, keyPath) {
 		renderReverse =
 			templateData.source.element.getAttribute("render-reverse");
 		if (!renderReverse)
-			renderReverse = template.element.getAttribute("render-reverse");
+			renderReverse = el.getAttribute("render-reverse");
 	}
 
-	let exclude = template.element.getAttribute("render-exclude") || "";
+	let exclude = el.getAttribute("render-exclude") || "";
 	if (exclude) {
 		exclude = exclude.replace(/ /g, "").split(",");
 	}
-	let reference = template.element.getAttribute("render-reference");
+	let reference = el.getAttribute("render-reference");
 
 	let isInsert = data.$filter && (data.$filter.create || data.$filter.update);
 	if (renderType !== "object") {
 		if ((!isInsert && !index) || data.$filter.overwrite) {
-			if (!template.clones) template = template.template;
-			for (const [key, element] of template.clones) {
+			if (!templateData.clones) {
+				return
+				if (templateData.template) {
+					templateData.clones = templateData.template.clones
+				} else if (templateData.parent && templateData.parent.template) {
+					templateData.clones = templateData.parent.template.clones
+				}
+			}
+
+			// if (!templateData.clones) {
+			// 	templateData
+			// 	templateData = templateData.templateData;
+			// }
+			for (const [key, element] of templateData.clones) {
 				renderedNodes.delete(element);
 				element.remove();
-				template.clones.delete(key);
+				templateData.clones.delete(key);
 			}
 		} //
 		// else if (index) {
 		// updates data that has already been rendered
-		// template.data = dotNotationToObject(renderData, template.data)
+		// templateData.data = dotNotationToObject(renderData, templateData.data)
 		// }
 	}
 
@@ -359,7 +392,7 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
 		const keys = Object.keys(renderData);
 		for (let i = 0; i < keys.length; i++) {
-			let clone = template.clones.get(keys[i]);
+			let clone = templateData.clones.get(keys[i]);
 			clone = renderedNodes.get(clone);
 
 			if (
@@ -370,7 +403,7 @@ async function renderTemplate(template, data, key, index, keyPath) {
 				if (clone) {
 					renderedNodes.delete(clone.element);
 					clone.element.remove();
-					template.clones.delete(keys[i]);
+					templateData.clones.delete(keys[i]);
 				}
 				continue;
 			}
@@ -384,26 +417,26 @@ async function renderTemplate(template, data, key, index, keyPath) {
 			let Data = { [renderAs]: { key: keys[i], value, type } };
 
 			if (!clone) {
-				clone = cloneTemplate(template);
+				clone = cloneTemplate(templateData);
 			} else {
 				if (clone.renderedValue === value) {
 					continue;
 				}
 			}
 			clone.renderedValue = value;
-			// let clone = cloneTemplate(template);
+			// let clone = cloneTemplate(templateData);
 
 			let renderedKey = key.split(".");
 			renderedKey = renderedKey[renderedKey.length - 1];
 			//renderedKey needs to remove the parent.renderAs/key
 
 			clone.key = keys[i];
-			clone.keyPath = template.keyPath + "." + renderedKey;
+			clone.keyPath = templateData.keyPath + "." + renderedKey;
 			clone.parentKey = renderedKey;
 			clone.renderKey = key;
 			clone.element.setAttribute("renderedKey", keys[i]);
 			await renderValues(clone.element, Data, keys[i], renderAs);
-			insertElement(template, clone.element, index);
+			insertElement(templateData, clone.element, index);
 		}
 	} else {
 		if (!key && !Array.isArray(renderData)) {
@@ -413,20 +446,20 @@ async function renderTemplate(template, data, key, index, keyPath) {
 		}
 
 		if (!renderData) {
-			let clone = cloneTemplate(template);
-			clone.keyPath = template.keyPath;
+			let clone = cloneTemplate(templateData);
+			clone.keyPath = templateData.keyPath;
 			await renderValues(clone.element, data, key, renderAs);
-			insertElement(template, clone.element, index);
+			insertElement(templateData, clone.element, index);
 		} else {
 			if (!Array.isArray(renderData)) renderData = [renderData];
 
 			for (let i = 0; i < renderData.length; i++) {
-				let clone = cloneTemplate(template);
+				let clone = cloneTemplate(templateData);
 
 				let test = clone.element.getAttribute("render-as");
 				if (test) renderAs = test;
 
-				clone.keyPath = template.keyPath || "" + `[${i}]`;
+				clone.keyPath = templateData.keyPath || "" + `[${i}]`;
 
 				let object;
 				if (
@@ -455,6 +488,9 @@ async function renderTemplate(template, data, key, index, keyPath) {
 
 				let index;
 				if (key !== "data") index = i;
+
+				clone.renderData = object
+				clone.index = index
 				await renderValues(
 					clone.element,
 					object,
@@ -465,7 +501,7 @@ async function renderTemplate(template, data, key, index, keyPath) {
 					index
 				);
 				insertElement(
-					template,
+					templateData,
 					clone.element,
 					index,
 					"",
@@ -713,8 +749,9 @@ async function renderValues(node, data, key, renderAs, keyPath, parent, index) {
 				return;
 			}
 		}
-		if (node.getAttribute("render") && !node.hasAttribute("render-clone")) {
-			renderTemplate(node, data);
+		if (node.hasAttribute("render") && !node.hasAttribute("render-clone")) {
+			let renderKey = node.getAttribute("render") || key
+			renderTemplate(node, data, renderKey);
 		} else if (node.childNodes.length > 0) {
 			// Array.from(node.childNodes).forEach(childNode => {
 			for (let childNode of node.childNodes) {
@@ -1157,14 +1194,20 @@ Observer.init({
 
 		let renderedNode = renderedNodes.get(parentElement);
 		let data;
-		if (renderedNode.source) {
-			data = renderedNode.source.data;
+		if (renderedNode) {
+			if (renderedNode.renderData) {
+				data = renderedNode.renderData;
+			} 
+		} else {
+			let sourceElement = mutation.target.parentElement.closest("[render-query]")
+			let sourceData = sources.get(sourceElement);
+			if (sourceData) {
+				data = sourceData.data;
+			}
 		}
-		if (renderedNode.template) {
-			data = renderedNode.template.source.data;
+		if (data) {
+			// render({ element: mutation.target, data });
 		}
-
-		render({ element: mutation.target, data });
 	}
 });
 
