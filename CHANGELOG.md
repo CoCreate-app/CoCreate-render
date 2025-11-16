@@ -1,3 +1,10 @@
+## [1.45.5](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.4...v1.45.5) (2025-11-16)
+
+
+### Bug Fixes
+
+* improve template rendering logic and error handling in renderTemplate function ([decd034](https://github.com/CoCreate-app/CoCreate-render/commit/decd034e0087981dac3abc15a9f3ee79e7d0870a))
+
 ## [1.45.4](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.3...v1.45.4) (2025-09-01)
 
 
