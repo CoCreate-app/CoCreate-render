@@ -66,6 +66,22 @@ function init(element) {
 				await render({ source: element[i], data });
 			element[i].getData = () => sources.get(element[i]).data;
 		}
+
+		let dataAttr = element[i].getAttribute("render-data");
+
+		if (dataAttr) {
+			try {
+				// Parse the string into a usable object
+				const parsedData = JSON.parse(dataAttr);
+
+				// Ensure the method exists before calling it
+				if (typeof element[i].renderValue === "function") {
+					element[i].renderValue(parsedData);
+				}
+			} catch (error) {
+				console.error("Failed to parse render-data:", error);
+			}
+		}	
 	}
 }
 
