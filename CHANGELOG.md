@@ -1,3 +1,10 @@
+## [1.45.6](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.5...v1.45.6) (2026-02-04)
+
+
+### Bug Fixes
+
+* update worklow ([d98917c](https://github.com/CoCreate-app/CoCreate-render/commit/d98917c98cc2c38b426f3c720f08d67e066836e6))
+
 ## [1.45.5](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.4...v1.45.5) (2025-11-16)
 
 
