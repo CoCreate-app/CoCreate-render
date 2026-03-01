@@ -164,22 +164,23 @@ async function render({
         }
     }
 
-    let sourceData = sources.get(source);
-    if (!sourceData) {
-        sourceData = { element: source, data: { ...data } };
-        sources.set(source, sourceData);
-    } else if (sourceData.data) {
-        sourceData.data = { ...data };
-    } else {
-        // TODO: Most effiecientway to comapre too objects or array of objects
-        if (data === sourceData.data) return;
-        sourceData.data = { ...data };
-    }
-
     if (data.$filter) {
         index = index || data.$filter.startingIndex || data.$filter.index;
         update = update || data.$filter.update;
         remove = remove || data.$filter.remove;
+    }
+
+    let isMutation = remove || update || (data.$filter && data.$filter.create);
+
+    let sourceData = sources.get(source);
+    if (!sourceData) {
+        sourceData = { element: source, data: { ...data } };
+        sources.set(source, sourceData);
+    } else if (!isMutation) {
+        // Only overwrite the master list if this is a full read, not a patch/mutation!
+        if (data !== sourceData.data) {
+            sourceData.data = { ...data };
+        }
     }
 
     if (
@@ -241,7 +242,7 @@ async function render({
                 }
 
                 clone = clones.get(cloneKey);
-                if (!clone) return;
+                if (!clone) continue;
 
                 clones.delete(cloneKey);
                 renderedNodes.delete(clone);
@@ -261,7 +262,7 @@ async function render({
 
                     if (!currentIndex) currentIndex = data.$filter.currentIndex;
 
-                    if (!clone) return;
+                    if (!clone) continue;
 
                     await renderValues(clone, { object: data[key][j] });
                     if (currentIndex >= 0)
