@@ -1,3 +1,10 @@
+# [1.46.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.6...v1.46.0) (2026-03-01)
+
+
+### Features
+
+* added operrator to support conditional rendering ([7bc2ec4](https://github.com/CoCreate-app/CoCreate-render/commit/7bc2ec46f4bbe30c5e5a81875f95136ab679e8c4))
+
 ## [1.45.6](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.5...v1.45.6) (2026-02-04)
 
 
