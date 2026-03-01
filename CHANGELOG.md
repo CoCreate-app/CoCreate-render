@@ -1,3 +1,10 @@
+## [1.46.1](https://github.com/CoCreate-app/CoCreate-render/compare/v1.46.0...v1.46.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* optimize data handling in render function to prevent unnecessary updates ([a6f7202](https://github.com/CoCreate-app/CoCreate-render/commit/a6f720282744f2e393e1921fea5bccceb466f617))
+
 # [1.46.0](https://github.com/CoCreate-app/CoCreate-render/compare/v1.45.6...v1.46.0) (2026-03-01)
 
 
